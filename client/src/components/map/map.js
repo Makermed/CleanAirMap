@@ -1,31 +1,43 @@
 import Mapbox from 'react-map-gl';
 import {useGetLocations} from "./getMapLocations";
 import 'mapbox-gl/dist/mapbox-gl.css';
-import React, {useState} from "react";
+import React, {useState, useRef, useEffect} from "react";
 import { makeVar} from '@apollo/client';
 import {IconLayer} from '@deck.gl/layers';
 import {MapView} from '@deck.gl/core';
 import DeckGL from '@deck.gl/react';
 import { AIR_QUALITY_INDICATOR_COLORS } from "common/constants";
 import Tooltip from "../tooltip/tooltip";
+import ControlPanel from './controlPanel';
+import {GeolocateControl} from 'react-map-gl';
 
 // TODO: figure out a safer way to store this if necessary.
 const token = process.env.REACT_APP_MAPBOX_TOKEN;
 
 const MAP_VIEW = new MapView({repeat: true});
 
-const INITIAL_VIEW_STATE = {
-  longitude: -79.39,
-  latitude: 43.66,
-  zoom: 12,
-};
 
 const Map = () => {
-  const mapRef = React.useRef(null);
   const mapLocations = makeVar([]);
   // TODO: Use the map bounds to retrieve only a subset of markers
-  // eslint-disable-next-line
-  const [mapBounds, setMapBounds] = useState({});
+  const mapRef = useRef(null);
+  const geoControlRef = useRef(null);
+
+  useEffect(() => {
+    geoLocate();
+  }, [geoControlRef]);
+
+  const geoLocate = () => {
+    if (geoControlRef.current && mapRef.current) {
+      geoControlRef.current?.trigger();
+    }
+  }
+
+  const [viewState, setViewState] = useState({
+    longitude: -79.39,
+    latitude: 43.66,
+    zoom: 12});
+  
   const [hoverLocation, setHoverLocation] = useState(null);
 
   // Get the data within the bounds of the map.
@@ -36,14 +48,15 @@ const Map = () => {
   }
 
   // Update the map boundaries whenever the map view changes.
-  const onViewChange = () => {
-    if (mapRef.current === null) return;
-    const bounds = mapRef.current.getBounds();
-    setMapBounds({'lng_max': bounds.getEast(), 
-                  'lng_min': bounds.getWest(),
-                  'lat_max': bounds.getNorth(),
-                  'lat_min': bounds.getSouth()});
-  };
+  const onViewChange = (view) => {
+    if (view.coords) {
+      setViewState((oldViewState) => ({
+        ...oldViewState,
+        'longitude': view.coords.longitude,
+        'latitude': view.coords.latitude,
+      }));
+    }
+  }
 
   const layer = new IconLayer({
     data: mapLocations(),
@@ -64,17 +77,16 @@ const Map = () => {
     },
   });
   const onclick = (e) => {
-    console.log("onclick");
+    console.log("this isn't doing anything.");
     console.log(e);
   }
 
   return (
-    <div>
-    <Tooltip {...hoverLocation} />
+    <>
     <DeckGL
       layers={[layer]}
       views={MAP_VIEW}
-      initialViewState={INITIAL_VIEW_STATE}
+      initialViewState={viewState}
       controller={{dragRotate: false}}
       onViewStateChange={onViewChange}
       onClick={onclick}
@@ -85,13 +97,18 @@ const Map = () => {
           setHoverLocation({show: false, location: null, x: null, y: null});
         }}}
     >
+
       <Mapbox reuseMaps
             ref={mapRef}
+            onLoad={geoLocate}
             mapboxAccessToken={token}
-            mapStyle="mapbox://styles/mapbox/streets-v11"
-          />
+            mapStyle="mapbox://styles/mapbox/streets-v11">
+                  <GeolocateControl onGeolocate={something => onViewChange(something)} ref={geoControlRef} />
+            </Mapbox>
     </DeckGL>
-    </div>
+    <ControlPanel />
+    <Tooltip {...hoverLocation} />
+    </>
   )
 }
 

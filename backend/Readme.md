@@ -20,10 +20,10 @@ While working on the GraphQL implementation, it is recommended to have the devel
 
 To run the development server
 
-1. Have a PostGres listening on the DATABASE_PORT defined in .env
+1. Have a Postgres instance listening on the DATABASE_PORT defined in .env
     - You can use the docker-compose app from "Getting Started"
-      - you will be able to connect to the same PostGres and use PGAdmin as needed)
+      - you will be able to connect to the container's Postgres instance and use PGAdmin as needed)
       - if you choose the option, set an environment variable PLAYGROUND_PORT in your shell, to avoid colliding with the cleanair-be container's mapped port
-    - Or, run your own PostGres however you choose
+    - Or, run your own Postgres instance however you choose
 
 2. `npm run dev`

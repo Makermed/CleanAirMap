@@ -122,7 +122,7 @@ export interface NexusGenArgTypes {
       postcode?: string | null; // String
       region: string; // String!
       street: string; // String!
-      type?: NexusGenEnums['LocationEnum'] | null; // LocationEnum
+      type: NexusGenEnums['LocationEnum']; // LocationEnum!
     }
   }
 }

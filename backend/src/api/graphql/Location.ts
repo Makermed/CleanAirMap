@@ -86,7 +86,7 @@ export const LocationMutation = extendType({
                 lat: nonNull(floatArg()),
                 long: nonNull(floatArg()),
                 description: stringArg(),
-                type: arg({ type: 'LocationEnum' })
+                type: nonNull(arg({ type: 'LocationEnum' }))
             },
             async resolve(_root, args, ctx) {
                 const location  = {

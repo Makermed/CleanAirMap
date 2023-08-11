@@ -56,7 +56,7 @@ enum LocationEnum {
 }
 
 type Mutation {
-  createLocation(country: String!, description: String, district: String, lat: Float!, locality: String, long: Float!, name: String!, place: String!, postcode: String, region: String!, street: String!, type: LocationEnum): Location
+  createLocation(country: String!, description: String, district: String, lat: Float!, locality: String, long: Float!, name: String!, place: String!, postcode: String, region: String!, street: String!, type: LocationEnum!): Location
 }
 
 type Query {

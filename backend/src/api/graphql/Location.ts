@@ -39,7 +39,7 @@ export const Location = objectType({
     name: 'Location',
     sourceType: 'LocationModel',
     definition(t) {
-        t.int('id'),
+        t.int('locationId'),
         t.string('name'),
         t.field('type', { type: 'LocationEnum' })
         t.string('street'),

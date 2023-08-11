@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Location {
-  id           Int       @id @default(autoincrement())
+  locationId   Int       @id @default(autoincrement())
   name         String
   type         Int
   street       String

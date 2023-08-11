@@ -63,9 +63,9 @@ export interface NexusGenFieldTypes {
     created_id: number | null; // Int
     description: string | null; // String
     district: string | null; // String
-    id: number | null; // Int
     latitude: number | null; // Float
     locality: string | null; // String
+    locationId: number | null; // Int
     longitude: number | null; // Float
     name: string | null; // String
     place: string | null; // String
@@ -89,9 +89,9 @@ export interface NexusGenFieldTypeNames {
     created_id: 'Int'
     description: 'String'
     district: 'String'
-    id: 'Int'
     latitude: 'Float'
     locality: 'String'
+    locationId: 'Int'
     longitude: 'Float'
     name: 'String'
     place: 'String'

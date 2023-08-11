@@ -13,9 +13,9 @@ type Location {
   created_id: Int
   description: String
   district: String
-  id: Int
   latitude: Float
   locality: String
+  locationId: Int
   longitude: Float
   name: String
   place: String

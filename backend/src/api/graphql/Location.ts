@@ -1,6 +1,6 @@
 import { arg, floatArg, objectType, enumType } from 'nexus'
 import { extendType } from 'nexus'
-import { stringArg, nonNull } from 'nexus'
+import { stringArg, nonNull, intArg } from 'nexus'
 
 export const LocationEnum = enumType({
     name: "LocationEnum",
@@ -62,8 +62,16 @@ export const LocationQuery = extendType({
     definition(t) {
         t.list.field('locations', {
             type: 'Location',
-            resolve(_root, _args, ctx) {
+            args: { locationId: intArg()},
+            async resolve(_root, _args, ctx) {
+                if (_args == null || _args.locationId == null) {
                 return ctx.db.locationDAO.getMany();
+            }
+                if (_args != null && _args.locationId != null) {
+                    const single = await ctx.db.locationDAO.getById(_args.locationId);
+                    return [ single ] ;
+                }
+                return null;
             }
         })
     },

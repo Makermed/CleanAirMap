@@ -60,5 +60,5 @@ type Mutation {
 }
 
 type Query {
-  locations: [Location]
+  locations(locationId: Int): [Location]
 }

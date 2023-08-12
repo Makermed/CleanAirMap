@@ -125,6 +125,11 @@ export interface NexusGenArgTypes {
       type: NexusGenEnums['LocationEnum']; // LocationEnum!
     }
   }
+  Query: {
+    locations: { // args
+      locationId?: number | null; // Int
+    }
+  }
 }
 
 export interface NexusGenAbstractTypeMembers {

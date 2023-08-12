@@ -1,7 +1,7 @@
-import { Location } from "@prisma/client"
+import { LocationModel } from "./dataTypes";
 export interface ILocation {
-    getById(id: number) : Promise<Location | null>;
-    getMany(maxResults? : number) : Promise<Location[]>;
+    getById(id: number) : Promise<LocationModel | null>;
+    getMany(maxResults? : number) : Promise<LocationModel[]>;
 
-    create(reading: Location) : Promise<Location | null>;
+    create(reading: LocationModel) : Promise<LocationModel | null>;
 }

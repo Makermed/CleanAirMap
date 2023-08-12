@@ -5,19 +5,19 @@ export { Room } from "@prisma/client"
 
 // TODO: figure out if this can be referenced from Prisma types
 export interface LocationModel {
-    id: number
-    name: String
+    locationId: number
+    name: string
     type: number
-    street: String
-    locality: String | null
-    place: String
-    district: String | null
-    region: String
-    postcode: String | null
-    country: String
+    street: string
+    locality: string | null
+    place: string
+    district: string | null
+    region: string
+    postcode: string | null
+    country: string
     latitude: number
     longitude: number
-    description: String | null
+    description: string | null
     avgCo2: number | null
     created_id: number
     created_at: Date

@@ -1,19 +1,20 @@
-import { PrismaClient, Location } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { ILocation } from '../../interfaces'
+import { LocationModel } from '../../dataTypes'
 
 export class LocationDAO implements ILocation {
     client = new PrismaClient();
 
-    getById(id: number) : Promise<Location | null> {
-        return this.client.location.findUnique({ where: { id: id}});
+    getById(id: number) : Promise<LocationModel | null> {
+        return this.client.location.findUnique({ where: { locationId: id}});
     };
 
-    getMany(maxResults? : number) : Promise<Location[]>
+    getMany(maxResults? : number) : Promise<LocationModel[]>
     {
         return this.client.location.findMany();
     };
 
-    create(location: Location) : Promise<Location | null>
+    create(location: LocationModel) : Promise<LocationModel | null>
     {
         return this.client.location.create ( { data: location } );
     };

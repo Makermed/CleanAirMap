@@ -11,26 +11,26 @@ datasource db {
 }
 
 model Location {
-  locationId   Int       @id @default(autoincrement())
-  name         String
-  type         Int
-  street       String
-  locality     String?
-  place        String
-  district     String?
-  region       String
-  postcode     String?
-  country      String
-  latitude     Float
-  longitude    Float
-  description  String?
-  avgCo2       Float?
-  created_id   Int
-  created_at   DateTime  @default(now())
+  locationId  Int      @id @default(autoincrement())
+  name        String
+  type        Int
+  street      String
+  locality    String?
+  place       String
+  district    String?
+  region      String
+  postcode    String?
+  country     String
+  latitude    Float
+  longitude   Float
+  description String?
+  avgCo2      Float?
+  created_id  Int
+  created_at  DateTime @default(now())
 }
 
 model Room {
-  id           Int       @id @default(autoincrement())
+  roomId       Int       @id @default(autoincrement())
   locationId   Int
   name         String
   readings     Reading[]
@@ -45,7 +45,7 @@ model Reading {
   unit         String
   notes        String?
   locationId   Int
-  readingRoom  Room?    @relation(fields: [roomId], references: [id])
+  readingRoom  Room?    @relation(fields: [roomId], references: [roomId])
   roomId       Int?
   created_id   Int
   created_user User     @relation(fields: [created_id], references: [id])
@@ -53,7 +53,7 @@ model Reading {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  rooms     Room[]
-  readings  Reading[]
+  id       Int       @id @default(autoincrement())
+  rooms    Room[]
+  readings Reading[]
 }

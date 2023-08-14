@@ -22,3 +22,12 @@ export interface LocationModel {
     created_id: number
     created_at: Date
 }
+
+export interface RoomModel {
+    roomId: number
+    locationId: number
+    name: string
+    created_id: number
+    created_at: Date
+}
+}

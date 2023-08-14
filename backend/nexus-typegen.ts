@@ -44,6 +44,7 @@ export interface NexusGenObjects {
   Location: LocationModel;
   Mutation: {};
   Query: {};
+  Room: RoomModel;
 }
 
 export interface NexusGenInterfaces {
@@ -76,9 +77,18 @@ export interface NexusGenFieldTypes {
   }
   Mutation: { // field return type
     createLocation: NexusGenRootTypes['Location'] | null; // Location
+    createRoom: NexusGenRootTypes['Room'] | null; // Room
   }
   Query: { // field return type
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    rooms: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
+  }
+  Room: { // field return type
+    created_at: NexusGenScalars['DateTime'] | null; // DateTime
+    created_id: number | null; // Int
+    locationId: number | null; // Int
+    name: string | null; // String
+    roomId: number | null; // Int
   }
 }
 
@@ -102,9 +112,18 @@ export interface NexusGenFieldTypeNames {
   }
   Mutation: { // field return type name
     createLocation: 'Location'
+    createRoom: 'Room'
   }
   Query: { // field return type name
     locations: 'Location'
+    rooms: 'Room'
+  }
+  Room: { // field return type name
+    created_at: 'DateTime'
+    created_id: 'Int'
+    locationId: 'Int'
+    name: 'String'
+    roomId: 'Int'
   }
 }
 
@@ -124,10 +143,17 @@ export interface NexusGenArgTypes {
       street: string; // String!
       type: NexusGenEnums['LocationEnum']; // LocationEnum!
     }
+    createRoom: { // args
+      locationId: number; // Int!
+      name: string; // String!
+    }
   }
   Query: {
     locations: { // args
       locationId?: number | null; // Int
+    }
+    rooms: { // args
+      roomId?: number | null; // Int
     }
   }
 }

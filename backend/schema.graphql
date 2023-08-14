@@ -57,8 +57,18 @@ enum LocationEnum {
 
 type Mutation {
   createLocation(country: String!, description: String, district: String, lat: Float!, locality: String, long: Float!, name: String!, place: String!, postcode: String, region: String!, street: String!, type: LocationEnum!): Location
+  createRoom(locationId: Int!, name: String!): Room
 }
 
 type Query {
   locations(locationId: Int): [Location]
+  rooms(roomId: Int): [Room]
+}
+
+type Room {
+  created_at: DateTime
+  created_id: Int
+  locationId: Int
+  name: String
+  roomId: Int
 }

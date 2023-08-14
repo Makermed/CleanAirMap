@@ -7,3 +7,4 @@ export const GQLDateTime = decorateType(GraphQLDateTime, {
 } )
 
 export * from './Location'
+export * from './Room'

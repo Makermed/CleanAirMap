@@ -72,6 +72,7 @@ export interface NexusGenFieldTypes {
     place: string | null; // String
     postcode: string | null; // String
     region: string | null; // String
+    rooms: NexusGenRootTypes['Room'][] | null; // [Room!]
     street: string | null; // String
     type: NexusGenEnums['LocationEnum'] | null; // LocationEnum
   }
@@ -107,6 +108,7 @@ export interface NexusGenFieldTypeNames {
     place: 'String'
     postcode: 'String'
     region: 'String'
+    rooms: 'Room'
     street: 'String'
     type: 'LocationEnum'
   }

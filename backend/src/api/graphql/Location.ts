@@ -52,6 +52,12 @@ export const Location = objectType({
         t.float('longitude'),
         t.string('description'),
         t.float('avgCo2'),
+        t.list.nonNull.field('rooms', {
+            type: 'Room',
+            resolve: (parent, _, ctx) => {
+                return ctx.db.locationDAO.getRooms(parent.locationId);
+            }
+        })
         t.int('created_id'),
         t.datetime('created_at')
     },

@@ -21,6 +21,7 @@ type Location {
   place: String
   postcode: String
   region: String
+  rooms: [Room!]
   street: String
   type: LocationEnum
 }

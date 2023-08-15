@@ -3,8 +3,12 @@ import { IRoom } from '../../interfaces'
 import { RoomModel, LocationModel } from '../../dataTypes'
 
 export class RoomDAO implements IRoom {
-    client = new PrismaClient();
+    client : PrismaClient;
 
+    constructor(client : PrismaClient) {
+        this.client = client;
+    }
+    
     getById(id: number) : Promise<RoomModel | null> {
         return this.client.room.findUnique({ where: { roomId: id}});
     };

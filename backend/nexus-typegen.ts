@@ -1,4 +1,4 @@
-import { LocationModel } from "./src/dataAccess/dataTypes" 
+import { LocationModel, RoomModel } from "./src/dataAccess/dataTypes" 
 
 import type { Context } from "./src/api/context"
 import type { core } from "nexus"

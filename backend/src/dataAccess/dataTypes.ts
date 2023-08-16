@@ -1,8 +1,3 @@
-export { User } from "@prisma/client"
-export { Reading } from "@prisma/client"
-export { Location } from "@prisma/client"
-export { Room } from "@prisma/client"
-
 // TODO: figure out if this can be referenced from Prisma types
 export interface LocationModel {
     locationId: number
@@ -29,5 +24,4 @@ export interface RoomModel {
     name: string
     created_id: number
     created_at: Date
-}
 }

@@ -7,10 +7,13 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import Slider from "@mui/material/Slider";
+import { useControl } from 'react-map-gl';
+import { BoxZoomHandler } from 'mapbox-gl';
 
-const ControlPanel = ({position}) => {
+
+const ControlPanel = ({zoom, position}) => {
     return (
-      <Box sx={{ position: 'absolute', top: 20, right: 20, zIndex: 1, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
+      <Box sx={{ position: 'absolute', top: 20, left: 20, zIndex: 1, backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
       <React.Fragment>
         <CardContent>
           <Avatar src="/broken-image.jpg" />

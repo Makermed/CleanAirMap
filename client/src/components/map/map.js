@@ -1,7 +1,7 @@
 import Mapbox from 'react-map-gl';
 import {useGetLocations} from "./getMapLocations";
 import 'mapbox-gl/dist/mapbox-gl.css';
-import React, {useState, useRef, useEffect} from "react";
+import React, {useState, useRef, useEffect, useCallback} from "react";
 import { makeVar} from '@apollo/client';
 import {IconLayer} from '@deck.gl/layers';
 import {MapView} from '@deck.gl/core';
@@ -10,6 +10,8 @@ import { AIR_QUALITY_INDICATOR_COLORS } from "common/constants";
 import Tooltip from "../tooltip/tooltip";
 import ControlPanel from './controlPanel';
 import {GeolocateControl} from 'react-map-gl';
+import {NavigationWidget} from '@deck.gl/react'
+import {MapProvider, NavigationControl} from 'react-map-gl';
 
 // TODO: figure out a safer way to store this if necessary.
 const token = process.env.REACT_APP_MAPBOX_TOKEN;
@@ -32,6 +34,30 @@ const Map = () => {
       geoControlRef.current?.trigger();
     }
   }
+
+  const [settings, setSettings] = useState({
+    scrollZoom: true,
+    boxZoom: true,
+    dragRotate: true,
+    dragPan: true,
+    keyboard: true,
+    doubleClickZoom: true,
+    touchZoomRotate: true,
+    touchPitch: true,
+    minZoom: 0,
+    maxZoom: 20,
+    minPitch: 0,
+    maxPitch: 85
+  });
+
+  const updateSettings = useCallback(
+    (name, value) =>
+      setSettings(s => ({
+        ...s,
+        [name]: value
+      })),
+    []
+  );
 
   const [viewState, setViewState] = useState({
     longitude: -79.39,
@@ -84,6 +110,7 @@ const Map = () => {
   return (
     <>
     <DeckGL
+      ContextProvider={MapProvider.ContextProvider}
       layers={[layer]}
       views={MAP_VIEW}
       initialViewState={viewState}
@@ -97,16 +124,18 @@ const Map = () => {
           setHoverLocation({show: false, location: null, x: null, y: null});
         }}}
     >
-
+ <NavigationControl />
       <Mapbox reuseMaps
             ref={mapRef}
             onLoad={geoLocate}
             mapboxAccessToken={token}
             mapStyle="mapbox://styles/mapbox/streets-v11">
+                 
                   <GeolocateControl onGeolocate={something => onViewChange(something)} ref={geoControlRef} />
             </Mapbox>
     </DeckGL>
-    <ControlPanel />
+
+    <ControlPanel settings={settings} onChange={updateSettings}/>
     <Tooltip {...hoverLocation} />
     </>
   )

@@ -1,8 +1,19 @@
-import { createTheme } from '@mui/material/styles';
+import { extendTheme } from '@mui/joy/styles';
 
-import light from './light';
+const air_quality_palette = {
+        bad: 'red',
+        moderate: 'orange',
+        good: 'green',
+        unknown: 'grey',
+};
 
-export default createTheme({
-  //TODO: add dark later, this is just a placeholder for now.
-  light,
+export default extendTheme({
+    colorSchemes: {
+        light: {
+          air_quality_palette: air_quality_palette,
+        },
+        dark: {
+          air_quality_palette: air_quality_palette,
+        }
+    }
 });

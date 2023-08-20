@@ -1,144 +1,85 @@
-import Mapbox from 'react-map-gl';
-import {useGetLocations} from "./getMapLocations";
+import { CollisionFilterExtension } from '@deck.gl/extensions';
+import { GeolocateControl, Map, NavigationControl, useControl } from 'react-map-gl';
+import { IconLayer } from '@deck.gl/layers';
+import { MapboxOverlay } from '@deck.gl/mapbox';
+import { getMapMarker } from "./utils";
+import { useEffect, useRef, useState } from "react";
+import { useListLocations } from "./data";
+import { useTheme } from '@mui/material/styles';
+import ControlPanel from './components/controlPanel';
+import Tooltip from "./components/tooltip";
 import 'mapbox-gl/dist/mapbox-gl.css';
-import React, {useState, useRef, useEffect, useCallback} from "react";
-import { makeVar} from '@apollo/client';
-import {IconLayer} from '@deck.gl/layers';
-import {MapView} from '@deck.gl/core';
-import DeckGL from '@deck.gl/react';
-import { AIR_QUALITY_INDICATOR_COLORS } from "common/constants";
-import Tooltip from "../tooltip/tooltip";
-import ControlPanel from './controlPanel';
-import {GeolocateControl} from 'react-map-gl';
-import {NavigationWidget} from '@deck.gl/react'
-import {MapProvider, NavigationControl} from 'react-map-gl';
 
 // TODO: figure out a safer way to store this if necessary.
 const token = process.env.REACT_APP_MAPBOX_TOKEN;
 
-const MAP_VIEW = new MapView({repeat: true});
+function DeckGLOverlay(props) {
+  const deck = useControl(() => new MapboxOverlay(props));
+  deck?.setProps(props);
+  return null;
+};
 
+const CleanAirMap = () => {
 
-const Map = () => {
-  const mapLocations = makeVar([]);
-  // TODO: Use the map bounds to retrieve only a subset of markers
+  const theme = useTheme();
   const mapRef = useRef(null);
   const geoControlRef = useRef(null);
 
-  useEffect(() => {
-    geoLocate();
-  }, [geoControlRef]);
-
-  const geoLocate = () => {
-    if (geoControlRef.current && mapRef.current) {
-      geoControlRef.current?.trigger();
-    }
-  }
-
-  const [settings, setSettings] = useState({
-    scrollZoom: true,
-    boxZoom: true,
-    dragRotate: true,
-    dragPan: true,
-    keyboard: true,
-    doubleClickZoom: true,
-    touchZoomRotate: true,
-    touchPitch: true,
-    minZoom: 0,
-    maxZoom: 20,
-    minPitch: 0,
-    maxPitch: 85
-  });
-
-  const updateSettings = useCallback(
-    (name, value) =>
-      setSettings(s => ({
-        ...s,
-        [name]: value
-      })),
-    []
-  );
-
+  const [tooltip, setTooltip] = useState(null);
   const [viewState, setViewState] = useState({
     longitude: -79.39,
     latitude: 43.66,
     zoom: 12});
-  
-  const [hoverLocation, setHoverLocation] = useState(null);
 
-  // Get the data within the bounds of the map.
-  const { data } = useGetLocations();
-  if (data && data.locations) {
-    // TODO: add error handling here.
-    mapLocations(data.locations);
-  }
+  const { data } = useListLocations();
 
-  // Update the map boundaries whenever the map view changes.
-  const onViewChange = (view) => {
-    if (view.coords) {
-      setViewState((oldViewState) => ({
-        ...oldViewState,
-        'longitude': view.coords.longitude,
-        'latitude': view.coords.latitude,
-      }));
+  useEffect(() => {
+    if (geoControlRef.current && mapRef.current) {
+      geoControlRef.current?.trigger();
     }
-  }
+  }, [geoControlRef]);
 
-  const layer = new IconLayer({
-    data: mapLocations(),
+  const iconLayer = new IconLayer({
+    id: 'icon',
+    onHover: location => setTooltip(<Tooltip info={location} />),
+    data: data?.locations,
     pickable: true,
     getPosition: location => {
       return [location.longitude, location.latitude];
     },
-    iconAtlas: '/static/images/map/marker.svg',
-    iconMapping: {marker: {x: 0, y: 0, width: 139, height: 165, mask: true}},
-    id: 'icon',
-    getIcon: d => 'marker',
-    sizeUnits: 'meters',
-    sizeScale: 2000,
-    sizeMinPixels: 6,
-    sizeMaxPixels: 20,
-    getColor: location => {
-      return AIR_QUALITY_INDICATOR_COLORS[location.avgAirQualityRating];
+    getIcon: location => ({
+      url: getMapMarker(location, theme),
+      width: 30,
+      height: 40
+    }),
+    sizeScale: 40,
+    sizeUnits: 'pixels',
+    collisionTestProps: { sizeScale: 70},
+    extensions: [new CollisionFilterExtension()],
+    getCollisionPriority: location => {
+      // Prioritize collisions based on the number of readings.
+      return location.readings_aggregate.aggregate.count;
     },
   });
-  const onclick = (e) => {
-    console.log("this isn't doing anything.");
-    console.log(e);
-  }
+
 
   return (
     <>
-    <DeckGL
-      ContextProvider={MapProvider.ContextProvider}
-      layers={[layer]}
-      views={MAP_VIEW}
+      {tooltip}
+      <ControlPanel />
+      <Map
+      reuseMaps
+      ref={mapRef}
       initialViewState={viewState}
-      controller={{dragRotate: false}}
-      onViewStateChange={onViewChange}
-      onClick={onclick}
-      onHover={({object, x, y}) => {
-        if (object) {
-          setHoverLocation({show: true, location: object, x: x, y: y});
-        } else {
-          setHoverLocation({show: false, location: null, x: null, y: null});
-        }}}
-    >
- <NavigationControl />
-      <Mapbox reuseMaps
-            ref={mapRef}
-            onLoad={geoLocate}
-            mapboxAccessToken={token}
-            mapStyle="mapbox://styles/mapbox/streets-v11">
-                 
-                  <GeolocateControl onGeolocate={something => onViewChange(something)} ref={geoControlRef} />
-            </Mapbox>
-    </DeckGL>
-
-    <ControlPanel settings={settings} onChange={updateSettings}/>
-    <Tooltip {...hoverLocation} />
+      onViewportChange={setViewState}
+      mapStyle="mapbox://styles/mapbox/streets-v11"
+      mapboxAccessToken={token}>
+        <NavigationControl />
+        <GeolocateControl ref={geoControlRef} /> 
+        <DeckGLOverlay layers={[iconLayer]} />
+    </Map>
     </>
-  )
+  );
 }
 
-export default Map;
+export default CleanAirMap;

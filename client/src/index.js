@@ -1,24 +1,26 @@
+import { ApolloProvider } from '@apollo/client';
+import { client } from 'storage/config';
+import { CssBaseline, Sheet} from '@mui/joy';
+import { CssVarsProvider } from '@mui/joy/styles';
+import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ApolloProvider } from '@apollo/client';
-import {client} from 'storage/config';
-import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from 'style/theme';
-import './index.css';
+import theme from 'style/theme'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 // TODO: structure this and app.js so essential stuff is in app and
 // stuff that can be swapped out is in here.
 root.render(
     <ApolloProvider client={client}>
-      <CssBaseline enableColorScheme />
       <React.StrictMode>
-        <ThemeProvider theme={theme}>
-          <App />
-        </ThemeProvider>
+        <CssVarsProvider theme={theme}>
+          <CssBaseline />
+            <Sheet>
+              <App />
+            </Sheet>
+        </CssVarsProvider>
       </React.StrictMode>
     </ApolloProvider>
 );

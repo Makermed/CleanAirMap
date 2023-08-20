@@ -1,6 +1,5 @@
-import React, { useRef } from 'react';
-import Map from "components/map/map";
-import {MapProvider} from 'react-map-gl';
+import { Map } from "components/map";
+import { MapProvider } from 'react-map-gl';
 
 const MapView = () => {
   return (

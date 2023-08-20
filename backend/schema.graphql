@@ -13,12 +13,11 @@ type Location {
   created_id: Int
   description: String
   district: String
-  latitude: Float
   locality: String
   locationId: Int
-  longitude: Float
   name: String
   place: String
+  position: Position
   postcode: String
   region: String
   rooms: [Room!]
@@ -60,11 +59,10 @@ input LocationInputType {
   country: String!
   description: String
   district: String
-  latitude: Float!
   locality: String
-  longitude: Float!
   name: String!
   place: String!
+  position: Position!
   postcode: String
   region: String!
   street: String!
@@ -75,6 +73,9 @@ type Mutation {
   createLocation(data: LocationInputType!): Location
   createRoom(locationId: Int!, name: String!): Room
 }
+
+"""A GeoJSON Position"""
+scalar Position
 
 type Query {
   locations(locationId: Int): [Location]

@@ -1,6 +1,7 @@
 import { arg, floatArg, objectType, enumType, inputObjectType } from 'nexus'
 import { extendType } from 'nexus'
 import { stringArg, nonNull, intArg } from 'nexus'
+import { Position } from './GraphQLPosition'
 
 export const LocationEnum = enumType({
     name: "LocationEnum",
@@ -48,8 +49,12 @@ export const Location = objectType({
         t.string('district'),
         t.string('region'),
         t.string('postcode'),
-        t.float('latitude'),
-        t.float('longitude'),
+        t.field('position', {
+            type: 'Position',
+            resolve: (locationModel) => {
+                return new Position(locationModel.latitude, locationModel.longitude)
+            }
+            })
         t.string('description'),
         t.float('avgCo2'),
         t.list.nonNull.field('rooms', {
@@ -74,8 +79,7 @@ export const LocationInputType = inputObjectType({
         t.string('district'),
         t.nonNull.string('region'),
         t.string('postcode'),
-        t.nonNull.float('latitude'),
-        t.nonNull.float('longitude'),
+        t.nonNull.field('position', { type: 'Position' }),
         t.nonNull.string('country'),
         t.string('description')
     },
@@ -89,8 +93,8 @@ export const LocationQuery = extendType({
             args: { locationId: intArg()},
             async resolve(_root, _args, ctx) {
                 if (_args == null || _args.locationId == null) {
-                return ctx.db.locationDAO.getMany();
-            }
+                    return ctx.db.locationDAO.getMany();
+                }
                 if (_args != null && _args.locationId != null) {
                     const single = await ctx.db.locationDAO.getById(_args.locationId);
                     return [ single ] ;
@@ -118,8 +122,8 @@ export const LocationMutation = extendType({
                     postcode: args.data.postcode,
                     country: args.data.country,
                     type: args.data.type,
-                    latitude: args.data.latitude,
-                    longitude: args.data.longitude,
+                    latitude: args.data.position.latitude,
+                    longitude: args.data.position.longitude,
                     description: args.data.description,
                     avgCo2: null,
                     created_id: 1

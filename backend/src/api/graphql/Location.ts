@@ -1,4 +1,4 @@
-import { arg, floatArg, objectType, enumType } from 'nexus'
+import { arg, floatArg, objectType, enumType, inputObjectType } from 'nexus'
 import { extendType } from 'nexus'
 import { stringArg, nonNull, intArg } from 'nexus'
 
@@ -63,6 +63,24 @@ export const Location = objectType({
     },
 })
 
+export const LocationInputType = inputObjectType({
+    name: 'LocationInputType',
+    definition(t) {
+        t.nonNull.string('name'),
+        t.nonNull.field('type', { type: 'LocationEnum' })
+        t.nonNull.string('street'),
+        t.string('locality'),
+        t.nonNull.string('place'),
+        t.string('district'),
+        t.nonNull.string('region'),
+        t.string('postcode'),
+        t.nonNull.float('latitude'),
+        t.nonNull.float('longitude'),
+        t.nonNull.string('country'),
+        t.string('description')
+    },
+})
+
 export const LocationQuery = extendType({
     type: 'Query',
     definition(t) {
@@ -88,34 +106,21 @@ export const LocationMutation = extendType({
     definition(t) {
         t.field('createLocation', {
             type: 'Location',
-            args: {
-                name: nonNull(stringArg()),
-                street: nonNull(stringArg()),
-                locality: stringArg(),
-                place: nonNull(stringArg()),
-                district: stringArg(),
-                region: nonNull(stringArg()),
-                postcode: stringArg(),
-                country: nonNull(stringArg()),
-                lat: nonNull(floatArg()),
-                long: nonNull(floatArg()),
-                description: stringArg(),
-                type: nonNull(arg({ type: 'LocationEnum' }))
-            },
+            args: { data: nonNull(LocationInputType) },
             async resolve(_root, args, ctx) {
                 const location  = {
-                    name: args.name,
-                    street: args.street,
-                    locality: args.locality,
-                    place: args.place,
-                    district: args.district,
-                    region: args.region,
-                    postcode: args.postcode,
-                    country: args.country,
-                    type: args.type,
-                    latitude: args.lat,
-                    longitude: args.long,
-                    description: args.description,
+                    name: args.data.name,
+                    street: args.data.street,
+                    locality: args.data.locality,
+                    place: args.data.place,
+                    district: args.data.district,
+                    region: args.data.region,
+                    postcode: args.data.postcode,
+                    country: args.data.country,
+                    type: args.data.type,
+                    latitude: args.data.latitude,
+                    longitude: args.data.longitude,
+                    description: args.data.description,
                     avgCo2: null,
                     created_id: 1
                 }

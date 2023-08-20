@@ -56,8 +56,23 @@ enum LocationEnum {
   WORSHIP
 }
 
+input LocationInputType {
+  country: String!
+  description: String
+  district: String
+  latitude: Float!
+  locality: String
+  longitude: Float!
+  name: String!
+  place: String!
+  postcode: String
+  region: String!
+  street: String!
+  type: LocationEnum!
+}
+
 type Mutation {
-  createLocation(country: String!, description: String, district: String, lat: Float!, locality: String, long: Float!, name: String!, place: String!, postcode: String, region: String!, street: String!, type: LocationEnum!): Location
+  createLocation(data: LocationInputType!): Location
   createRoom(locationId: Int!, name: String!): Room
 }
 

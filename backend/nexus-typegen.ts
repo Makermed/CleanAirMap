@@ -25,6 +25,20 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  LocationInputType: { // input type
+    country: string; // String!
+    description?: string | null; // String
+    district?: string | null; // String
+    latitude: number; // Float!
+    locality?: string | null; // String
+    longitude: number; // Float!
+    name: string; // String!
+    place: string; // String!
+    postcode?: string | null; // String
+    region: string; // String!
+    street: string; // String!
+    type: NexusGenEnums['LocationEnum']; // LocationEnum!
+  }
 }
 
 export interface NexusGenEnums {
@@ -132,18 +146,7 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Mutation: {
     createLocation: { // args
-      country: string; // String!
-      description?: string | null; // String
-      district?: string | null; // String
-      lat: number; // Float!
-      locality?: string | null; // String
-      long: number; // Float!
-      name: string; // String!
-      place: string; // String!
-      postcode?: string | null; // String
-      region: string; // String!
-      street: string; // String!
-      type: NexusGenEnums['LocationEnum']; // LocationEnum!
+      data: NexusGenInputs['LocationInputType']; // LocationInputType!
     }
     createRoom: { // args
       locationId: number; // Int!
@@ -168,7 +171,7 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = keyof NexusGenEnums;
 

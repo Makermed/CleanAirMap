@@ -36,7 +36,6 @@ services:
       - postgres
     ports:
       - "${PLAYGROUND_PORT}:4000"
-      - "${API_PORT}:3000"
     restart: always
 
 volumes:

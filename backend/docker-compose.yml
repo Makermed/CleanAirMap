@@ -8,6 +8,8 @@ services:
     environment:
       POSTGRES_USER: "${DATABASE_USER}"
       POSTGRES_PASSWORD: "${DATABASE_PASSWORD}"
+    volumes:
+      - db-data:/var/lib/postgresql/data
     restart: unless-stopped
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
@@ -36,3 +38,7 @@ services:
       - "${PLAYGROUND_PORT}:4000"
       - "${API_PORT}:3000"
     restart: always
+
+volumes:
+  db-data:
+    name: "CleanAirMap-data"

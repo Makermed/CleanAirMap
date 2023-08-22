@@ -1,6 +1,7 @@
-import { arg, floatArg, objectType, enumType } from 'nexus'
+import { arg, floatArg, objectType, enumType, inputObjectType } from 'nexus'
 import { extendType } from 'nexus'
 import { stringArg, nonNull, intArg } from 'nexus'
+import { Position } from './GraphQLPosition'
 
 export const LocationEnum = enumType({
     name: "LocationEnum",
@@ -48,8 +49,12 @@ export const Location = objectType({
         t.string('district'),
         t.string('region'),
         t.string('postcode'),
-        t.float('latitude'),
-        t.float('longitude'),
+        t.field('position', {
+            type: 'Position',
+            resolve: (locationModel) => {
+                return new Position(locationModel.latitude, locationModel.longitude)
+            }
+            })
         t.string('description'),
         t.float('avgCo2'),
         t.list.nonNull.field('rooms', {
@@ -63,6 +68,23 @@ export const Location = objectType({
     },
 })
 
+export const LocationInputType = inputObjectType({
+    name: 'LocationInputType',
+    definition(t) {
+        t.nonNull.string('name'),
+        t.nonNull.field('type', { type: 'LocationEnum' })
+        t.nonNull.string('street'),
+        t.string('locality'),
+        t.nonNull.string('place'),
+        t.string('district'),
+        t.nonNull.string('region'),
+        t.string('postcode'),
+        t.nonNull.field('position', { type: 'Position' }),
+        t.nonNull.string('country'),
+        t.string('description')
+    },
+})
+
 export const LocationQuery = extendType({
     type: 'Query',
     definition(t) {
@@ -71,8 +93,8 @@ export const LocationQuery = extendType({
             args: { locationId: intArg()},
             async resolve(_root, _args, ctx) {
                 if (_args == null || _args.locationId == null) {
-                return ctx.db.locationDAO.getMany();
-            }
+                    return ctx.db.locationDAO.getMany();
+                }
                 if (_args != null && _args.locationId != null) {
                     const single = await ctx.db.locationDAO.getById(_args.locationId);
                     return [ single ] ;
@@ -88,34 +110,21 @@ export const LocationMutation = extendType({
     definition(t) {
         t.field('createLocation', {
             type: 'Location',
-            args: {
-                name: nonNull(stringArg()),
-                street: nonNull(stringArg()),
-                locality: stringArg(),
-                place: nonNull(stringArg()),
-                district: stringArg(),
-                region: nonNull(stringArg()),
-                postcode: stringArg(),
-                country: nonNull(stringArg()),
-                lat: nonNull(floatArg()),
-                long: nonNull(floatArg()),
-                description: stringArg(),
-                type: nonNull(arg({ type: 'LocationEnum' }))
-            },
+            args: { data: nonNull(LocationInputType) },
             async resolve(_root, args, ctx) {
                 const location  = {
-                    name: args.name,
-                    street: args.street,
-                    locality: args.locality,
-                    place: args.place,
-                    district: args.district,
-                    region: args.region,
-                    postcode: args.postcode,
-                    country: args.country,
-                    type: args.type,
-                    latitude: args.lat,
-                    longitude: args.long,
-                    description: args.description,
+                    name: args.data.name,
+                    street: args.data.street,
+                    locality: args.data.locality,
+                    place: args.data.place,
+                    district: args.data.district,
+                    region: args.data.region,
+                    postcode: args.data.postcode,
+                    country: args.data.country,
+                    type: args.data.type,
+                    latitude: args.data.position.latitude,
+                    longitude: args.data.position.longitude,
+                    description: args.data.description,
                     avgCo2: null,
                     created_id: 1
                 }

@@ -8,6 +8,10 @@ declare global {
      * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
      */
     datetime<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "DateTime";
+    /**
+     * A GeoJSON Position
+     */
+    position<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Position";
   }
 }
 declare global {
@@ -16,6 +20,10 @@ declare global {
      * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
      */
     datetime<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "DateTime";
+    /**
+     * A GeoJSON Position
+     */
+    position<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Position";
   }
 }
 
@@ -25,6 +33,19 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  LocationInputType: { // input type
+    country: string; // String!
+    description?: string | null; // String
+    district?: string | null; // String
+    locality?: string | null; // String
+    name: string; // String!
+    place: string; // String!
+    position: NexusGenScalars['Position']; // Position!
+    postcode?: string | null; // String
+    region: string; // String!
+    street: string; // String!
+    type: NexusGenEnums['LocationEnum']; // LocationEnum!
+  }
 }
 
 export interface NexusGenEnums {
@@ -38,6 +59,7 @@ export interface NexusGenScalars {
   Boolean: boolean
   ID: string
   DateTime: Date
+  Position: any
 }
 
 export interface NexusGenObjects {
@@ -64,12 +86,11 @@ export interface NexusGenFieldTypes {
     created_id: number | null; // Int
     description: string | null; // String
     district: string | null; // String
-    latitude: number | null; // Float
     locality: string | null; // String
     locationId: number | null; // Int
-    longitude: number | null; // Float
     name: string | null; // String
     place: string | null; // String
+    position: NexusGenScalars['Position'] | null; // Position
     postcode: string | null; // String
     region: string | null; // String
     rooms: NexusGenRootTypes['Room'][] | null; // [Room!]
@@ -100,12 +121,11 @@ export interface NexusGenFieldTypeNames {
     created_id: 'Int'
     description: 'String'
     district: 'String'
-    latitude: 'Float'
     locality: 'String'
     locationId: 'Int'
-    longitude: 'Float'
     name: 'String'
     place: 'String'
+    position: 'Position'
     postcode: 'String'
     region: 'String'
     rooms: 'Room'
@@ -132,18 +152,7 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Mutation: {
     createLocation: { // args
-      country: string; // String!
-      description?: string | null; // String
-      district?: string | null; // String
-      lat: number; // Float!
-      locality?: string | null; // String
-      long: number; // Float!
-      name: string; // String!
-      place: string; // String!
-      postcode?: string | null; // String
-      region: string; // String!
-      street: string; // String!
-      type: NexusGenEnums['LocationEnum']; // LocationEnum!
+      data: NexusGenInputs['LocationInputType']; // LocationInputType!
     }
     createRoom: { // args
       locationId: number; // Int!
@@ -168,7 +177,7 @@ export interface NexusGenTypeInterfaces {
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
-export type NexusGenInputNames = never;
+export type NexusGenInputNames = keyof NexusGenInputs;
 
 export type NexusGenEnumNames = keyof NexusGenEnums;
 

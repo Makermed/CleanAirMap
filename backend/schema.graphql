@@ -13,12 +13,11 @@ type Location {
   created_id: Int
   description: String
   district: String
-  latitude: Float
   locality: String
   locationId: Int
-  longitude: Float
   name: String
   place: String
+  position: Position
   postcode: String
   region: String
   rooms: [Room!]
@@ -56,10 +55,27 @@ enum LocationEnum {
   WORSHIP
 }
 
+input LocationInputType {
+  country: String!
+  description: String
+  district: String
+  locality: String
+  name: String!
+  place: String!
+  position: Position!
+  postcode: String
+  region: String!
+  street: String!
+  type: LocationEnum!
+}
+
 type Mutation {
-  createLocation(country: String!, description: String, district: String, lat: Float!, locality: String, long: Float!, name: String!, place: String!, postcode: String, region: String!, street: String!, type: LocationEnum!): Location
+  createLocation(data: LocationInputType!): Location
   createRoom(locationId: Int!, name: String!): Room
 }
+
+"""A GeoJSON Position"""
+scalar Position
 
 type Query {
   locations(locationId: Int): [Location]

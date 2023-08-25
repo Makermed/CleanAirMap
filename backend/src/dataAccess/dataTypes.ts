@@ -1,3 +1,5 @@
+import { Decimal } from "@prisma/client/runtime/library"
+
 // TODO: figure out if this can be referenced from Prisma types
 export interface LocationModel {
     locationId: number
@@ -22,6 +24,17 @@ export interface RoomModel {
     roomId: number
     locationId: number
     name: string
+    created_id: number
+    created_at: Date
+}
+
+export interface ReadingModel {
+    id: number
+    locationId: number
+    roomId: number | null
+    value: Decimal
+    unit: string
+    notes: string | null
     created_id: number
     created_at: Date
 }

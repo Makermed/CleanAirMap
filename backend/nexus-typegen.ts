@@ -81,6 +81,9 @@ export interface NexusGenObjects {
     location: NexusGenRootTypes['Location']; // Location!
     reading: NexusGenRootTypes['Reading']; // Reading!
   }
+  AddReadingPayload: { // root type
+    reading?: NexusGenRootTypes['Reading'] | null; // Reading
+  }
   Location: LocationModel;
   Mutation: {};
   Query: {};
@@ -103,6 +106,9 @@ export interface NexusGenFieldTypes {
     location: NexusGenRootTypes['Location']; // Location!
     reading: NexusGenRootTypes['Reading']; // Reading!
   }
+  AddReadingPayload: { // field return type
+    reading: NexusGenRootTypes['Reading'] | null; // Reading
+  }
   Location: { // field return type
     avgCo2: number | null; // Float
     created_at: NexusGenScalars['DateTime'] | null; // DateTime
@@ -121,6 +127,7 @@ export interface NexusGenFieldTypes {
     type: NexusGenEnums['LocationEnum'] | null; // LocationEnum
   }
   Mutation: { // field return type
+    addReading: NexusGenRootTypes['AddReadingPayload'] | null; // AddReadingPayload
     addReadingNewLocation: NexusGenRootTypes['AddReadingNewLocationPayload'] | null; // AddReadingNewLocationPayload
     createLocation: NexusGenRootTypes['Location'] | null; // Location
     createRoom: NexusGenRootTypes['Room'] | null; // Room
@@ -152,6 +159,9 @@ export interface NexusGenFieldTypeNames {
     location: 'Location'
     reading: 'Reading'
   }
+  AddReadingPayload: { // field return type name
+    reading: 'Reading'
+  }
   Location: { // field return type name
     avgCo2: 'Float'
     created_at: 'DateTime'
@@ -170,6 +180,7 @@ export interface NexusGenFieldTypeNames {
     type: 'LocationEnum'
   }
   Mutation: { // field return type name
+    addReading: 'AddReadingPayload'
     addReadingNewLocation: 'AddReadingNewLocationPayload'
     createLocation: 'Location'
     createRoom: 'Room'
@@ -198,6 +209,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    addReading: { // args
+      input: NexusGenInputs['AddReadingInputType']; // AddReadingInputType!
+    }
     addReadingNewLocation: { // args
       input: NexusGenInputs['AddReadingNewLocationInputType']; // AddReadingNewLocationInputType!
     }

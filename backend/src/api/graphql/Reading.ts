@@ -47,6 +47,13 @@ export const AddReadingInputType = inputObjectType({
     },
 })
 
+export const AddReadingPayload = objectType({
+    name: 'AddReadingPayload',
+    definition(t) {
+        t.field('reading', { type: Reading })
+    },
+})
+
 export const AddReadingNewLocationInputType = inputObjectType({
     name: 'AddReadingNewLocationInputType',
     definition(t) {
@@ -107,5 +114,29 @@ export const addReadingNewLocation = extendType({
             }
         }
         )
-    },
+    }
+})
+
+export const addReading = extendType({
+    type: 'Mutation',
+    definition(t) {
+        t.field('addReading', {
+            type: 'AddReadingPayload',
+            args: { input: nonNull(AddReadingInputType) },
+            async resolve(_root, args, ctx) {
+                const readingModel = {
+                    locationId: args.input.locationId,
+                    roomId: null,
+                    value: args.input.reading.value,
+                    unit: args.input.reading.unit,
+                    notes: args.input.reading.notes,
+                    created_id: 1
+                }
+                //@ts-ignore: missing ID and creation time will be supplied by the DB
+                // TODO: make the type of IReadingDAO.create more correct
+                const newReading = await ctx.db.readingDAO.create(readingModel)
+                return { reading: newReading }
+            }
+        })
+    }
 })

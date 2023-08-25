@@ -1,4 +1,4 @@
-import { LocationModel, RoomModel } from "./src/dataAccess/dataTypes" 
+import { LocationModel, RoomModel, ReadingModel } from "./src/dataAccess/dataTypes" 
 
 import type { Context } from "./src/api/context"
 import type { core } from "nexus"
@@ -41,6 +41,14 @@ declare global {
 }
 
 export interface NexusGenInputs {
+  AddReadingInputType: { // input type
+    locationId: number; // Int!
+    reading: NexusGenInputs['ReadingInputType']; // ReadingInputType!
+  }
+  AddReadingNewLocationInputType: { // input type
+    location: NexusGenInputs['LocationInputType']; // LocationInputType!
+    reading: NexusGenInputs['ReadingInputType']; // ReadingInputType!
+  }
   LocationInputType: { // input type
     geometry: NexusGenScalars['JSONObject']; // JSONObject!
     properties: NexusGenInputs['POIPropertiesInputType']; // POIPropertiesInputType!
@@ -51,9 +59,15 @@ export interface NexusGenInputs {
     full_address: string; // String!
     name: string; // String!
   }
+  ReadingInputType: { // input type
+    notes?: string | null; // String
+    unit: NexusGenEnums['ReadingUnitEnum']; // ReadingUnitEnum!
+    value: number; // Float!
+  }
 }
 
 export interface NexusGenEnums {
+  ReadingUnitEnum: "ppm CO2"
 }
 
 export interface NexusGenScalars {
@@ -68,6 +82,10 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  AddReadingNewLocationPayload: { // root type
+    location: NexusGenRootTypes['Location']; // Location!
+    reading: NexusGenRootTypes['Reading']; // Reading!
+  }
   Location: LocationModel;
   Mutation: {};
   POIProperties: { // root type
@@ -76,6 +94,7 @@ export interface NexusGenObjects {
     name: string; // String!
   }
   Query: {};
+  Reading: ReadingModel;
   Room: RoomModel;
 }
 
@@ -87,9 +106,13 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  AddReadingNewLocationPayload: { // field return type
+    location: NexusGenRootTypes['Location']; // Location!
+    reading: NexusGenRootTypes['Reading']; // Reading!
+  }
   Location: { // field return type
     geometry: NexusGenScalars['JSONObject'] | null; // JSONObject
     id: number; // Int!
@@ -98,6 +121,7 @@ export interface NexusGenFieldTypes {
     type: string; // String!
   }
   Mutation: { // field return type
+    addReadingNewLocation: NexusGenRootTypes['AddReadingNewLocationPayload'] | null; // AddReadingNewLocationPayload
     createLocation: NexusGenRootTypes['Location'] | null; // Location
     createRoom: NexusGenRootTypes['Room'] | null; // Room
   }
@@ -108,7 +132,16 @@ export interface NexusGenFieldTypes {
   }
   Query: { // field return type
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    readings: Array<NexusGenRootTypes['Reading'] | null> | null; // [Reading]
     rooms: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
+  }
+  Reading: { // field return type
+    created_at: NexusGenScalars['DateTime']; // DateTime!
+    id: number; // Int!
+    location: NexusGenRootTypes['Location']; // Location!
+    notes: string | null; // String
+    unit: NexusGenEnums['ReadingUnitEnum']; // ReadingUnitEnum!
+    value: number; // Float!
   }
   Room: { // field return type
     created_at: NexusGenScalars['DateTime'] | null; // DateTime
@@ -120,6 +153,10 @@ export interface NexusGenFieldTypes {
 }
 
 export interface NexusGenFieldTypeNames {
+  AddReadingNewLocationPayload: { // field return type name
+    location: 'Location'
+    reading: 'Reading'
+  }
   Location: { // field return type name
     geometry: 'JSONObject'
     id: 'Int'
@@ -128,6 +165,7 @@ export interface NexusGenFieldTypeNames {
     type: 'String'
   }
   Mutation: { // field return type name
+    addReadingNewLocation: 'AddReadingNewLocationPayload'
     createLocation: 'Location'
     createRoom: 'Room'
   }
@@ -138,7 +176,16 @@ export interface NexusGenFieldTypeNames {
   }
   Query: { // field return type name
     locations: 'Location'
+    readings: 'Reading'
     rooms: 'Room'
+  }
+  Reading: { // field return type name
+    created_at: 'DateTime'
+    id: 'Int'
+    location: 'Location'
+    notes: 'String'
+    unit: 'ReadingUnitEnum'
+    value: 'Float'
   }
   Room: { // field return type name
     created_at: 'DateTime'
@@ -151,6 +198,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Mutation: {
+    addReadingNewLocation: { // args
+      input: NexusGenInputs['AddReadingNewLocationInputType']; // AddReadingNewLocationInputType!
+    }
     createLocation: { // args
       data: NexusGenInputs['LocationInputType']; // LocationInputType!
     }
@@ -179,7 +229,7 @@ export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = keyof NexusGenInputs;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 

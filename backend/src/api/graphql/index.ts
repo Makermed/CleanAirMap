@@ -16,3 +16,4 @@ export const GQLGeoJSONPosition = GraphQLGeoJSONPoint;
 
 export * from './Location'
 export * from './Room'
+export * from './Reading'

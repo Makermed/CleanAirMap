@@ -39,6 +39,7 @@ type Location {
 
   """Properties of the location"""
   properties: POIProperties!
+  readings: [Reading!]
   rooms: [Room!]
 
   """GeoJSON type. Always 'Feature'"""

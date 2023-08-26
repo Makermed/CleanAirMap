@@ -123,6 +123,7 @@ export interface NexusGenFieldTypes {
     geometry: NexusGenScalars['JSONObject'] | null; // JSONObject
     id: number; // Int!
     properties: NexusGenRootTypes['POIProperties']; // POIProperties!
+    readings: NexusGenRootTypes['Reading'][] | null; // [Reading!]
     rooms: NexusGenRootTypes['Room'][] | null; // [Room!]
     type: string; // String!
   }
@@ -171,6 +172,7 @@ export interface NexusGenFieldTypeNames {
     geometry: 'JSONObject'
     id: 'Int'
     properties: 'POIProperties'
+    readings: 'Reading'
     rooms: 'Room'
     type: 'String'
   }

@@ -17,6 +17,7 @@ model Location {
   full_address String
   geometry     Json
   rooms       Room[]
+  readings    Reading[]
   created_id  Int
   created_at  DateTime @default(now())
 }
@@ -38,6 +39,7 @@ model Reading {
   unit         String
   notes        String?
   locationId   Int
+  readingLocation  Location    @relation(fields: [locationId], references: [locationId])
   readingRoom  Room?    @relation(fields: [roomId], references: [roomId])
   roomId       Int?
   created_id   Int

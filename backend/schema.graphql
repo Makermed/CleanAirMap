@@ -38,6 +38,7 @@ type Location {
   place: String
   position: Position
   postcode: String
+  readings: [Reading!]
   region: String
   rooms: [Room!]
   street: String

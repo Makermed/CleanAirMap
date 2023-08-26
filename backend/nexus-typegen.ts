@@ -122,6 +122,7 @@ export interface NexusGenFieldTypes {
     place: string | null; // String
     position: NexusGenScalars['Position'] | null; // Position
     postcode: string | null; // String
+    readings: NexusGenRootTypes['Reading'][] | null; // [Reading!]
     region: string | null; // String
     rooms: NexusGenRootTypes['Room'][] | null; // [Room!]
     street: string | null; // String
@@ -192,6 +193,7 @@ export interface NexusGenFieldTypeNames {
     place: 'String'
     position: 'Position'
     postcode: 'String'
+    readings: 'Reading'
     region: 'String'
     rooms: 'Room'
     street: 'String'

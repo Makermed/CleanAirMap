@@ -62,6 +62,12 @@ export const Location = objectType({
             resolve: (parent, _, ctx) => {
                 return ctx.db.locationDAO.getRooms(parent.locationId);
             }
+        }),
+        t.list.nonNull.field('readings', {
+            type: 'Reading',
+            resolve: (parent, _, ctx) => {
+                return ctx.db.locationDAO.getReadings(parent.locationId);
+            }
         })
         t.int('created_id'),
         t.datetime('created_at')

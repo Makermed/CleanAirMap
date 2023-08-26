@@ -9,6 +9,10 @@ declare global {
      */
     datetime<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "DateTime";
     /**
+     * The `BigInt` scalar type represents non-fractional signed whole numeric values.
+     */
+    bigint<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "BigInt";
+    /**
      * A GeoJSON Position
      */
     position<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Position";
@@ -20,6 +24,10 @@ declare global {
      * A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
      */
     datetime<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "DateTime";
+    /**
+     * The `BigInt` scalar type represents non-fractional signed whole numeric values.
+     */
+    bigint<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "BigInt";
     /**
      * A GeoJSON Position
      */
@@ -72,6 +80,7 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  BigInt: bigint
   DateTime: Date
   Position: any
 }
@@ -158,7 +167,7 @@ export interface NexusGenFieldTypes {
   }
   Reading: { // field return type
     created_at: NexusGenScalars['DateTime']; // DateTime!
-    id: number; // Int!
+    id: NexusGenScalars['BigInt']; // BigInt!
     location: NexusGenRootTypes['Location']; // Location!
     notes: string | null; // String
     unit: NexusGenEnums['ReadingUnitEnum']; // ReadingUnitEnum!
@@ -229,7 +238,7 @@ export interface NexusGenFieldTypeNames {
   }
   Reading: { // field return type name
     created_at: 'DateTime'
-    id: 'Int'
+    id: 'BigInt'
     location: 'Location'
     notes: 'String'
     unit: 'ReadingUnitEnum'

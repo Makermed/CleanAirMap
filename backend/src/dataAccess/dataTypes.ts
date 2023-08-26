@@ -29,7 +29,7 @@ export interface RoomModel {
 }
 
 export interface ReadingModel {
-    id: number
+    id: bigint
     locationId: number
     roomId: number | null
     value: Decimal

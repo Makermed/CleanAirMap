@@ -10,7 +10,7 @@ export const Reading = objectType({
     name: 'Reading',
     sourceType: 'ReadingModel',
     definition(t) {
-        t.nonNull.int('id'),
+        t.nonNull.bigint('id'),
         t.nonNull.float('value'),
         t.nonNull.field('unit', { type: ReadingUnitEnum }),
         t.nonNull.field('location', {

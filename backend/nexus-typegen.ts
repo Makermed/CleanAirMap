@@ -85,6 +85,7 @@ export interface NexusGenObjects {
     reading?: NexusGenRootTypes['Reading'] | null; // Reading
   }
   Location: LocationModel;
+  LocationSummary: LocationModel;
   Mutation: {};
   Query: {};
   Reading: ReadingModel;
@@ -126,6 +127,22 @@ export interface NexusGenFieldTypes {
     street: string | null; // String
     type: NexusGenEnums['LocationEnum'] | null; // LocationEnum
   }
+  LocationSummary: { // field return type
+    avgCo2: number | null; // Float
+    created_at: NexusGenScalars['DateTime'] | null; // DateTime
+    created_id: number | null; // Int
+    description: string | null; // String
+    district: string | null; // String
+    locality: string | null; // String
+    locationId: number | null; // Int
+    name: string | null; // String
+    place: string | null; // String
+    position: NexusGenScalars['Position'] | null; // Position
+    postcode: string | null; // String
+    region: string | null; // String
+    street: string | null; // String
+    type: NexusGenEnums['LocationEnum'] | null; // LocationEnum
+  }
   Mutation: { // field return type
     addReading: NexusGenRootTypes['AddReadingPayload'] | null; // AddReadingPayload
     addReadingNewLocation: NexusGenRootTypes['AddReadingNewLocationPayload'] | null; // AddReadingNewLocationPayload
@@ -133,7 +150,8 @@ export interface NexusGenFieldTypes {
     createRoom: NexusGenRootTypes['Room'] | null; // Room
   }
   Query: { // field return type
-    locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    locationDetail: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    locationSummary: Array<NexusGenRootTypes['LocationSummary'] | null> | null; // [LocationSummary]
     readings: Array<NexusGenRootTypes['Reading'] | null> | null; // [Reading]
     rooms: Array<NexusGenRootTypes['Room'] | null> | null; // [Room]
   }
@@ -179,6 +197,22 @@ export interface NexusGenFieldTypeNames {
     street: 'String'
     type: 'LocationEnum'
   }
+  LocationSummary: { // field return type name
+    avgCo2: 'Float'
+    created_at: 'DateTime'
+    created_id: 'Int'
+    description: 'String'
+    district: 'String'
+    locality: 'String'
+    locationId: 'Int'
+    name: 'String'
+    place: 'String'
+    position: 'Position'
+    postcode: 'String'
+    region: 'String'
+    street: 'String'
+    type: 'LocationEnum'
+  }
   Mutation: { // field return type name
     addReading: 'AddReadingPayload'
     addReadingNewLocation: 'AddReadingNewLocationPayload'
@@ -186,7 +220,8 @@ export interface NexusGenFieldTypeNames {
     createRoom: 'Room'
   }
   Query: { // field return type name
-    locations: 'Location'
+    locationDetail: 'Location'
+    locationSummary: 'LocationSummary'
     readings: 'Reading'
     rooms: 'Room'
   }
@@ -224,7 +259,10 @@ export interface NexusGenArgTypes {
     }
   }
   Query: {
-    locations: { // args
+    locationDetail: { // args
+      locationId?: number | null; // Int
+    }
+    locationSummary: { // args
       locationId?: number | null; // Int
     }
     rooms: { // args

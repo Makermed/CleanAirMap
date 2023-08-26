@@ -68,6 +68,32 @@ export const Location = objectType({
     },
 })
 
+export const LocationSummary = objectType({
+    name: 'LocationSummary',
+    sourceType: 'LocationModel',
+    definition(t) {
+        t.int('locationId'),
+        t.string('name'),
+        t.field('type', { type: 'LocationEnum' })
+        t.string('street'),
+        t.string('locality'),
+        t.string('place'),
+        t.string('district'),
+        t.string('region'),
+        t.string('postcode'),
+        t.field('position', {
+            type: 'Position',
+            resolve: (locationModel) => {
+                return new Position(locationModel.latitude, locationModel.longitude)
+            }
+            })
+        t.string('description'),
+        t.float('avgCo2'),
+        t.int('created_id'),
+        t.datetime('created_at')
+    },
+})
+
 export const LocationInputType = inputObjectType({
     name: 'LocationInputType',
     definition(t) {
@@ -88,8 +114,22 @@ export const LocationInputType = inputObjectType({
 export const LocationQuery = extendType({
     type: 'Query',
     definition(t) {
-        t.list.field('locations', {
+        t.list.field('locationDetail', {
             type: 'Location',
+            args: { locationId: intArg()},
+            async resolve(_root, _args, ctx) {
+                if (_args == null || _args.locationId == null) {
+                    return ctx.db.locationDAO.getMany();
+                }
+                if (_args != null && _args.locationId != null) {
+                    const single = await ctx.db.locationDAO.getById(_args.locationId);
+                    return [ single ] ;
+                }
+                return null;
+            }
+        }),
+        t.list.field('locationSummary', {
+            type: 'LocationSummary',
             args: { locationId: intArg()},
             async resolve(_root, _args, ctx) {
                 if (_args == null || _args.locationId == null) {

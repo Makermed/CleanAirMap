@@ -88,6 +88,23 @@ input LocationInputType {
   type: LocationEnum!
 }
 
+type LocationSummary {
+  avgCo2: Float
+  created_at: DateTime
+  created_id: Int
+  description: String
+  district: String
+  locality: String
+  locationId: Int
+  name: String
+  place: String
+  position: Position
+  postcode: String
+  region: String
+  street: String
+  type: LocationEnum
+}
+
 type Mutation {
   addReading(input: AddReadingInputType!): AddReadingPayload
   addReadingNewLocation(input: AddReadingNewLocationInputType!): AddReadingNewLocationPayload
@@ -99,7 +116,8 @@ type Mutation {
 scalar Position
 
 type Query {
-  locations(locationId: Int): [Location]
+  locationDetail(locationId: Int): [Location]
+  locationSummary(locationId: Int): [LocationSummary]
   readings: [Reading]
   rooms(roomId: Int): [Room]
 }

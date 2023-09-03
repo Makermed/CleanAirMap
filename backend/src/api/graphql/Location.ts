@@ -3,85 +3,69 @@ import { extendType } from 'nexus'
 import { stringArg, nonNull, intArg } from 'nexus'
 import { Position } from './GraphQLPosition'
 
-export const LocationEnum = enumType({
-    name: "LocationEnum",
-    members: {
-      ALL: 999,
-      SHOP: 0,
-      MUSEUM: 1,
-      BAR: 2,
-      CAFE: 3,
-      HOSPITAL: 4,
-      TRAIN: 5,
-      RESTAURANT: 6,
-      LIBRARY: 7,
-      ARTS: 8,
-      HOTEL: 9,
-      GASSTATION: 10,
-      PARKING: 11,
-      MOVIE: 12,
-      PARK: 13,
-      CAMERA: 14,
-      ARENA: 15,
-      PHARMACY: 16,
-      SCHOOL: 17,
-      BEAUTY: 18,
-      FITNESS: 19,
-      SENIORS: 20,
-      PROFESSIONAL: 21,
-      DENTISTS: 22,
-      DINING: 23,
-      WORSHIP: 24
-    },
-    description: 'The type of location, eg. shop, place of worship, hospital, etc.'
-  })
-
+export const POIProperties = objectType({
+    name: 'POIProperties',
+    definition(t) {
+        t.nonNull.string('name'),
+        t.nonNull.string('full_address'),
+        t.string('feature_type')
+    }
+})
+export const POIPropertiesInputType = inputObjectType({
+    name: 'POIPropertiesInputType',
+    definition(t) {
+        t.nonNull.string('name'),
+        t.nonNull.string('full_address'),
+        t.string('feature_type')
+    }
+})
 export const Location = objectType({
     name: 'Location',
     sourceType: 'LocationModel',
     definition(t) {
-        t.int('locationId'),
-        t.string('name'),
-        t.field('type', { type: 'LocationEnum' })
-        t.string('street'),
-        t.string('locality'),
-        t.string('place'),
-        t.string('district'),
-        t.string('region'),
-        t.string('postcode'),
-        t.field('position', {
-            type: 'Position',
-            resolve: (locationModel) => {
-                return new Position(locationModel.latitude, locationModel.longitude)
+        t.nonNull.field('type', {
+            type: 'String',
+            description: "GeoJSON type. Always 'Feature'",
+            resolve: () => { return "Feature" }
+        }),
+        t.nonNull.field('id', {
+            type: 'Int',
+            description: "The CleanAirDB ID for this feature",
+            resolve: (model) => { return model.locationId }
+        }),
+        t.jsonObject('geometry'),
+        t.nonNull.field('properties', {
+            type: 'POIProperties',
+            description: "Properties of the location",
+            resolve: (model) => {
+                return {
+                    name: model.name,
+                    full_address: model.full_address,
+                    feature_type: model.feature_type
+                }
             }
-            })
-        t.string('description'),
-        t.float('avgCo2'),
+        })
         t.list.nonNull.field('rooms', {
             type: 'Room',
             resolve: (parent, _, ctx) => {
                 return ctx.db.locationDAO.getRooms(parent.locationId);
             }
         })
-        t.int('created_id'),
-        t.datetime('created_at')
     },
 })
 
 export const LocationInputType = inputObjectType({
     name: 'LocationInputType',
     definition(t) {
-        t.nonNull.string('name'),
-        t.nonNull.field('type', { type: 'LocationEnum' })
-        t.nonNull.string('street'),
-        t.string('locality'),
-        t.nonNull.string('place'),
-        t.string('district'),
-        t.nonNull.string('region'),
-        t.string('postcode'),
-        t.nonNull.field('position', { type: 'Position' }),
-        t.nonNull.string('country'),
-        t.string('description')
+        t.nonNull.field('type', {
+            type: 'String',
+            description: "GeoJSON type. Always 'Feature'",
+        }),
+        t.jsonObject('geometry'),
+        t.nonNull.field('properties', {
+            type: 'POIPropertiesInputType',
+            description: "Properties of the location"
+        })
     },
 })
 
@@ -112,20 +96,12 @@ export const LocationMutation = extendType({
             type: 'Location',
             args: { data: nonNull(LocationInputType) },
             async resolve(_root, args, ctx) {
+                const input = args.data;
                 const location  = {
-                    name: args.data.name,
-                    street: args.data.street,
-                    locality: args.data.locality,
-                    place: args.data.place,
-                    district: args.data.district,
-                    region: args.data.region,
-                    postcode: args.data.postcode,
-                    country: args.data.country,
-                    type: args.data.type,
-                    latitude: args.data.position.latitude,
-                    longitude: args.data.position.longitude,
-                    description: args.data.description,
-                    avgCo2: null,
+                    name: input.properties.name,
+                    full_address: input.properties.full_address,
+                    feature_type: input.properties.feature_type,
+                    geometry: input.geometry,
                     created_id: 1
                 }
                 //@ts-ignore: missing ID is okay, as it will be autogenerated

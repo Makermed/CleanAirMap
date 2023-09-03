@@ -79,18 +79,9 @@ function getRandomString(minLength: number, maxLength: number) {
 function createLocation(userList: User[]) {
     let locData = {
         name: getRandomString(5, 20),
-        street: getRandomString(5, 20),
-        locality: getRandomString(5, 20),
-        place: getRandomString(5, 20),
-        district: getRandomString(5, 20),
-        region: getRandomString(5, 20),
-        postcode: getRandomString(5, 20),
-        country: getRandomString(5, 20),
-        type: getRandomInt(1, 24),
-        latitude: getRandomFloat(-90, 90),
-        longitude: getRandomFloat(-180, 180),
-        description: getRandomString(20, 200),
-        avgCo2: null,
+        full_address: getRandomString(20, 100),
+        feature_type: "poi",
+        geometry: '{"coordinates": [-80.522168, 43.465133], "type": "Point"}',
         created_id: pickUser(userList)
     };
     return locData;
@@ -150,8 +141,8 @@ async function createLocations(userList: User[]) {
 
         if (userList.length === 0) { throw Error('Need at least one user to create a location') }
 
-        let userData = [...Array(needMore)].map(() => createLocation(userList));
-        prisma.location.createMany({ data: userData }).then((result) => console.log(`Created ${result.count} locations`))
+        let locationData = [...Array(needMore)].map(() => createLocation(userList));
+        prisma.location.createMany({ data: locationData }).then((result) => console.log(`Created ${result.count} locations`))
     }
     else {
         console.log(`Found ${have} locations of ${needTotal}, nothing to do`)

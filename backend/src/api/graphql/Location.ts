@@ -4,8 +4,9 @@ import { stringArg, nonNull, intArg } from 'nexus'
 import { Position } from './GraphQLPosition'
 import { LocationModel } from '../../dataAccess/dataTypes'
 import { IDataAdaptor } from "../../dataAccess/interfaces";
+import { NexusGenInputs } from '../../../nexus-typegen'
 
-export const locationInputToModel = (db : IDataAdaptor, input) : Promise<LocationModel | null> => {
+export const locationInputToModel = (db : IDataAdaptor, input : NexusGenInputs["LocationInputType"]) : Promise<LocationModel | null> => {
     const location = {
         name: input.properties.name,
         full_address: input.properties.full_address,
@@ -13,7 +14,7 @@ export const locationInputToModel = (db : IDataAdaptor, input) : Promise<Locatio
         geometry: input.geometry,
         created_id: 1
     }
-    
+
     return db.locationDAO.create(location)
 }
 

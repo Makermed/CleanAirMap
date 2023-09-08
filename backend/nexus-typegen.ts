@@ -42,7 +42,7 @@ declare global {
 
 export interface NexusGenInputs {
   LocationInputType: { // input type
-    geometry?: NexusGenScalars['JSONObject'] | null; // JSONObject
+    geometry: NexusGenScalars['JSONObject']; // JSONObject!
     properties: NexusGenInputs['POIPropertiesInputType']; // POIPropertiesInputType!
     type: string; // String!
   }
@@ -63,7 +63,7 @@ export interface NexusGenScalars {
   Boolean: boolean
   ID: string
   DateTime: Date
-  JSONObject: String
+  JSONObject: any
   Position: any
 }
 

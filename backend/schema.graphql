@@ -27,7 +27,7 @@ type Location {
 }
 
 input LocationInputType {
-  geometry: JSONObject
+  geometry: JSONObject!
 
   """Properties of the location"""
   properties: POIPropertiesInputType!

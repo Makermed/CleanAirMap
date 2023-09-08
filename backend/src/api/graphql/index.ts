@@ -8,7 +8,7 @@ export const GQLDateTime = decorateType(GraphQLDateTime, {
 } )
 
 export const GQLJSONObject = decorateType(GraphQLJSONObject, {
-    sourceType: 'String',
+    sourceType: 'any',
     asNexusMethod: 'jsonObject'
 })
 

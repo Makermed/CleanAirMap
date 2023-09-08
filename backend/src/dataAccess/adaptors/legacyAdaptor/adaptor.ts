@@ -1,6 +1,7 @@
-import { IDataAdaptor, ILocation, IRoom } from "../../interfaces";
+import { IDataAdaptor, ILocation, IReading, IRoom } from "../../interfaces";
 import LocationDAO from "./LocationDAO";
 import RoomDAO from "./RoomDAO";
+import ReadingDAO from "./ReadingDAO";
 import { HttpLink, ApolloClient, InMemoryCache, NormalizedCacheObject } from "@apollo/client/core";
 import fetch from 'node-fetch'
 
@@ -12,7 +13,8 @@ export class LegacyAdaptor implements IDataAdaptor {
     client: ApolloClient<NormalizedCacheObject>;
     locationDAO: ILocation;
     roomDAO: IRoom;
-  
+    readingDAO: IReading;
+
     constructor(private endpoint: string) {
         this.client = new ApolloClient({
             link: new HttpLink({
@@ -23,6 +25,6 @@ export class LegacyAdaptor implements IDataAdaptor {
           });
       this.locationDAO = new LocationDAO(this.client);
       this.roomDAO = new RoomDAO(this.client);
+      this.readingDAO = new ReadingDAO(this.client)
     }
   }
-  

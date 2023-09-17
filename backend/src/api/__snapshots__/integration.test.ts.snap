@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetches a single location's rooms 1`] = `
+{
+  "kind": "single",
+  "singleResult": {
+    "data": {
+      "locations": [
+        {
+          "locationId": 1,
+          "name": "Location 1",
+          "rooms": [
+            {
+              "created_at": 2023-01-01T00:00:00.000Z,
+              "created_id": 1,
+              "locationId": 1,
+              "name": "L1 Room 1",
+              "roomId": 1,
+            },
+            {
+              "created_at": 2023-01-01T00:00:00.000Z,
+              "created_id": 1,
+              "locationId": 1,
+              "name": "L1 Room 2",
+              "roomId": 2,
+            },
+            {
+              "created_at": 2023-01-01T00:00:00.000Z,
+              "created_id": 1,
+              "locationId": 1,
+              "name": "L1 Room 3",
+              "roomId": 3,
+            },
+          ],
+        },
+      ],
+    },
+    "errors": undefined,
+  },
+}
+`;
+
+exports[`fetches a single location, no rooms 1`] = `
+{
+  "kind": "single",
+  "singleResult": {
+    "data": {
+      "locations": [
+        {
+          "avgCo2": 900,
+          "created_at": 2023-01-01T00:00:00.000Z,
+          "created_id": 1,
+          "description": "A fun place to be",
+          "district": null,
+          "locality": null,
+          "locationId": 1,
+          "name": "Location 1",
+          "place": "AnyTown",
+          "position": {
+            "coordinates": [
+              40.32908,
+              30,
+            ],
+          },
+          "postcode": "H0H0H0",
+          "region": "StateProv",
+          "street": "1 Main St",
+          "type": "CAFE",
+        },
+      ],
+    },
+    "errors": undefined,
+  },
+}
+`;

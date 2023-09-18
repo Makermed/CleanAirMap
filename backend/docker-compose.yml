@@ -25,9 +25,7 @@ services:
     restart: unless-stopped
 
   cleanair-be:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ${COMPOSE_BE_IMAGE_REGISTRY}/cleanairmap-be:${COMPOSE_BE_IMAGE_TAG:-latest}
     container_name: cleanair-be
     depends_on:
       - postgres

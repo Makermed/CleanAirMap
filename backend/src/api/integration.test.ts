@@ -4,6 +4,7 @@ import { Context } from "./context"
 import { TestAdaptor } from "../dataAccess/adaptors/testAdaptor/adaptor";
 import { LocationModel, RoomModel } from "../dataAccess/dataTypes";
 import { assert } from "console";
+import { faker, Faker } from '@faker-js/faker'
 
 const testServer = new ApolloServer<Context>({schema})
 
@@ -23,6 +24,37 @@ function mockSingleLocation() : Promise<LocationModel | null> {
 
     }
     return Promise.resolve(location)
+}
+
+function createTestLocation(seed : number) : LocationModel {
+  faker.seed(seed);
+  faker.setDefaultRefDate('2023-01-01T00:00:00.000Z')
+  const location : LocationModel = {
+    locationId: seed,
+    name: faker.company.name(),
+    feature_type: 'poi',
+    full_address: createFakeAddress(faker),
+    geometry: { coordinates: [faker.location.longitude(), faker.location.latitude()] },
+    created_id: 1,
+    created_at: faker.date.anytime()
+  };
+
+  return location;
+}
+
+function createFakeAddress(my_faker : Faker) : string {
+  const l = my_faker.location;
+  return [l.streetAddress(), l.city(), l.state(), l.countryCode()].join(', ');
+}
+
+function mockMultipleLocations() : Promise<LocationModel[] | null> {
+  let locations = new Array<LocationModel>();
+
+  for (let i : number = 0; i <= 5; i++) {
+    locations.push(createTestLocation(i))
+  }
+
+  return Promise.resolve(locations)
 }
 
 function mockSingleLocationRooms() : Promise<RoomModel[] | null> {
@@ -48,12 +80,13 @@ function mockSingleLocationRooms() : Promise<RoomModel[] | null> {
   return Promise.resolve(rooms)
 }
 
-it('fetches a single location, no rooms', async() => {
+describe("locations query field", () => {
+  it('fetches a single location, no rooms', async() => {
     testContext.db.locationDAO.getById = jest.fn().mockReturnValueOnce(mockSingleLocation())
 
     const response = testServer.executeOperation(
         {
-            query: SINGLE_LOCATION_NO_ROOMS_QUERY,
+            query: LOCATION_NO_ROOMS_QUERY,
             variables: { locationId: 1}
         },
         {
@@ -65,31 +98,49 @@ it('fetches a single location, no rooms', async() => {
 
     assert(result.body.kind === 'single')
     expect(result.body).toMatchSnapshot()
-  }
-)
+  })
 
-it('fetches a single location\'s rooms', async() => {
-  testContext.db.locationDAO.getById = jest.fn().mockReturnValueOnce(mockSingleLocation())
-  testContext.db.locationDAO.getRooms = jest.fn().mockReturnValueOnce(mockSingleLocationRooms())
+  it('fetches a single location\'s rooms', async() => {
+    testContext.db.locationDAO.getById = jest.fn().mockReturnValueOnce(mockSingleLocation())
+    testContext.db.locationDAO.getRooms = jest.fn().mockReturnValueOnce(mockSingleLocationRooms())
 
-  const response = testServer.executeOperation(
-      {
-          query: SINGLE_LOCATION_WITH_ROOMS_QUERY,
-          variables: { locationId: 1}
-      },
-      {
-          contextValue: testContext
-      }
-  )
+    const response = testServer.executeOperation(
+        {
+            query: SINGLE_LOCATION_WITH_ROOMS_QUERY,
+            variables: { locationId: 1}
+        },
+        {
+            contextValue: testContext
+        }
+    )
 
-  const result = await response
+    const result = await response
 
-  assert(result.body.kind === 'single')
-  expect(result.body).toMatchSnapshot()
-}
-)
+    assert(result.body.kind === 'single')
+    expect(result.body).toMatchSnapshot()
+  })
 
-const SINGLE_LOCATION_NO_ROOMS_QUERY =
+  it('fetches multiple locations', async() => {
+    testContext.db.locationDAO.getMany = jest.fn().mockReturnValueOnce(mockMultipleLocations())
+
+    const response = testServer.executeOperation(
+        {
+            query: LOCATION_NO_ROOMS_QUERY,
+            variables: { locationId: null }
+        },
+        {
+            contextValue: testContext
+        }
+    )
+
+    const result = await response
+
+    expect(result.body).toMatchSnapshot()
+    assert(result.body.kind === 'single')
+  })
+});
+
+const LOCATION_NO_ROOMS_QUERY =
 `query Locations($locationId: Int) {
   locations(locationId: $locationId) {
     type

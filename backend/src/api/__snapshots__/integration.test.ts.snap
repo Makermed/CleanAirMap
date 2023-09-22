@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`fetches a single location's rooms 1`] = `
+exports[`locations query field fetches a single location's rooms 1`] = `
 {
   "kind": "single",
   "singleResult": {
@@ -42,7 +42,7 @@ exports[`fetches a single location's rooms 1`] = `
 }
 `;
 
-exports[`fetches a single location, no rooms 1`] = `
+exports[`locations query field fetches a single location, no rooms 1`] = `
 {
   "kind": "single",
   "singleResult": {
@@ -60,6 +60,109 @@ exports[`fetches a single location, no rooms 1`] = `
             "feature_type": "poi",
             "full_address": "123 Main St, AnyTown, StateProv, H0H0H0, Any Nation",
             "name": "Location 1",
+          },
+          "type": "Feature",
+        },
+      ],
+    },
+    "errors": undefined,
+  },
+}
+`;
+
+exports[`locations query field fetches multiple locations 1`] = `
+{
+  "kind": "single",
+  "singleResult": {
+    "data": {
+      "locations": [
+        {
+          "geometry": {
+            "coordinates": [
+              -159.5834,
+              83.4593,
+            ],
+          },
+          "id": 0,
+          "properties": {
+            "feature_type": "poi",
+            "full_address": "685 Kassulke Passage, Hoppeport, Iowa, TN",
+            "name": "Medhurst - Rau",
+          },
+          "type": "Feature",
+        },
+        {
+          "geometry": {
+            "coordinates": [
+              -37.1637,
+              78.3971,
+            ],
+          },
+          "id": 1,
+          "properties": {
+            "feature_type": "poi",
+            "full_address": "113 Corkery Ferry, South Christybury, Louisiana, NO",
+            "name": "Zieme - Reichel",
+          },
+          "type": "Feature",
+        },
+        {
+          "geometry": {
+            "coordinates": [
+              -136.8178,
+              -36.0622,
+            ],
+          },
+          "id": 2,
+          "properties": {
+            "feature_type": "poi",
+            "full_address": "594 Helen Gateway, East Connor, Ohio, MV",
+            "name": "Denesik - Balistreri",
+          },
+          "type": "Feature",
+        },
+        {
+          "geometry": {
+            "coordinates": [
+              -105.3926,
+              -45.3801,
+            ],
+          },
+          "id": 3,
+          "properties": {
+            "feature_type": "poi",
+            "full_address": "315 Trantow Knoll, Ames, Connecticut, AS",
+            "name": "Bernier - Quigley",
+          },
+          "type": "Feature",
+        },
+        {
+          "geometry": {
+            "coordinates": [
+              145.1443,
+              -11.7375,
+            ],
+          },
+          "id": 4,
+          "properties": {
+            "feature_type": "poi",
+            "full_address": "876 Metz Extension, Fort Danatown, Ohio, EC",
+            "name": "Tromp, Lockman and D'Amore",
+          },
+          "type": "Feature",
+        },
+        {
+          "geometry": {
+            "coordinates": [
+              -4.8103,
+              -36.5759,
+            ],
+          },
+          "id": 5,
+          "properties": {
+            "feature_type": "poi",
+            "full_address": "239 Kuhn Cliff, Hyattfort, Louisiana, LK",
+            "name": "Bednar Group",
           },
           "type": "Feature",
         },

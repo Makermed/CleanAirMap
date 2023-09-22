@@ -2,6 +2,21 @@ import { arg, floatArg, objectType, enumType, inputObjectType } from 'nexus'
 import { extendType } from 'nexus'
 import { stringArg, nonNull, intArg } from 'nexus'
 import { Position } from './GraphQLPosition'
+import { LocationModel } from '../../dataAccess/dataTypes'
+import { IDataAdaptor } from "../../dataAccess/interfaces";
+import { NexusGenInputs } from '../../../nexus-typegen'
+
+export const locationInputToModel = (db : IDataAdaptor, input : NexusGenInputs["LocationInputType"]) : Promise<LocationModel | null> => {
+    const location = {
+        name: input.properties.name,
+        full_address: input.properties.full_address,
+        feature_type: input.properties.feature_type ?? null,
+        geometry: input.geometry,
+        created_id: 1
+    }
+
+    return db.locationDAO.create(location)
+}
 
 export const POIProperties = objectType({
     name: 'POIProperties',
@@ -50,6 +65,12 @@ export const Location = objectType({
             resolve: (parent, _, ctx) => {
                 return ctx.db.locationDAO.getRooms(parent.locationId);
             }
+        }),
+        t.list.nonNull.field('readings', {
+            type: 'Reading',
+            resolve: (parent, _, ctx) => {
+                return ctx.db.locationDAO.getReadings(parent.locationId);
+            }
         })
     },
 })
@@ -95,17 +116,8 @@ export const LocationMutation = extendType({
         t.field('createLocation', {
             type: 'Location',
             args: { data: nonNull(LocationInputType) },
-            async resolve(_root, args, ctx) {
-                const input = args.data;
-                const location  = {
-                    name: input.properties.name,
-                    full_address: input.properties.full_address,
-                    feature_type: input.properties.feature_type ?? null,
-                    geometry: input.geometry,
-                    created_id: 1
-                }
-                const newloc = await ctx.db.locationDAO.create( location )
-                return newloc
+            resolve(_root, args, ctx) {
+                return locationInputToModel(ctx.db, args.data)
             }
         })
     }

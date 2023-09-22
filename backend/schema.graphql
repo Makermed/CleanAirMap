@@ -2,6 +2,25 @@
 ### Do not make changes to this file directly
 
 
+input AddReadingInputType {
+  locationId: Int!
+  reading: ReadingInputType!
+}
+
+input AddReadingNewLocationInputType {
+  location: LocationInputType!
+  reading: ReadingInputType!
+}
+
+type AddReadingNewLocationPayload {
+  location: Location!
+  reading: Reading!
+}
+
+type AddReadingPayload {
+  reading: Reading
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
@@ -20,6 +39,7 @@ type Location {
 
   """Properties of the location"""
   properties: POIProperties!
+  readings: [Reading!]
   rooms: [Room!]
 
   """GeoJSON type. Always 'Feature'"""
@@ -37,6 +57,8 @@ input LocationInputType {
 }
 
 type Mutation {
+  addReading(input: AddReadingInputType!): AddReadingPayload
+  addReadingNewLocation(input: AddReadingNewLocationInputType!): AddReadingNewLocationPayload
   createLocation(data: LocationInputType!): Location
   createRoom(locationId: Int!, name: String!): Room
 }
@@ -58,7 +80,28 @@ scalar Position
 
 type Query {
   locations(locationId: Int): [Location]
+  readings: [Reading]
   rooms(roomId: Int): [Room]
+}
+
+type Reading {
+  created_at: DateTime!
+  id: Int!
+  location: Location!
+  notes: String
+  unit: ReadingUnitEnum!
+  value: Float!
+}
+
+input ReadingInputType {
+  notes: String
+  unit: ReadingUnitEnum!
+  value: Float!
+}
+
+"""The supported units for air quality readings"""
+enum ReadingUnitEnum {
+  PPM_CO2
 }
 
 type Room {

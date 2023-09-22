@@ -13,7 +13,7 @@ export const schema = makeSchema({
     export: "Context",
   },
   sourceTypes: {
-    headers: [ 'import { LocationModel, RoomModel } from "./src/dataAccess/dataTypes" '],
+    headers: [ 'import { LocationModel, RoomModel, ReadingModel } from "./src/dataAccess/dataTypes" '],
     modules: []
   }
 })

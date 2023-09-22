@@ -12,19 +12,10 @@ datasource db {
 
 model Location {
   locationId  Int      @id @default(autoincrement())
-  name        String
-  type        Int
-  street      String
-  locality    String?
-  place       String
-  district    String?
-  region      String
-  postcode    String?
-  country     String
-  latitude    Float
-  longitude   Float
-  description String?
-  avgCo2      Float?
+  name         String
+  feature_type String?
+  full_address String
+  geometry     Json
   rooms       Room[]
   created_id  Int
   created_at  DateTime @default(now())

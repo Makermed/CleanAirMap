@@ -1,5 +1,5 @@
 import { ILocation } from '../../interfaces'
-import { LocationModel, RoomModel } from '../../dataTypes'
+import { LocationModel, LocationModelInput, RoomModel } from '../../dataTypes'
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client';
 import gql from 'graphql-tag';
 
@@ -77,7 +77,7 @@ export class LocationDAO implements ILocation {
             .catch((error: any) => console.log(`received error ${error}`));
     };
 
-    create(location: LocationModel) : Promise<LocationModel | null>
+    create(location: LocationModelInput) : Promise<LocationModel | null>
     {
         return Promise.reject(new Error("Not implemented"));
     };
@@ -87,5 +87,5 @@ export class LocationDAO implements ILocation {
         return Promise.reject(new Error("Not implemented"));
     }
 }
-  
+
 export default LocationDAO;

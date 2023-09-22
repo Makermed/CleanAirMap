@@ -15,18 +15,9 @@ function mockSingleLocation() : Promise<LocationModel | null> {
     const location : LocationModel = {
         locationId: 1,
         name: 'Location 1',
-        type: 3,
-        street: '1 Main St',
-        locality: null,
-        place: 'AnyTown',
-        district: null,
-        region: 'StateProv',
-        postcode: 'H0H0H0',
-        country: 'Any Nation',
-        latitude: 30,
-        longitude: 40.32908,
-        description: 'A fun place to be',
-        avgCo2: 900,
+        feature_type: 'poi',
+        full_address: '123 Main St, AnyTown, StateProv, H0H0H0, Any Nation',
+        geometry: { coordinates: [30,40.32908] },
         created_id: 1,
         created_at: new Date("2023-01-01")
 
@@ -101,28 +92,24 @@ it('fetches a single location\'s rooms', async() => {
 const SINGLE_LOCATION_NO_ROOMS_QUERY =
 `query Locations($locationId: Int) {
   locations(locationId: $locationId) {
-    locationId
-    name
-    avgCo2
-    created_at
-    created_id
-    description
-    district
-    locality
-    place
-    position
-    postcode
-    region
-    street
     type
+    id
+    geometry
+    properties {
+      name
+      full_address
+      feature_type
+    }
   }
 }`
 
 const SINGLE_LOCATION_WITH_ROOMS_QUERY =
 `query Locations($locationId: Int) {
   locations(locationId: $locationId) {
-    locationId
-    name
+    id
+    properties {
+      name
+    }
     rooms {
       roomId
       locationId

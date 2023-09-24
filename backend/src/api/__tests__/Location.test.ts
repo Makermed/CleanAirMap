@@ -1,8 +1,8 @@
 import { ApolloServer, GraphQLResponse } from "@apollo/server";
-import { schema } from "./schema";
-import { Context } from "./context"
-import { TestAdaptor } from "../dataAccess/adaptors/testAdaptor/adaptor";
-import { LocationModel, RoomModel } from "../dataAccess/dataTypes";
+import { schema } from "../schema";
+import { Context } from "../context"
+import { TestAdaptor } from "../../dataAccess/adaptors/testAdaptor/adaptor";
+import { LocationModel, RoomModel } from "../../dataAccess/dataTypes";
 import { assert } from "console";
 
 const testServer = new ApolloServer<Context>({schema})

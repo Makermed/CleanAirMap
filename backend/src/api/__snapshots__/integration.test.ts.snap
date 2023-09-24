@@ -79,14 +79,14 @@ exports[`locations query field fetches multiple locations 1`] = `
         {
           "geometry": {
             "coordinates": [
-              -159.5834,
-              83.4593,
+              166.9186,
+              -40.9219,
             ],
           },
           "id": 0,
           "properties": {
             "feature_type": "poi",
-            "full_address": "685 Kassulke Passage, Hoppeport, Iowa, TN",
+            "full_address": "685 Mueller Pines, South Eli, Saskatchewan, AX",
             "name": "Medhurst - Rau",
           },
           "type": "Feature",
@@ -101,7 +101,7 @@ exports[`locations query field fetches multiple locations 1`] = `
           "id": 1,
           "properties": {
             "feature_type": "poi",
-            "full_address": "113 Corkery Ferry, South Christybury, Louisiana, NO",
+            "full_address": "113 Feil Cliffs, East Gilbert, Newfoundland and Labrador, NO",
             "name": "Zieme - Reichel",
           },
           "type": "Feature",
@@ -116,7 +116,7 @@ exports[`locations query field fetches multiple locations 1`] = `
           "id": 2,
           "properties": {
             "feature_type": "poi",
-            "full_address": "594 Helen Gateway, East Connor, Ohio, MV",
+            "full_address": "594 Helen Gateway, East   Connor, Prince Edward Island, MV",
             "name": "Denesik - Balistreri",
           },
           "type": "Feature",
@@ -124,14 +124,14 @@ exports[`locations query field fetches multiple locations 1`] = `
         {
           "geometry": {
             "coordinates": [
-              -105.3926,
-              -45.3801,
+              -146.3215,
+              -10.6542,
             ],
           },
           "id": 3,
           "properties": {
             "feature_type": "poi",
-            "full_address": "315 Trantow Knoll, Ames, Connecticut, AS",
+            "full_address": "315 Kertzmann Turnpike, East Alizeberg, New Brunswick, AU",
             "name": "Bernier - Quigley",
           },
           "type": "Feature",
@@ -139,14 +139,14 @@ exports[`locations query field fetches multiple locations 1`] = `
         {
           "geometry": {
             "coordinates": [
-              145.1443,
-              -11.7375,
+              -88.9264,
+              72.5722,
             ],
           },
           "id": 4,
           "properties": {
             "feature_type": "poi",
-            "full_address": "876 Metz Extension, Fort Danatown, Ohio, EC",
+            "full_address": "876 Emmerich Coves, Dorval, Alberta, PE",
             "name": "Tromp, Lockman and D'Amore",
           },
           "type": "Feature",
@@ -154,14 +154,14 @@ exports[`locations query field fetches multiple locations 1`] = `
         {
           "geometry": {
             "coordinates": [
-              -4.8103,
-              -36.5759,
+              -73.1518,
+              88.3478,
             ],
           },
           "id": 5,
           "properties": {
             "feature_type": "poi",
-            "full_address": "239 Kuhn Cliff, Hyattfort, Louisiana, LK",
+            "full_address": "239 Borer Parkways, Port Fidel, Northwest Territories, KR",
             "name": "Bednar Group",
           },
           "type": "Feature",

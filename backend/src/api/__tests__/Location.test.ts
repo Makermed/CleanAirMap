@@ -72,7 +72,7 @@ describe("locations query field", () => {
   it('fetches a single location, no rooms', async() => {
     testContext.db.locationDAO.getById = jest.fn().mockReturnValueOnce(mockSingleLocation())
 
-    const response = testServer.executeOperation(
+    const { body } : GraphQLResponse<Record<string,unknown>> = await testServer.executeOperation(
         {
             query: LOCATION_NO_ROOMS_QUERY,
             variables: { locationId: 1}
@@ -80,19 +80,19 @@ describe("locations query field", () => {
         {
             contextValue: testContext
         }
-    )
+    );
 
-    const result = await response
-
-    assert(result.body.kind === 'single')
-    expect(result.body).toMatchSnapshot()
+    assert(body.kind === 'single');
+    expect(body.singleResult.errors).toBeUndefined();
+    expect(body.singleResult.data).not.toBeNull();
+    expect(body.singleResult.data?.locations).toMatchSnapshot();
   })
 
   it('fetches a single location\'s rooms', async() => {
     testContext.db.locationDAO.getById = jest.fn().mockReturnValueOnce(mockSingleLocation())
     testContext.db.locationDAO.getRooms = jest.fn().mockReturnValueOnce(mockSingleLocationRooms())
 
-    const response = testServer.executeOperation(
+    const { body } = await testServer.executeOperation(
         {
             query: SINGLE_LOCATION_WITH_ROOMS_QUERY,
             variables: { locationId: 1}
@@ -102,16 +102,16 @@ describe("locations query field", () => {
         }
     )
 
-    const result = await response
-
-    assert(result.body.kind === 'single')
-    expect(result.body).toMatchSnapshot()
+    assert(body.kind === 'single');
+    expect(body.singleResult.errors).toBeUndefined();
+    expect(body.singleResult.data).not.toBeNull();
+    expect(body.singleResult.data?.locations).toMatchSnapshot();
   })
 
   it('fetches multiple locations', async() => {
     testContext.db.locationDAO.getMany = jest.fn().mockReturnValueOnce(mockMultipleLocations())
 
-    const response = testServer.executeOperation(
+    const { body } = await testServer.executeOperation(
         {
             query: LOCATION_NO_ROOMS_QUERY,
             variables: { locationId: null }
@@ -121,10 +121,10 @@ describe("locations query field", () => {
         }
     )
 
-    const result = await response
-
-    expect(result.body).toMatchSnapshot()
-    assert(result.body.kind === 'single')
+    assert(body.kind === 'single');
+    expect(body.singleResult.errors).toBeUndefined();
+    expect(body.singleResult.data).not.toBeNull();
+    expect(body.singleResult.data?.locations).toMatchSnapshot();
   })
 
   it('stores a new location' , async () => {
@@ -140,7 +140,7 @@ describe("locations query field", () => {
       }
     };
 
-    const result = await testServer.executeOperation(
+    const { body } = await testServer.executeOperation(
       {
           query: CREATE_ONLY_LOCATION_QUERY,
           variables: { data: locationIn }
@@ -150,7 +150,10 @@ describe("locations query field", () => {
       }
     );
 
-    expect(result.body).toMatchSnapshot();
+    assert(body.kind === 'single');
+    expect(body.singleResult.errors).toBeUndefined();
+    expect(body.singleResult.data).not.toBeNull();
+    expect(body.singleResult.data?.createLocation).toMatchSnapshot();
   })
 });
 

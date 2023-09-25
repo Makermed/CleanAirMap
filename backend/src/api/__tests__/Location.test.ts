@@ -4,7 +4,7 @@ import { Context } from "../context"
 import { TestAdaptor } from "../../dataAccess/adaptors/testAdaptor/adaptor";
 import { LocationModel, RoomModel, LocationModelInput } from "../../dataAccess/dataTypes";
 import { NexusGenInputs } from "../../../nexus-typegen";
-import { assert } from "console";
+import assert from 'assert';
 
 const testServer = new ApolloServer<Context>({schema})
 

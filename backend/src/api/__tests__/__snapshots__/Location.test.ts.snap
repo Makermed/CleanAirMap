@@ -149,6 +149,185 @@ exports[`locations query field fetches multiple locations 1`] = `
 ]
 `;
 
+exports[`locations query field retrieves location with readings 1`] = `
+[
+  {
+    "id": 0,
+    "properties": {
+      "name": "Medhurst - Rau",
+    },
+    "readings": [
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 1,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 467,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 2,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 864.34,
+      },
+      {
+        "created_at": 2023-02-01T00:00:00.000Z,
+        "id": 3,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 566.84234,
+      },
+    ],
+  },
+  {
+    "id": 1,
+    "properties": {
+      "name": "Zieme - Reichel",
+    },
+    "readings": [
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 1,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 467,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 2,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 864.34,
+      },
+      {
+        "created_at": 2023-02-01T00:00:00.000Z,
+        "id": 3,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 566.84234,
+      },
+    ],
+  },
+  {
+    "id": 2,
+    "properties": {
+      "name": "Denesik - Balistreri",
+    },
+    "readings": [
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 1,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 467,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 2,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 864.34,
+      },
+      {
+        "created_at": 2023-02-01T00:00:00.000Z,
+        "id": 3,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 566.84234,
+      },
+    ],
+  },
+  {
+    "id": 3,
+    "properties": {
+      "name": "Bernier - Quigley",
+    },
+    "readings": [
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 1,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 467,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 2,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 864.34,
+      },
+      {
+        "created_at": 2023-02-01T00:00:00.000Z,
+        "id": 3,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 566.84234,
+      },
+    ],
+  },
+  {
+    "id": 4,
+    "properties": {
+      "name": "Tromp, Lockman and D'Amore",
+    },
+    "readings": [
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 1,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 467,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 2,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 864.34,
+      },
+      {
+        "created_at": 2023-02-01T00:00:00.000Z,
+        "id": 3,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 566.84234,
+      },
+    ],
+  },
+  {
+    "id": 5,
+    "properties": {
+      "name": "Bednar Group",
+    },
+    "readings": [
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 1,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 467,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 2,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 864.34,
+      },
+      {
+        "created_at": 2023-02-01T00:00:00.000Z,
+        "id": 3,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 566.84234,
+      },
+    ],
+  },
+]
+`;
+
 exports[`locations query field stores a new location 1`] = `
 {
   "geometry": {

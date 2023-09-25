@@ -1,11 +1,13 @@
+import { Decimal } from "@prisma/client/runtime/library";
 import { IDataAdaptor } from "../../dataAccess/IDataAdaptor";
-import { LocationModel, RoomModel, LocationModelInput } from "../../dataAccess/dataTypes";
+import { LocationModel, RoomModel, LocationModelInput, ReadingModel } from "../../dataAccess/dataTypes";
 
 export function mockLocationDAO(testAdaptor : IDataAdaptor) {
     testAdaptor.locationDAO.getById = jest.fn().mockReturnValue(mockSingleLocation());
     testAdaptor.locationDAO.create = jest.fn().mockImplementation(mockCreate);
     testAdaptor.locationDAO.getMany = jest.fn().mockReturnValue(mockMultipleLocations());
     testAdaptor.locationDAO.getRooms = jest.fn().mockReturnValue(mockSingleLocationRooms());
+    testAdaptor.locationDAO.getReadings = jest.fn().mockReturnValue(mockSingleLocationReadings());
 }
 
 function mockSingleLocation() : Promise<LocationModel | null> {
@@ -51,6 +53,38 @@ function mockSingleLocationRooms() : Promise<RoomModel[] | null> {
   },]
   return Promise.resolve(rooms)
 }
+
+function mockSingleLocationReadings() : Promise<ReadingModel[] | null> {
+    const readings : ReadingModel[] = [{
+      id: 1,
+      locationId: 1,
+      roomId: null,
+      value: new Decimal(467),
+      unit: 'ppm CO2',
+      notes: null,
+      created_id: 1,
+      created_at: new Date("2023-01-01")
+    },{
+      id: 2,
+      locationId: 2,
+      roomId: null,
+      value: new Decimal(864.34),
+      unit: 'ppm CO2',
+      notes: null,
+      created_id: 1,
+      created_at: new Date("2023-01-01")
+    },{
+      id: 3,
+      locationId: 1,
+      roomId: null,
+      value: new Decimal(566.84234),
+      unit: 'ppm CO2',
+      notes: null,
+      created_id: 1,
+      created_at: new Date("2023-02-01")
+    },]
+    return Promise.resolve(readings)
+  }
 
 async function mockCreate(locIn: LocationModelInput) : Promise<LocationModel | null> {
   let out : LocationModel | null = await mockSingleLocation();

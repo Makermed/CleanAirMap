@@ -57,6 +57,14 @@ describe("locations query field", () => {
     expect(result.data).not.toBeNull();
     expect(result.data?.createLocation).toMatchSnapshot();
   })
+
+  it('retrieves location with readings', async () => {
+    const result = await queryForSingleResult(testServer, LOCATION_WITH_READINGS_QUERY, { locationId: null }, testContext);
+
+    expect(result.errors).toBeUndefined();
+    expect(result.data).not.toBeNull();
+    expect(result.data?.locations).toMatchSnapshot();
+  });
 });
 
 const LOCATION_NO_ROOMS_QUERY =
@@ -85,6 +93,23 @@ const SINGLE_LOCATION_WITH_ROOMS_QUERY =
       locationId
       name
       created_id
+      created_at
+    }
+  }
+}`
+
+const LOCATION_WITH_READINGS_QUERY =
+`query Locations($locationId: Int) {
+  locations(locationId: $locationId) {
+    id
+    properties {
+      name
+    }
+    readings {
+      id
+      value
+      unit
+      notes
       created_at
     }
   }

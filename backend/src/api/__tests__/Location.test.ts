@@ -2,7 +2,8 @@ import { ApolloServer, GraphQLResponse } from "@apollo/server";
 import { schema } from "../schema";
 import { Context } from "../context"
 import { TestAdaptor } from "../../dataAccess/adaptors/testAdaptor/adaptor";
-import { LocationModel, RoomModel } from "../../dataAccess/dataTypes";
+import { LocationModel, RoomModel, LocationModelInput } from "../../dataAccess/dataTypes";
+import { NexusGenInputs } from "../../../nexus-typegen";
 import { assert } from "console";
 
 const testServer = new ApolloServer<Context>({schema})
@@ -53,6 +54,19 @@ function mockSingleLocationRooms() : Promise<RoomModel[] | null> {
     created_at: new Date("2023-01-01")
   },]
   return Promise.resolve(rooms)
+}
+
+async function mockCreate(locIn: LocationModelInput) : Promise<LocationModel | null> {
+  let out : LocationModel | null = await mockSingleLocation();
+  if (out != null) {
+    Object.assign(locIn, out);
+
+    out.locationId = 45;
+    out.created_at = new Date('2023-01-05');
+    out.created_id = 5;
+  }
+
+  return out;
 }
 
 describe("locations query field", () => {
@@ -113,6 +127,43 @@ describe("locations query field", () => {
     expect(result.body).toMatchSnapshot()
     assert(result.body.kind === 'single')
   })
+
+  it('stores a new location' , async () => {
+    testContext.db.locationDAO.create = jest.fn().mockImplementationOnce(async (locationIn) =>
+    {
+      let out : LocationModel | null = await mockSingleLocation();
+      if (out != null) {
+        Object.assign(out, locationIn)
+
+        out.created_at = new Date('2023-01-05');
+        out.created_id = 5;
+      }
+
+      return out;
+    });
+
+    const locationIn : NexusGenInputs["LocationInputType"] = {
+      type: 'Feature',
+      geometry: { coordinates: [-86.9259644,43.4708553] },
+      properties: {
+        name: 'Create location test',
+        feature_type: 'poi',
+        full_address: '567 Kings Boul., SomePlace, Ontario, M4G 2E5, Canada'
+      }
+    };
+
+    const result = await testServer.executeOperation(
+      {
+          query: CREATE_ONLY_LOCATION_QUERY,
+          variables: { data: locationIn }
+      },
+      {
+          contextValue: testContext
+      }
+    );
+
+    expect(result.body).toMatchSnapshot();
+  })
 });
 
 const LOCATION_NO_ROOMS_QUERY =
@@ -142,6 +193,20 @@ const SINGLE_LOCATION_WITH_ROOMS_QUERY =
       name
       created_id
       created_at
+    }
+  }
+}`
+
+const CREATE_ONLY_LOCATION_QUERY =
+`mutation CreateLocation($data: LocationInputType!) {
+  createLocation(data: $data) {
+    type
+    id
+    geometry
+    properties {
+      feature_type
+      full_address
+      name
     }
   }
 }`

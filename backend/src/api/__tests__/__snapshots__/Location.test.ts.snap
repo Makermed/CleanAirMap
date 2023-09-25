@@ -172,3 +172,29 @@ exports[`locations query field fetches multiple locations 1`] = `
   },
 }
 `;
+
+exports[`locations query field stores a new location 1`] = `
+{
+  "kind": "single",
+  "singleResult": {
+    "data": {
+      "createLocation": {
+        "geometry": {
+          "coordinates": [
+            -86.9259644,
+            43.4708553,
+          ],
+        },
+        "id": 1,
+        "properties": {
+          "feature_type": "poi",
+          "full_address": "567 Kings Boul., SomePlace, Ontario, M4G 2E5, Canada",
+          "name": "Create location test",
+        },
+        "type": "Feature",
+      },
+    },
+    "errors": undefined,
+  },
+}
+`;

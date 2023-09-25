@@ -59,9 +59,8 @@ function mockSingleLocationRooms() : Promise<RoomModel[] | null> {
 async function mockCreate(locIn: LocationModelInput) : Promise<LocationModel | null> {
   let out : LocationModel | null = await mockSingleLocation();
   if (out != null) {
-    Object.assign(locIn, out);
+    Object.assign(out, locIn)
 
-    out.locationId = 45;
     out.created_at = new Date('2023-01-05');
     out.created_id = 5;
   }
@@ -129,18 +128,7 @@ describe("locations query field", () => {
   })
 
   it('stores a new location' , async () => {
-    testContext.db.locationDAO.create = jest.fn().mockImplementationOnce(async (locationIn) =>
-    {
-      let out : LocationModel | null = await mockSingleLocation();
-      if (out != null) {
-        Object.assign(out, locationIn)
-
-        out.created_at = new Date('2023-01-05');
-        out.created_id = 5;
-      }
-
-      return out;
-    });
+    testContext.db.locationDAO.create = jest.fn().mockImplementationOnce(mockCreate);
 
     const locationIn : NexusGenInputs["LocationInputType"] = {
       type: 'Feature',

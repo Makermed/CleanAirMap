@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npx jest",
     "dev": "ts-node-dev --transpile-only --no-notify src/api/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "generate-location": "ts-node-dev --transpile-only --no-notify src/dataAccess/util/generateTestData.ts"
   },
   "keywords": [],
   "author": "",

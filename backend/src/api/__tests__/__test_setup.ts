@@ -10,6 +10,10 @@ export function mockLocationDAO(testAdaptor : IDataAdaptor) {
     testAdaptor.locationDAO.getReadings = jest.fn().mockReturnValue(mockSingleLocationReadings());
 }
 
+export function mockReadingDAO(testAdaptor : IDataAdaptor) {
+  testAdaptor.readingDAO.create = jest.fn().mockImplementation(mockCreateReading);
+}
+
 function mockSingleLocation() : Promise<LocationModel | null> {
     const location : LocationModel = {
         locationId: 1,
@@ -94,6 +98,23 @@ async function mockCreate(locIn: LocationModelInput) : Promise<LocationModel | n
     out.created_at = new Date('2023-01-05');
     out.created_id = 5;
   }
+
+  return out;
+}
+
+async function mockCreateReading(readingIn: ReadingModel) : Promise<ReadingModel | null> {
+  const out : ReadingModel = {
+    id: 1,
+    locationId: 1,
+    notes: null,
+    roomId: null,
+    value: new Decimal(456),
+    unit: 'ppm CO2',
+    created_at: new Date('2023-01-05'),
+    created_id: 5
+  };
+
+  Object.assign(out, readingIn);
 
   return out;
 }

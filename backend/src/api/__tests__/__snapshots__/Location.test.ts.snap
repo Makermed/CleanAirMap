@@ -1,0 +1,347 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`locations query field fetches a single location's rooms 1`] = `
+[
+  {
+    "id": 1,
+    "properties": {
+      "name": "Location 1",
+    },
+    "rooms": [
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "created_id": 1,
+        "locationId": 1,
+        "name": "L1 Room 1",
+        "roomId": 1,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "created_id": 1,
+        "locationId": 1,
+        "name": "L1 Room 2",
+        "roomId": 2,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "created_id": 1,
+        "locationId": 1,
+        "name": "L1 Room 3",
+        "roomId": 3,
+      },
+    ],
+  },
+]
+`;
+
+exports[`locations query field fetches a single location, no rooms 1`] = `
+[
+  {
+    "geometry": {
+      "coordinates": [
+        30,
+        40.32908,
+      ],
+    },
+    "id": 1,
+    "properties": {
+      "feature_type": "poi",
+      "full_address": "123 Main St, AnyTown, StateProv, H0H0H0, Any Nation",
+      "name": "Location 1",
+    },
+    "type": "Feature",
+  },
+]
+`;
+
+exports[`locations query field fetches multiple locations 1`] = `
+[
+  {
+    "geometry": {
+      "coordinates": [
+        166.9186,
+        -40.9219,
+      ],
+    },
+    "id": 0,
+    "properties": {
+      "feature_type": "poi",
+      "full_address": "685 Mueller Pines, South Eli, Saskatchewan, AX",
+      "name": "Medhurst - Rau",
+    },
+    "type": "Feature",
+  },
+  {
+    "geometry": {
+      "coordinates": [
+        -37.1637,
+        78.3971,
+      ],
+    },
+    "id": 1,
+    "properties": {
+      "feature_type": "poi",
+      "full_address": "113 Feil Cliffs, East Gilbert, Newfoundland and Labrador, NO",
+      "name": "Zieme - Reichel",
+    },
+    "type": "Feature",
+  },
+  {
+    "geometry": {
+      "coordinates": [
+        -136.8178,
+        -36.0622,
+      ],
+    },
+    "id": 2,
+    "properties": {
+      "feature_type": "poi",
+      "full_address": "594 Helen Gateway, East   Connor, Prince Edward Island, MV",
+      "name": "Denesik - Balistreri",
+    },
+    "type": "Feature",
+  },
+  {
+    "geometry": {
+      "coordinates": [
+        -146.3215,
+        -10.6542,
+      ],
+    },
+    "id": 3,
+    "properties": {
+      "feature_type": "poi",
+      "full_address": "315 Kertzmann Turnpike, East Alizeberg, New Brunswick, AU",
+      "name": "Bernier - Quigley",
+    },
+    "type": "Feature",
+  },
+  {
+    "geometry": {
+      "coordinates": [
+        -88.9264,
+        72.5722,
+      ],
+    },
+    "id": 4,
+    "properties": {
+      "feature_type": "poi",
+      "full_address": "876 Emmerich Coves, Dorval, Alberta, PE",
+      "name": "Tromp, Lockman and D'Amore",
+    },
+    "type": "Feature",
+  },
+  {
+    "geometry": {
+      "coordinates": [
+        -73.1518,
+        88.3478,
+      ],
+    },
+    "id": 5,
+    "properties": {
+      "feature_type": "poi",
+      "full_address": "239 Borer Parkways, Port Fidel, Northwest Territories, KR",
+      "name": "Bednar Group",
+    },
+    "type": "Feature",
+  },
+]
+`;
+
+exports[`locations query field retrieves location with readings 1`] = `
+[
+  {
+    "id": 0,
+    "properties": {
+      "name": "Medhurst - Rau",
+    },
+    "readings": [
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 1,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 467,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 2,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 864.34,
+      },
+      {
+        "created_at": 2023-02-01T00:00:00.000Z,
+        "id": 3,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 566.84234,
+      },
+    ],
+  },
+  {
+    "id": 1,
+    "properties": {
+      "name": "Zieme - Reichel",
+    },
+    "readings": [
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 1,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 467,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 2,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 864.34,
+      },
+      {
+        "created_at": 2023-02-01T00:00:00.000Z,
+        "id": 3,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 566.84234,
+      },
+    ],
+  },
+  {
+    "id": 2,
+    "properties": {
+      "name": "Denesik - Balistreri",
+    },
+    "readings": [
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 1,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 467,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 2,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 864.34,
+      },
+      {
+        "created_at": 2023-02-01T00:00:00.000Z,
+        "id": 3,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 566.84234,
+      },
+    ],
+  },
+  {
+    "id": 3,
+    "properties": {
+      "name": "Bernier - Quigley",
+    },
+    "readings": [
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 1,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 467,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 2,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 864.34,
+      },
+      {
+        "created_at": 2023-02-01T00:00:00.000Z,
+        "id": 3,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 566.84234,
+      },
+    ],
+  },
+  {
+    "id": 4,
+    "properties": {
+      "name": "Tromp, Lockman and D'Amore",
+    },
+    "readings": [
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 1,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 467,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 2,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 864.34,
+      },
+      {
+        "created_at": 2023-02-01T00:00:00.000Z,
+        "id": 3,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 566.84234,
+      },
+    ],
+  },
+  {
+    "id": 5,
+    "properties": {
+      "name": "Bednar Group",
+    },
+    "readings": [
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 1,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 467,
+      },
+      {
+        "created_at": 2023-01-01T00:00:00.000Z,
+        "id": 2,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 864.34,
+      },
+      {
+        "created_at": 2023-02-01T00:00:00.000Z,
+        "id": 3,
+        "notes": null,
+        "unit": "PPM_CO2",
+        "value": 566.84234,
+      },
+    ],
+  },
+]
+`;
+
+exports[`locations query field stores a new location 1`] = `
+{
+  "geometry": {
+    "coordinates": [
+      -86.9259644,
+      43.4708553,
+    ],
+  },
+  "id": 1,
+  "properties": {
+    "feature_type": "poi",
+    "full_address": "567 Kings Boul., SomePlace, Ontario, M4G 2E5, Canada",
+    "name": "Create location test",
+  },
+  "type": "Feature",
+}
+`;

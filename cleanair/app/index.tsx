@@ -1,10 +1,11 @@
 import { StyleSheet, Platform } from 'react-native';
 
-import MapView from '../../components/MapView'
+import CleanAirMap from '../components/Map'
+
 
 export default function Main() {
   return (
-    <MapView />
+    <CleanAirMap />
   );
 }
 

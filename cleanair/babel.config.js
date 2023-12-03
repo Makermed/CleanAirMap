@@ -3,14 +3,14 @@ module.exports = function (api) {
   return {
     presets: ['babel-preset-expo'],
     plugins: [
-      // Required for expo-router
       'expo-router/babel',
+      'react-native-paper/babel',
     ],
     ignore: [
-      '**/node_modules/mapbox-gl/dist/mapbox-gl.js',
-      '**/node_modules/mapbox-gl/dist/mapbox-gl.js.map',
-      './node_modules/mapbox-gl/dist/mapbox-gl.js',
-      './node_modules/mapbox-gl/**/*',
+      '**/node_modules/maplibre-gl/dist/maplibre-gl.js',
+      '**/node_modules/maplibre-gl/dist/maplibre-gl.js.map',
+      './node_modules/maplibre-gl/dist/maplibre-gl.js',
+      './node_modules/maplibre-gl/**/*',
     ],
   };
 };

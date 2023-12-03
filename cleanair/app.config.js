@@ -4,7 +4,7 @@ module.exports = function () {
     "slug": "cleanair",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/image/icon.png",
+    "icon": "./assets/images/icon.png",
     "scheme": "cleanair",
     "userInterfaceStyle": "automatic",
     "runtimeVersion": "1.0.0",
@@ -48,7 +48,7 @@ module.exports = function () {
         "origin": false
       },
       "eas": {
-        "projectId": "d861c62f-3c78-4e3d-b3b9-183ffe34f5a1"
+        "projectId": "PROJECT_ID"
       }
     },
     "owner": "",

@@ -4,7 +4,7 @@ import { StyleSheet, View, Text } from "react-native"
 import { TextInput, Button, Switch } from "react-native-paper"
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Feature} from "geojson";
-import { Modal, Portal, PaperProvider } from 'react-native-paper';
+import { Modal, Portal } from 'react-native-paper';
 
 interface NewLocationModalProps {
   location: Feature;

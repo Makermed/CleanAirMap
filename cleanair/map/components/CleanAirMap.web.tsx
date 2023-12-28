@@ -8,9 +8,10 @@ import { viewState } from '../../storage/global';
 import NewLocationModal from './NewLocationModal';
 import distance from '@turf/distance';
 import SearchBar from "./SearchBar";
-import 'maplibre-gl/dist/maplibre-gl.css';
 import MyMarker from './Marker';
-import { reverseGeocode } from './data';
+import { reverseGeocode } from '../data';
+
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 
 export default function CleanAirMap() {
@@ -21,7 +22,7 @@ export default function CleanAirMap() {
   const [showModalForNewLocation, setShowModalForNewLocation] = useState<any | null>(null);
 
   const createNewLocation = useCallback((item: Feature) => {
-    // TODO: Replace the new one after fetching this. There's no pointin getting it twice.
+    // TODO: Replace the new one after fetching this. There's no point in getting it twice.
     if (!item?.properties?.formatted) {
       reverseGeocode(item).then((data) => {
         setShowModalForNewLocation(data);
@@ -113,12 +114,10 @@ export default function CleanAirMap() {
 
 const styles = StyleSheet.create({
   page: {
-    height: '100%',
-    width:'100%'
+    flex: 2,
   },
   map: {
-      height: '100%',
-      width:'100%'
+      flex: 1,
   },
   searchbar: {
     top: 25,

@@ -1,6 +1,4 @@
-import { StyleSheet, Platform } from 'react-native';
-
-import CleanAirMap from '../components/Map'
+import CleanAirMap from '../map'
 
 
 export default function Main() {
@@ -8,14 +6,3 @@ export default function Main() {
     <CleanAirMap />
   );
 }
-
-const styles = StyleSheet.create({
-  page: {
-    height: '100%',
-    width:'100%'
-  },
-  map: {
-      height: '100%',
-      width:'100%'
-  }
-});

@@ -1,11 +1,14 @@
+import * as dotenv from "dotenv";
+dotenv.config();
+
 module.exports = function () {
   return {"expo": {
-    "name": "cleanair",
-    "slug": "cleanair",
+    "name": "cleanairmap",
+    "slug": "cleanairmap",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "cleanair",
+    "scheme": "cleanairmap",
     "userInterfaceStyle": "automatic",
     "runtimeVersion": "1.0.0",
     "splash": {
@@ -17,18 +20,20 @@ module.exports = function () {
       "**/*"
     ],
     "ios": {
+      "googleServicesFile": process.env.GOOGLE_SERVICE_INFO || "./GoogleService-Info.plist",
       "supportsTablet": true,
-      "bundleIdentifier": "com.ravenapp.cleanairmap",
+      "bundleIdentifier": "org.ravenapp.cleanairmap",
       "runtimeVersion": {
         "policy": "appVersion"
       }
     },
     "android": {
+      "googleServicesFile": process.env.GOOGLE_SERVICES_JSON || "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.ravenapp.cleanairmap",
+      "package": "org.ravenapp.cleanairmap",
       "runtimeVersion": "1.0.0"
     },
     "web": {
@@ -38,7 +43,15 @@ module.exports = function () {
     },
     "plugins": [
       "expo-router",
+      ["expo-build-properties",
+      {
+        "ios": {
+          "useFrameworks": "static"
+        }
+      }],
       "@maplibre/maplibre-react-native",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
     ],
     "experiments": {
       "typedRoutes": true
@@ -48,16 +61,18 @@ module.exports = function () {
         "origin": false
       },
       "eas": {
-        "projectId": "PROJECT_ID"
+        "projectId": "ad02678c-2f10-4881-99a3-3bb7fbccf7c2",
+      },
+      "firebase": {
+        "apiKey": process.env.FIREBASE_API_KEY,
+        "authDomain": process.env.FIREBASE_AUTH_DOMAIN,
+        "projectId": process.env.FIREBASE_PROJECT_ID,
+        "storageBucket": process.env.FIREBASE_STORAGE_BUCKET,
+        "messagingSenderId": process.env.FIREBASE_MESSAGING_SENDER_ID,
+        "appId": process.env.FIREBASE_APP_ID,
+        "measurementId": process.env.FIREBASE_MEASUREMENT_ID,
       }
     },
-    "owner": "",
-    "updates": {
-      "url": "https://u.expo.dev/PROJECT_ID",
-      "requestHeaders": {
-        "expo-channel-name": "main"
-      }
-    }
-  }
-  }
+    "owner": "cleanairmap"
+  }}
 }

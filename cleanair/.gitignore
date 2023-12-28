@@ -82,3 +82,8 @@ yarn-error.*
 
 expo-env.d.ts
 # @end expo-cli
+
+#Firebase
+GoogleService-Info.plist
+google-services.json
+credentials.json

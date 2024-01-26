@@ -1,9 +1,9 @@
 import { GoogleAuthProvider } from "firebase/auth";
-import { firebaseAuth } from '../firebase';
+import { firebaseAuth } from '../firebaseconfig';
 import { StyleSheet, View } from 'react-native';
 import { useEffect, useState } from 'react';
 
-const SignInForm = () => {
+const SignInForm = (isSignup : boolean) => {
     const [rendered, setRendered] = useState(false);
     var uiConfig = {
         // Without this the callback from the ui doesn't work because it doesn't
@@ -11,10 +11,14 @@ const SignInForm = () => {
        signInFlow: 'popup',
         signInOptions: [
           GoogleAuthProvider.PROVIDER_ID
-        ],
-        signInSuccessUrl: '/',
+        ],  
         tosUrl: '', // TODO: Add a terms of service URL.
-        privacyPolicyUrl: '' // TODO: Add a privacy policy URL.
+        privacyPolicyUrl: '', // TODO: Add a privacy policy URL.,
+        callbacks: {
+          signInSuccessWithAuthResult: () => {
+            return false;
+          }
+       }
       };
 
   useEffect(() => {

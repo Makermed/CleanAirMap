@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { viewState } from '../../storage/global';
+import { viewState } from '../data/viewState';
 import MapLibreGL from '@maplibre/maplibre-react-native';
 import { useRef, useCallback } from "react";
 import SearchBar from "./SearchBar";

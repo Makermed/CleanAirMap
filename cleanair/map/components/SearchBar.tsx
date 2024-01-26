@@ -1,7 +1,7 @@
 import { Searchbar, List } from 'react-native-paper';
 import { StyleSheet, View, FlatList} from 'react-native';
 import { useEffect, useState, useCallback } from "react";
-import { viewState } from '../../storage/global';
+import { viewState } from '../data/viewState';
 import { Feature } from "geojson";
 
 const autocomplete_endpoint = "https://api.geoapify.com/v1/geocode/autocomplete";

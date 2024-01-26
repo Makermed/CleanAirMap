@@ -1,12 +1,13 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
-import { PaperProvider } from 'react-native-paper';
-import { client } from '../storage/config';
+import { PaperProvider, Button } from 'react-native-paper';
+import { client } from '../storage';
 import { ApolloProvider } from '@apollo/client';
-import { AuthModal, useFirebaseAuth } from '../auth';
+import { Modal } from '../common';
+import { AuthButton, useFirebaseAuth} from '../auth';
 import 'expo-dev-client'; // Turn on debugging.
 
 export {
@@ -23,7 +24,8 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  return(<ApolloProvider client={client}>
+  return(
+    <ApolloProvider client={client}>
       <LoadingLayout/>
     </ApolloProvider>);
 }
@@ -51,13 +53,16 @@ function LoadingLayout() {
   if (!loaded) {
     return null;
   }
-  return (<RootLayoutNav/>);
+  return (
+        <PaperProvider>
+            <RootLayoutNav/>
+            <Modal />
+        </PaperProvider>);
 }
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
   return (
-        <PaperProvider>
             <Stack
               screenOptions={{
                 headerShown: true,
@@ -68,9 +73,7 @@ function RootLayoutNav() {
                 headerTitleStyle: {
                   fontWeight: 'bold',
                 },
-                headerRight: () => (
-                  <AuthModal />
-                )
+                headerRight: () => (<AuthButton/>)
               }}
               >
                 <Stack.Screen
@@ -78,7 +81,5 @@ function RootLayoutNav() {
                   options={{ title: 'My home' }}
                 />
             </Stack>
-        </PaperProvider>
-
   );
 }

@@ -1,5 +1,5 @@
-import { AuthModal } from './components';
-import { User } from './User';
-import { useFirebaseAuth } from './firebase';
+import { AuthButton } from './components';
+import { User, currentUser } from './User';
+import { useFirebaseAuth } from './useFirebaseAuth';
 
-export { AuthModal, User, useFirebaseAuth };
+export { AuthButton, User, currentUser, useFirebaseAuth };

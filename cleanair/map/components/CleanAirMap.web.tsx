@@ -1,15 +1,16 @@
 import { StyleSheet, View } from 'react-native';
-import MapGL, {MapRef, Marker, ViewState} from 'react-map-gl/maplibre';
+import MapGL, {MapRef, Marker, ViewState, Layer, SymbolLayer} from 'react-map-gl/maplibre';
 import { useRef, useState, useCallback } from "react";
 import { MapGeoJSONFeature, LngLatLike } from 'maplibre-gl';
 import { router } from 'expo-router'
 import { Point, Feature} from "geojson";
-import { viewState } from '../../storage/global';
+import { viewState } from '../data';
 import NewLocationModal from './NewLocationModal';
 import distance from '@turf/distance';
 import SearchBar from "./SearchBar";
 import MyMarker from './Marker';
 import { reverseGeocode } from '../data';
+import LocationLayer from './LocationLayer';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -103,6 +104,7 @@ export default function CleanAirMap() {
                 />
               </Marker>
             )}
+            <LocationLayer />
         </MapGL>
         <SearchBar
           style={styles.searchbar}

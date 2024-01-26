@@ -1,3 +1,3 @@
-import {AuthModal} from './AuthModal';
+import { AuthButton } from './AuthButton';
 
-export {AuthModal}
+export { AuthButton }

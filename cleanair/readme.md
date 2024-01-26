@@ -11,6 +11,8 @@ Get an API key and set it to EXPO_PUBLIC_GEOAPIFY_TOKEN in .env
 
 ## Firebase
 
+Firebase is set to 10.6.0 because of https://github.com/firebase/firebase-js-sdk/issues/7849.
+
 Firebase is used to provide user authentication.
 Follow the [Expo instructions](https://docs.expo.dev/guides/using-firebase/#using-react-native-firebase) to configure firebase for this project.
 

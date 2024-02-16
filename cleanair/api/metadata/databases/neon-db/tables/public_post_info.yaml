@@ -1,0 +1,27 @@
+table:
+  name: post_info
+  schema: public
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - co2_reading
+        - comment
+        - created_timestamp
+        - edited_timestamp
+        - location_id
+        - reading_timestamp
+      filter: {}
+    comment: ""
+  - role: user
+    permission:
+      columns:
+        - co2_reading
+        - comment
+        - created_timestamp
+        - edited_timestamp
+        - location_id
+        - reading_timestamp
+        - username
+      filter: {}
+    comment: ""

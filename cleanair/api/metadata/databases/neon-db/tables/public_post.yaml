@@ -1,0 +1,37 @@
+table:
+  name: post
+  schema: public
+object_relationships:
+  - name: location
+    using:
+      foreign_key_constraint_on: location_id
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        user_id:
+          _eq: X-Hasura-User-Id
+      set:
+        user_id: x-hasura-User-Id
+      columns:
+        - co2_reading
+        - comment
+        - location_id
+        - reading_timestamp
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns: []
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+      check: null
+    comment: ""
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        user_id:
+          _eq: X-Hasura-User-Id
+    comment: ""

@@ -1,0 +1,54 @@
+table:
+  name: location
+  schema: public
+array_relationships:
+  - name: posts
+    using:
+      foreign_key_constraint_on:
+        column: location_id
+        table:
+          name: post
+          schema: public
+insert_permissions:
+  - role: user
+    permission:
+      check: {}
+      columns:
+        - address_line1
+        - address_line2
+        - category
+        - geography
+        - location_type
+        - name
+        - place_id
+        - source
+    comment: ""
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - address_line1
+        - address_line2
+        - category
+        - geography
+        - id
+        - location_type
+        - name
+        - place_id
+        - source
+      filter: {}
+    comment: ""
+  - role: user
+    permission:
+      columns:
+        - address_line1
+        - address_line2
+        - category
+        - geography
+        - id
+        - location_type
+        - name
+        - place_id
+        - source
+      filter: {}
+    comment: ""

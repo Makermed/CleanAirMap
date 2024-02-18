@@ -1,0 +1,11 @@
+table:
+  name: user_info
+  schema: public
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - id
+        - username
+      filter: {}
+    comment: ""

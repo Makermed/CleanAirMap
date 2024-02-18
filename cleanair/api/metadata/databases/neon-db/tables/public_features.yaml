@@ -1,0 +1,16 @@
+table:
+  name: features
+  schema: public
+select_permissions:
+  - role: anonymous
+    permission:
+      columns:
+        - feature_collection
+      filter: {}
+    comment: ""
+  - role: user
+    permission:
+      columns:
+        - feature_collection
+      filter: {}
+    comment: ""

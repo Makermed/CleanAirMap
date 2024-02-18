@@ -1,0 +1,55 @@
+table:
+  name: users
+  schema: public
+object_relationships:
+  - name: UserPosts
+    using:
+      manual_configuration:
+        column_mapping:
+          id: user_id
+        insertion_order: null
+        remote_table:
+          name: post
+          schema: public
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        id:
+          _eq: X-Hasura-User-Id
+      set:
+        id: x-hasura-User-Id
+        last_seen: now()
+      columns:
+        - email
+        - username
+    comment: ""
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - email
+        - id
+        - username
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - email
+        - username
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+      check: null
+    comment: ""
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        id:
+          _eq: X-Hasura-User-Id
+    comment: ""

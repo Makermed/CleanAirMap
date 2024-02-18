@@ -1,0 +1,6 @@
+- "!include public_features.yaml"
+- "!include public_location.yaml"
+- "!include public_post.yaml"
+- "!include public_post_info.yaml"
+- "!include public_user_info.yaml"
+- "!include public_users.yaml"

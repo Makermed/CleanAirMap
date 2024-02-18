@@ -4,8 +4,9 @@ import SignOutForm from './SignOutForm';
 import {currentUser} from '../User';
 import { useReactiveVar } from '@apollo/client';
 import { showModal, hideModal } from '../../common/components/Modal';
-import { Avatar, TouchableRipple } from 'react-native-paper';
+import { Pressable } from "@gluestack-ui/themed"
 import { StyleSheet } from 'react-native';
+import { UserAvatar } from '../UserAvatar';
 
 const AuthButton = () => {
     const user = useReactiveVar(currentUser);
@@ -20,12 +21,9 @@ const AuthButton = () => {
     },[user]);
 
     return (
-        <TouchableRipple onPress={openSignInDialog}>
-            {(user
-                && user?.getPhotoURL
-                && (<Avatar.Image size={40} source={{uri: user.getPhotoURL()!!}}/>))
-            || <Avatar.Icon size={40} icon="account-circle"/>}
-        </TouchableRipple>);
+        <Pressable onPress={openSignInDialog}>
+            <UserAvatar user={user}/>
+        </Pressable>);
 }
 
 export { AuthButton }

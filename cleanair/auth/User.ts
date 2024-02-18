@@ -23,8 +23,11 @@ class User {
     }
 
     getEmail = () : string =>  {
-        console.log(this.userProfile);
         return this.userProfile?.email;
+    }
+    getName = () : string => {
+        return this.firebaseUser.displayName;
+    
     }
 }
 

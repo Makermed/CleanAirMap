@@ -35,6 +35,7 @@ function useFirebaseAuth(): boolean {
                             return null;
                         });
                         console.log(token);
+                    console.log(user.uid);
                     console.log(token);
                     const idTokenResult = await user.getIdTokenResult()
                         .catch((error: any) => {
@@ -56,7 +57,6 @@ function useFirebaseAuth(): boolean {
                                          username: user.displayName,
                                          email: user.email}})
                                         .then((result) => {
-                                            console.log(result);
                                             currentUser(new User(user, result.data.insert_users_one));
                                         })
                                         .catch((error) => {

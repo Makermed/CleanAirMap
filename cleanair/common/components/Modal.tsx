@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Modal as PaperModal } from 'react-native-paper';
+import { Modal as GSModal} from "@gluestack-ui/themed"
 import { makeVar, useReactiveVar } from '@apollo/client';
 
 const modalContent = makeVar<ReactNode | null>(null);
@@ -11,9 +11,9 @@ const Modal = () => {
   const content = useReactiveVar(modalContent);
 
   return (
-    <PaperModal visible={content != null} onDismiss={() => modalContent(null)} >
+    <GSModal isOpen={content != null} onClose={() => modalContent(null)} >
         {content}
-    </ PaperModal>
+    </ GSModal>
   );
 }
 export { Modal, hideModal, showModal };

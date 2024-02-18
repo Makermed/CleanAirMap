@@ -4,7 +4,6 @@ module.exports = function (api) {
     presets: ['babel-preset-expo'],
     plugins: [
       'expo-router/babel',
-      'react-native-paper/babel',
     ],
     ignore: [
       '**/node_modules/maplibre-gl/dist/maplibre-gl.js',

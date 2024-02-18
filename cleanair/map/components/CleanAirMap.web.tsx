@@ -5,12 +5,13 @@ import { MapGeoJSONFeature, LngLatLike } from 'maplibre-gl';
 import { router } from 'expo-router'
 import { Point, Feature} from "geojson";
 import { viewState } from '../data';
-import NewLocationModal from './NewLocationModal';
+import NewLocationForm from './NewLocationForm';
 import distance from '@turf/distance';
-import SearchBar from "./SearchBar";
+import SearchBar from "../search/SearchBar";
 import MyMarker from './Marker';
 import { reverseGeocode } from '../data';
 import LocationLayer from './LocationLayer';
+import { showModal, hideModal } from '../../common/components/Modal';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -26,11 +27,11 @@ export default function CleanAirMap() {
     // TODO: Replace the new one after fetching this. There's no point in getting it twice.
     if (!item?.properties?.formatted) {
       reverseGeocode(item).then((data) => {
-        setShowModalForNewLocation(data);
+        showModal(<NewLocationForm location={data} />);
       });
     }
     else {
-      setShowModalForNewLocation(item);
+      showModal(<NewLocationForm location={item} />);
     }
   }, []);
 
@@ -77,13 +78,6 @@ export default function CleanAirMap() {
 
     return (
       <View style={styles.page}>
-        {showModalForNewLocation != null &&
-          (<NewLocationModal
-              location={showModalForNewLocation}
-              onDismiss={() => setShowModalForNewLocation(null)} />)
-        }
-        <View style={styles.map}>
-         
          <MapGL reuseMaps
             initialViewState = {viewState()}
             ref={mapRef}
@@ -110,7 +104,6 @@ export default function CleanAirMap() {
           style={styles.searchbar}
           onPickItem={(item: any) => selectSearchResult(item)}/>
         </View>
-      </View>
     );
 };
 
@@ -122,8 +115,9 @@ const styles = StyleSheet.create({
       flex: 1,
   },
   searchbar: {
-    top: 25,
-    left: 25,
     position: 'absolute',
+    top: 25,
+    left: 10,
+    backgroundColor: 'white'
   }
 });

@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import { viewState } from '../data/viewState';
 import MapLibreGL from '@maplibre/maplibre-react-native';
 import { useRef, useCallback } from "react";
-import SearchBar from "./SearchBar";
+import SearchBar from "../search/SearchBar";
 import { Feature} from "geojson";
 
 // Required for Android.

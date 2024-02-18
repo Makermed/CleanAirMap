@@ -1,4 +1,4 @@
-import { Button } from 'react-native-paper';
+import { Button } from "@gluestack-ui/themed"
 import { StyleSheet, View } from 'react-native';
 import {currentUser} from '../User';
 import { firebaseAuth } from '../firebaseconfig';

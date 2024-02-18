@@ -3,13 +3,14 @@ import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useColorScheme } from 'react-native';
-import { PaperProvider, Button } from 'react-native-paper';
 import { client } from '../storage';
 import { ApolloProvider } from '@apollo/client';
 import { Modal } from '../common';
 import { AuthButton, useFirebaseAuth} from '../auth';
 import 'expo-dev-client'; // Turn on debugging.
-
+import { GluestackUIProvider, Button } from "@gluestack-ui/themed"
+import config from "../gluestack-style.config"
+import { ParsingError } from 'maplibre-gl';
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -54,10 +55,10 @@ function LoadingLayout() {
     return null;
   }
   return (
-        <PaperProvider>
+        <GluestackUIProvider config={config}>
             <RootLayoutNav/>
             <Modal />
-        </PaperProvider>);
+        </GluestackUIProvider>);
 }
 
 function RootLayoutNav() {

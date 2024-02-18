@@ -11,7 +11,6 @@ const reverseGeocode = (feature: Feature): Promise<Feature> => {
       return fetch(reverse_url).then(resp =>
         resp.json().then(
             data => {
-              console.log(data);
               return feature;
             }));
 }

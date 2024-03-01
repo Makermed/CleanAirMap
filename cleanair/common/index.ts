@@ -1,2 +1,3 @@
-import { Modal } from './components/Modal';
-export { Modal }
+import Modal from './components/Modal';
+import UserMenu from './components/UserMenu';
+export { Modal, UserMenu }

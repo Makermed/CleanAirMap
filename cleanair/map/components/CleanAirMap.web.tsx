@@ -1,17 +1,15 @@
 import { StyleSheet, View } from 'react-native';
-import MapGL, {MapRef, Marker, ViewState, Layer, SymbolLayer} from 'react-map-gl/maplibre';
-import { useRef, useState, useCallback } from "react";
-import { MapGeoJSONFeature, LngLatLike } from 'maplibre-gl';
+import MapGL, { MapRef, Marker, ViewState } from 'react-map-gl/maplibre';
+import { useRef, useState, useCallback, useEffect } from "react";
+import { LngLatLike } from 'maplibre-gl';
 import { router } from 'expo-router'
-import { Point, Feature} from "geojson";
+import type { Point, Feature} from "geojson";
 import { viewState } from '../data';
 import NewLocationForm from './NewLocationForm';
 import distance from '@turf/distance';
 import SearchBar from "../search/SearchBar";
-import MyMarker from './Marker';
-import { reverseGeocode } from '../data';
+import LocationMarker from './Marker';
 import LocationLayer from './LocationLayer';
-import { showModal, hideModal } from '../../common/components/Modal';
 
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -20,29 +18,21 @@ export default function CleanAirMap() {
 
   useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<MapRef | null>(null);
-  const [selectedLocation, setSelectedLocation] = useState<MapGeoJSONFeature | null>(null);
-  const [showModalForNewLocation, setShowModalForNewLocation] = useState<any | null>(null);
-
-  const createNewLocation = useCallback((item: Feature) => {
-    // TODO: Replace the new one after fetching this. There's no point in getting it twice.
-    if (!item?.properties?.formatted) {
-      reverseGeocode(item).then((data) => {
-        showModal(<NewLocationForm location={data} />);
-      });
-    }
-    else {
-      showModal(<NewLocationForm location={item} />);
-    }
-  }, []);
+  const [selectedLocation, setSelectedLocation] = useState<Feature | null>(null);
+  const [showNewLocationForm, setShowNewLocationForm] = useState<boolean>(false);
 
   const selectSearchResult = useCallback((item: Feature) => {
-    mapRef?.current?.flyTo({ center: (item.geometry as Point).coordinates as LngLatLike});
-    setSelectedLocation(item as MapGeoJSONFeature);
+    mapRef?.current?.flyTo(
+      { center: (item.geometry as Point).coordinates as LngLatLike});
+    setSelectedLocation(item as Feature);
   }, []);
 
   const onClickMap = useCallback((evt: maplibregl.MapLayerMouseEvent, selectedFeature: Feature) => {
+    if (!mapRef.current) {
+      return;
+    }
     // Look for a POI that was clicked on directly first.
-    let targetItem = mapRef?.current?.queryRenderedFeatures(evt.point)
+    let targetItem : Feature | undefined = mapRef?.current?.queryRenderedFeatures(evt.point)
       ?.filter(a => a.sourceLayer == "poi" && a.properties.name?.length > 0)
       ?.[0];
 
@@ -63,7 +53,7 @@ export default function CleanAirMap() {
           const distanceToCurrent =  distance(evt.lngLat.toArray(), (current.geometry as Point).coordinates, {units: 'meters'});
           const distanceToClosest =  distance(evt.lngLat.toArray(), (closest.geometry as Point).coordinates, {units: 'meters'});
           return (distanceToClosest < distanceToCurrent) ? closest : current;
-        }, undefined as MapGeoJSONFeature | undefined);
+        }, undefined as Feature | undefined);
     }
 
     evt.preventDefault();
@@ -72,12 +62,21 @@ export default function CleanAirMap() {
   }, []);
 
   const handleMapMove = useCallback((state: ViewState) => {
+    if (router == null) {
+      return;
+    }
     viewState(state);
-    router?.setParams({ lat: state.latitude.toString(), lng: state.longitude.toString() });
   }, []);
 
+  useEffect(() => {
+    console.log("shownew location form changed");
+  }, [showNewLocationForm]);
+
+  console.log(showNewLocationForm);
     return (
       <View style={styles.page}>
+        {showNewLocationForm != false && selectedLocation != null &&
+          <NewLocationForm onClose={() => setShowNewLocationForm(false)} location={selectedLocation!} />}
          <MapGL reuseMaps
             initialViewState = {viewState()}
             ref={mapRef}
@@ -85,23 +84,21 @@ export default function CleanAirMap() {
             onMove={e => handleMapMove(e.viewState)}
             style={styles.map}
             mapStyle={`https://maps.geoapify.com/v1/styles/osm-bright/style.json?apiKey=${process.env.EXPO_PUBLIC_GEOAPIFY_TOKEN}`}>
-            {selectedLocation != null && (
-              <Marker
+            {selectedLocation && <Marker
                 anchor='bottom'
                 latitude={(selectedLocation.geometry as Point).coordinates[1]}
                 longitude={(selectedLocation.geometry as Point).coordinates[0]}
                 >
-                <MyMarker
-                  onAddNewLocation={() => createNewLocation(selectedLocation)}
+                <LocationMarker
+                  onAddNewLocation={() => setShowNewLocationForm(true)}
                   onClose={() => setSelectedLocation(null)}
                   location={selectedLocation}
                 />
               </Marker>
-            )}
+            }
             <LocationLayer />
         </MapGL>
         <SearchBar
-          style={styles.searchbar}
           onPickItem={(item: any) => selectSearchResult(item)}/>
         </View>
     );
@@ -113,11 +110,5 @@ const styles = StyleSheet.create({
   },
   map: {
       flex: 1,
-  },
-  searchbar: {
-    position: 'absolute',
-    top: 25,
-    left: 10,
-    backgroundColor: 'white'
   }
 });

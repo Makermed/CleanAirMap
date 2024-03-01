@@ -3,8 +3,8 @@ import { firebaseAuth } from '../firebaseconfig';
 import { StyleSheet, View } from 'react-native';
 import { useEffect, useState } from 'react';
 
-const SignInForm = (isSignup : boolean) => {
-    const [rendered, setRendered] = useState(false);
+const SignInForm = () => {
+    const [rendered, setRendered] = useState<boolean>(false);
     var uiConfig = {
         // Without this the callback from the ui doesn't work because it doesn't
         // run the callback in time.

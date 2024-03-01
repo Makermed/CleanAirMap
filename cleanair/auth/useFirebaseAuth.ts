@@ -1,10 +1,8 @@
 import type { FirebaseUser } from './firebaseconfig'
 import type { ParsedToken } from "firebase/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { firebaseAuth, db } from './firebaseconfig';
-import { Platform } from 'react-native';
+import { firebaseAuth, setUserUpdateCallback } from './firebaseconfig';
 import { queries } from "./data";
-import { ref, onValue } from "firebase/database";
 import { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { User, currentUser } from './User';
@@ -24,10 +22,6 @@ function useFirebaseAuth(): boolean {
                     unsubscribeUserUpdates();
                 }
                 if (user) {
-                  // Subscribe to auth changes and update the token.
-                  const metadataRef = Platform.OS == 'web'
-                      ? ref(db, 'metadata/' + user.uid + '/refreshTime')
-                      : db.ref('metadata/' + user.uid + '/refreshTime');
                   const userCallback = async () => {
                     const token = await user.getIdToken()
                         .catch((error: any) => {
@@ -68,10 +62,7 @@ function useFirebaseAuth(): boolean {
                         await AsyncStorage.removeItem('firebase-token');
                     }
                   };
-                  userCallback();
-                  unsubscribeUserUpdates = Platform.OS == 'web'
-                  ? onValue(metadataRef, userCallback)
-                  : metadataRef.on('value', userCallback);
+                  unsubscribeUserUpdates = setUserUpdateCallback(user.uid, userCallback);
                 }
                 setFirebaseUser(user);
                 setLoaded(true);

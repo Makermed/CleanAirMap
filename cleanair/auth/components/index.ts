@@ -1,3 +1,4 @@
-import { AuthButton } from './AuthButton';
+import SignInForm from './SignInForm.web';
+import SignOutForm from './SignOutForm';
 
-export { AuthButton }
+export { SignInForm, SignOutForm }

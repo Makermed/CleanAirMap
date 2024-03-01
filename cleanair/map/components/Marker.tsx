@@ -1,24 +1,28 @@
-import { StyleSheet, View } from 'react-native';
-import { Card, Heading, ButtonText, Button} from '@gluestack-ui/themed';
-import { Box } from '@gluestack-ui/themed';
-import { MapGeoJSONFeature } from 'maplibre-gl';
+import { Card, Heading, ButtonText, Button, HStack, VStack} from '@gluestack-ui/themed';
+import { Feature } from "geojson";
+import { ButtonIcon, CloseIcon } from "@gluestack-ui/themed";
 
-interface MarkerProps {
-    location: MapGeoJSONFeature,
-    onClose: Function,
-    onAddNewLocation: Function,
+
+type MarkerProps = {
+  location : Feature,
+  onClose: () => void,
+  onAddNewLocation: () => void
 }
-
-const Marker = ({location, onClose, onAddNewLocation} : MarkerProps) => {
+const Marker = ({location, onClose, onAddNewLocation} : MarkerProps ) => {
   return (
-    <Card size="md" variant="elevated" m="$3">
-        <Heading mb="$1" size="md">
-            {location.properties.name}
-        </Heading>
+    <Card>
+      <VStack>
+      <HStack mb="$5">
+       <Heading size="sm" mr="$3">{location?.properties?.name}</Heading>
+        <Button size='sm' onPress={onClose}>
+          <ButtonIcon size='sm' as={CloseIcon} />
+        </Button>
+        </HStack>
         <Button py="$2" px="$4" onPress={() => onAddNewLocation()}>
             <ButtonText size="sm">Add first reading</ButtonText>
         </Button>
-    </Card>
+        </VStack>
+      </Card>
   );
 }
 

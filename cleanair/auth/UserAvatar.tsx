@@ -1,12 +1,9 @@
-import { useEffect} from 'react';
-import { Pressable,
+import {
     Avatar,
-    AvatarBadge,
     AvatarFallbackText,
     AvatarImage,
     Icon,
   } from "@gluestack-ui/themed"
-import { StyleSheet } from 'react-native';
 import { User } from './User';
 import { User as UserIcon } from 'lucide-react-native';
 
@@ -32,4 +29,4 @@ const UserAvatar = ({ user } : { user: User | undefined | null } ) => {
    return user ? <AvatarForUser user={user}/> : <AvatarForNoUser />;
 }
 
-export { UserAvatar }
+export default UserAvatar;

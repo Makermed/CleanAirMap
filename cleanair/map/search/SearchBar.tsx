@@ -1,79 +1,113 @@
-import { Divider, SearchIcon, useMedia, Box, Input, InputField, InputSlot, InputIcon, FlatList} from '@gluestack-ui/themed';
-import { useRef, useState, useEffect } from "react";
+import { SearchIcon, useMedia, Box, Input, InputField, InputIcon} from '@gluestack-ui/themed';
+import { DimensionValue, StyleSheet } from 'react-native';
+import { Pressable } from '@gluestack-ui/themed';
 import { Feature } from "geojson";
-import SearchResultItem from './SearchResultItem';
-import queryAutocomplete from './data/queryAutocomplete';
+import { useNavigation } from 'expo-router';
+import { useState, useEffect } from "react";
 import { viewState } from '../data/viewState';
-import { DimensionValue } from 'react-native';
-const SearchBar = ({style, onPickItem}: {style: any, onPickItem: Function}) => {
-    const [listVisibility, setListVisibility] = useState<boolean>(true);
+import SearchResultList from './SearchResultList';
+import queryAutocomplete from './data/queryAutocomplete';
+import { BackHandler, Platform } from 'react-native';
+
+type SearchBarProps = {
+    onPickItem: (item: Feature) => void;
+}
+
+
+const SearchBar = ({onPickItem}: SearchBarProps) => {
     const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
     const [autocompleteSuggestions, setAutocompleteSuggestions] = useState<Array<Feature>>([]);
     const [searchText, setSearchText] = useState<string>("");
+    const [showSearchResults, setShowSearchResults] = useState<boolean>(false);
+    const media = useMedia();
+    const navigation = useNavigation();
 
-    const searchBoxRef = useRef<typeof InputField>(null);
-    const autofillListRef = useRef<typeof FlatList>(null);
-
+    // If the search results are showing, pressing the back button should close them on mobile.
+    BackHandler.addEventListener('hardwareBackPress', () => {
+        if ( Platform.OS == "web" ) { return false; }
+        if (showSearchResults) {
+            setShowSearchResults(false);
+            return true;
+        }
+        return false;
+    });
+ 
     useEffect(() => {
-        setSearchText(searchText);
         searchTimeout && clearTimeout(searchTimeout);
-        const textBox : typeof InputField | null = searchBoxRef.current;
-        if (textBox?.value?.length <= 3 || listVisibility == false) {
+        if (searchText.length <= 3) {
+            if (searchText.length == 0) {
+                setAutocompleteSuggestions([]);
+            }
             return;
         }
 
-        // Delay the search for a second to avoid too many API requests.
+        // Delay the search to avoid too many API requests when typing.
         setSearchTimeout(setTimeout(() => {
             queryAutocomplete(
-                textBox?.value,
+                searchText,
                 viewState()?.longitude,
                 viewState()?.latitude)
                 .then(result => {
-                    setAutocompleteSuggestions(result)
+                    setAutocompleteSuggestions(result);
+                    setShowSearchResults(true);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
                 });
-               
-        }, 1000));
+        }, 200));
     }, [searchText]);
 
-    const media = useMedia();
-    return(
-        <Box position="absolute"
-            top="$6"
-            w={media.md ? 600 as DimensionValue : '90%'}
-            alignSelf={media.md ? 'stretch' : 'center'}
-            ml={media.md ? '$6' : 'auto'}
-            bg='$white'
-            dark-bg='$black'
-            hardShadow={'2'}>
-        <Input h='$16'>
-            <InputIcon as={SearchIcon} ml='$4' h='$16' />
-            <InputField
-                placeholder="Search..."
-                ref={searchBoxRef as any}
-                blurOnSubmit={false}
-                value={searchText}
-                onBlur={() => setTimeout(() => {
-                    setListVisibility(false);
-                }, 300)}
-                onFocus={() => setListVisibility(true)}
-                onChange={event => setSearchText(event.nativeEvent.text)} placeholder="Search..." />
-            </Input>
-        <FlatList
-            ref={autofillListRef as any}
-            display={listVisibility ? "flex" : "none"}
-            ItemSeparatorComponent={() => <Divider
-                orientation="horizontal"
-                w="80%"
-                alignSelf='center'
-                bg="$borderLight600"
-                h={1}
-                $dark-bg="$borderDark600"
-              />}
-            data={autocompleteSuggestions}
-            renderItem={({item}) => <SearchResultItem onPress={() => onPickItem(item as Feature)} item={item as Feature} />}
-            keyExtractor={(item) => (item as Feature).properties!.place_id}
-        />
-        </Box>);
+    const pickItem = (item: Feature) => {
+        onPickItem(item as Feature);
+        setShowSearchResults(false);
+    }
+
+    return (
+        <>
+        {showSearchResults && (
+                <Pressable
+                    style={{...StyleSheet.absoluteFillObject}}
+                    onPress={() => setShowSearchResults(false)}>
+                </Pressable>)}
+                <Pressable
+                    position="absolute"
+                    top="$6"
+                    w={media.md ? 600 as DimensionValue : '90%'}
+                    alignItems={media.md ? 'stretch' : 'center'}
+                    alignContent={media.md ? 'stretch' : 'center'}
+                    collapsable={false}
+                    onFocus={() => setShowSearchResults(true)}
+                    onPress={() => setShowSearchResults(true)}>
+                        <Box
+                        minHeight="$16"
+                        alignSelf={media.md ? 'stretch' : 'center'}
+                        ml={media.md ? '$12' : 'auto'}
+                        w={media.md ? 600 as DimensionValue : '90%'}
+                        bg='$white'
+                        dark-bg='$black'
+                        hardShadow={'2'}>
+                        <Input minHeight="$16" flex={1} key='search-input'>
+                            <InputIcon as={SearchIcon} ml='$4' h='$16' />
+                            <InputField
+                                h='$16'
+                                key='search-input-field'
+                                id='search-input-field'
+                                flex={1}
+                                onPressIn={() => setShowSearchResults(true)}
+                                onFocus={() => setShowSearchResults(true)}
+                                placeholder="Search..."
+                                blurOnSubmit={false}
+                                onChange={event => {setSearchText(event.nativeEvent.text)}}
+                                />
+                        </Input>
+                        {showSearchResults && <SearchResultList
+                                            data={autocompleteSuggestions}
+                                            onPick={pickItem} />}
+                        </Box>
+                </Pressable>
+        </>
+    );
 }
+
 
 export default SearchBar;

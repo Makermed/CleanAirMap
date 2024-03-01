@@ -6,4 +6,8 @@ type FirebaseUser = FirebaseAuthTypes.User;
 const firebaseAuth = auth();
 const db = database();
 
-export {firebaseAuth, db, FirebaseUser}
+const setUserUpdateCallback = (uid: String, callback: any) : Function => {
+    callback();
+    return db.ref('metadata/' + uid + '/refreshTime').on('value', callback);
+}
+export {firebaseAuth, db, FirebaseUser, setUserUpdateCallback}

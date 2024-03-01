@@ -1,5 +1,7 @@
-import type { User as FirebaseUser } from './firebaseconfig'
+import type { FirebaseUser } from './firebaseconfig'
 import { makeVar} from '@apollo/client';
+import { firebaseAuth } from './firebaseconfig';
+import { client } from '../storage';
 
 class User {
     private firebaseUser: FirebaseUser;
@@ -25,9 +27,14 @@ class User {
     getEmail = () : string =>  {
         return this.userProfile?.email;
     }
-    getName = () : string => {
+    getName = () : string | null => {
         return this.firebaseUser.displayName;
-    
+    }
+    signOut = () => {
+        firebaseAuth.signOut().then(() => {
+            currentUser(null);
+            client.resetStore();
+        });
     }
 }
 

@@ -47,6 +47,10 @@ module.exports = function () {
       {
         "ios": {
           "useFrameworks": "static"
+        },
+        "android": {
+          "compileSdkVersion": 34,
+          "targetSdkVersion": 34,
         }
       }],
       "@maplibre/maplibre-react-native",

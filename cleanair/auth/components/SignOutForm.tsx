@@ -1,4 +1,4 @@
-import { Button } from "@gluestack-ui/themed"
+import { Button, ButtonText } from "@gluestack-ui/themed"
 import { StyleSheet, View } from 'react-native';
 import {currentUser} from '../User';
 import { firebaseAuth } from '../firebaseconfig';
@@ -14,20 +14,10 @@ const signOut = () => {
 const SignOutForm = () => {
     const logoutString = "Logout " + currentUser()?.getEmail();
     return (
-        <View>
-            <Button onPress={signOut} style={styles.logoutButton} mode="elevated">
-              {logoutString}
+            <Button variant="solid" mt="$2" onPress={signOut} >
+                <ButtonText>{logoutString}</ButtonText>
             </Button>
-        </View>
     )
 }
 
 export default SignOutForm;
-
-const styles = StyleSheet.create({
-    logoutButton: {
-       backgroundColor: 'white',
-       minWidth: 300,
-       maxWidth: 700,
-    }
-  });

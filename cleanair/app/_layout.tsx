@@ -1,20 +1,19 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { client } from '../storage';
 import { ApolloProvider } from '@apollo/client';
-import { Modal } from '../common';
 import { AuthButton, useFirebaseAuth} from '../auth';
-import 'expo-dev-client'; // Turn on debugging.
-import { GluestackUIProvider, Button } from "@gluestack-ui/themed"
+import { GluestackUIProvider } from "@gluestack-ui/themed"
+import UserMenu from '../common/components/UserMenu';
 import config from "../gluestack-style.config"
-import { ParsingError } from 'maplibre-gl';
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
 } from 'expo-router';
+import 'expo-dev-client'; // Turn on debugging.
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
@@ -57,7 +56,6 @@ function LoadingLayout() {
   return (
         <GluestackUIProvider config={config}>
             <RootLayoutNav/>
-            <Modal />
         </GluestackUIProvider>);
 }
 
@@ -74,12 +72,19 @@ function RootLayoutNav() {
                 headerTitleStyle: {
                   fontWeight: 'bold',
                 },
-                headerRight: () => (<AuthButton/>)
+                headerRight: () => (<UserMenu />)
               }}
               >
                 <Stack.Screen
                   name="index"
-                  options={{ title: 'My home' }}
+                  options={{ title: 'Clean Air Map' }}
+                />
+                <Stack.Screen
+                  name="login"
+                  options={{
+                    title: 'Clean Air Map | Login',
+                    presentation: 'transparentModal',
+                  }}
                 />
             </Stack>
   );

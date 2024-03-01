@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { client } from '../storage';
 import { ApolloProvider } from '@apollo/client';
-import { AuthButton, useFirebaseAuth} from '../auth';
+import { useFirebaseAuth} from '../auth';
 import { GluestackUIProvider } from "@gluestack-ui/themed"
 import UserMenu from '../common/components/UserMenu';
 import config from "../gluestack-style.config"

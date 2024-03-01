@@ -2,12 +2,17 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "moduleSuffixes": [".ios", ".android", ".web", ".native", ""]
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "moduleSuffixes": [".ios", ".android", ".web", ".native", ""],
+    "types": ["node"],
+    "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types", "./types"],
   },
   "include": [
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
-  ]
+    "expo-env.d.ts", "app.config.js" ],
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"]
 }

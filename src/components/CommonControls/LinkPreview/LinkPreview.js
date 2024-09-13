@@ -1,8 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Card, CardHeader, CardContent, Typography, Button } from "@material-ui/core";
-import { summarize_text, decodeHTMLEntities } from "utility/utils";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
+  Button,
+} from "@material-ui/core";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { summarize_text, decodeHTMLEntities } from "../../../utility/utils";
 
 const styles = (theme) => ({
   root: {
@@ -70,7 +77,7 @@ class LinkPreview extends React.Component {
     const { classes, preview } = this.props;
 
     if (!preview) {
-      return <div></div>;
+      return <div style={{ display: "none" }}></div>;
     }
     const title = summarize_text(preview.title, 25);
     const description = summarize_text(preview.description, 25);
@@ -78,8 +85,12 @@ class LinkPreview extends React.Component {
     return (
       <div className={classes.root}>
         <Card className={classes.card}>
-          {(preview.image !== null && preview.image !== "") && (
-            <img alt={""} src={preview.image} className={classes.media} />
+          {preview.image !== null && preview.image !== "" && (
+            <LazyLoadImage
+              alt={""}
+              src={preview.image}
+              className={classes.media}
+            />
           )}
           <CardHeader
             className={classes.header}
@@ -102,7 +113,9 @@ class LinkPreview extends React.Component {
               target="_blank"
               href={preview.url}
             >
-              <Typography className={classes.domain}>{preview.domain}</Typography>
+              <Typography className={classes.domain}>
+                {preview.domain}
+              </Typography>
             </Button>
           </CardContent>
         </Card>
@@ -113,7 +126,7 @@ class LinkPreview extends React.Component {
 
 LinkPreview.propTypes = {
   classes: PropTypes.object,
-  preview: PropTypes.object
+  preview: PropTypes.object,
 };
 
 export default withStyles(styles)(LinkPreview);

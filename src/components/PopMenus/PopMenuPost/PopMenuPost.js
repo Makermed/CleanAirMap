@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { MenuList, MenuItem } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -31,16 +30,17 @@ const styles = (theme) => ({
 
 class PopMenuPost extends React.Component {
   render() {
-    const { 
-      classes, 
-      theme, 
-      saved, 
+    const {
+      classes,
+      theme,
+      saved,
       owner,
-      onReport, 
+      onReport,
       onEdit,
-      onCopyLink, 
-      onSave, 
-      onDeleteSaved 
+      onDelete,
+      onCopyLink,
+      onSave,
+      onDeleteSaved,
     } = this.props;
 
     return (
@@ -56,18 +56,6 @@ class PopMenuPost extends React.Component {
             </span>
             Report Post
           </MenuItem>
-          {owner &&
-            <MenuItem className={classes.menu_item} onClick={onEdit}>
-              <span className={classes.menu_icon}>
-                <img
-                  className={classes.menu_img}
-                  alt={"edit"}
-                  src={`/static/images/icons/${theme}/edit.png`}
-                />
-              </span>
-              Edit Post
-            </MenuItem>
-          }
           <MenuItem className={classes.menu_item} onClick={onCopyLink}>
             <span className={classes.menu_icon}>
               <img
@@ -78,7 +66,7 @@ class PopMenuPost extends React.Component {
             </span>
             Copy Link to Post
           </MenuItem>
-          {saved &&
+          {saved && (
             <MenuItem className={classes.menu_item} onClick={onDeleteSaved}>
               <span className={classes.menu_icon}>
                 <img
@@ -89,8 +77,8 @@ class PopMenuPost extends React.Component {
               </span>
               Remove from Saved
             </MenuItem>
-          }
-          {!saved && 
+          )}
+          {!saved && (
             <MenuItem className={classes.menu_item} onClick={onSave}>
               <span className={classes.menu_icon}>
                 <img
@@ -101,23 +89,35 @@ class PopMenuPost extends React.Component {
               </span>
               Save Post
             </MenuItem>
-          }
+          )}
+          {owner && (
+            <MenuItem className={classes.menu_item} onClick={onEdit}>
+              <span className={classes.menu_icon}>
+                <img
+                  className={classes.menu_img}
+                  alt={"edit"}
+                  src={`/static/images/icons/${theme}/edit.png`}
+                />
+              </span>
+              Edit Post
+            </MenuItem>
+          )}
+          {owner && (
+            <MenuItem className={classes.menu_item} onClick={onDelete}>
+              <span className={classes.menu_icon}>
+                <img
+                  className={classes.menu_img}
+                  alt={"edit"}
+                  src={`/static/images/icons/${theme}/warning.png`}
+                />
+              </span>
+              Delete Post
+            </MenuItem>
+          )}
         </MenuList>
       </div>
     );
   }
 }
-
-PopMenuPost.propTypes = {
-  classes: PropTypes.object,
-  saved: PropTypes.bool,
-  owner: PropTypes.bool,
-  theme: PropTypes.string,
-  onReport: PropTypes.func,
-  onEdit: PropTypes.func,
-  onCopyLink: PropTypes.func,
-  onSave: PropTypes.func,
-  onDeleteSaved: PropTypes.func
-};
 
 export default withStyles(styles)(PopMenuPost);

@@ -2,38 +2,16 @@ import React from "react";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { ActionCreators } from "actions";
-import { withRouter, Link } from "react-router-dom";
-import { withFirebase } from 'services';
+import { ActionCreators } from "../../actions";
+import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import {
-  Typography,
-  Button,
-  IconButton,
-  Box,
-  TextField,
-  Icon
-} from "@material-ui/core";
+import { Button, IconButton, Box, TextField, Icon } from "@material-ui/core";
 import { ToastContainer } from "react-toastify";
 import validate from "validate.js";
-import { 
-  BasicAppBar, 
-  ImageSlider, 
-  WaitingDialog 
-} from "components";
-import * as ROUTES from "constants/routes";
-import { ROLE_USER, ROLE_ANONYMOUS } from "constants/user";
-import { GraphqlService } from 'services';
-import { 
-  MAX_ARTICLE_WIDTH, 
-  SIGN_METHOD_EMAIL, 
-  SIGN_METHOD_GOOGLE, 
-  SIGN_METHOD_APPLE,
-  GRAPHQL_SUCCESS 
-} from "constants/types";
-import { ToastSuccess, ToastError } from "utility/toast";
-
+import { BasicAppBar, ImageSlider, WaitingSpinner } from "../../components";
+import * as ROUTES from "../../constants/routes";
+import { MAX_ARTICLE_WIDTH, SIGN_METHOD_EMAIL } from "../../constants/types";
 
 const ERROR_CODE_ACCOUNT_EXISTS =
   "auth/account-exists-with-different-credential";
@@ -45,98 +23,105 @@ const ERROR_MSG_ACCOUNT_EXISTS = `
   your personal account page.
 `;
 
-// const ERROR_CODE_ACCOUNT_UNREGISTERED = "auth/account-unregistered";
-const ERROR_MSG_ACCOUNT_UNREGISTERED = 'This account was unregistered';
+const ERROR_MSG_ACCOUNT_UNREGISTERED = "This account was unregistered";
+
+const ERROR_MSG_SERVER_ERROR =
+  "Sorry, server doesn't response, retry again later";
 
 const schema = {
   email: {
     presence: { allowEmpty: false, message: "is required" },
     email: true,
     length: {
-      maximum: 64
-    }
+      maximum: 64,
+    },
   },
   password: {
     presence: { allowEmpty: false, message: "is required" },
     length: {
-      maximum: 128
-    }
-  }
+      maximum: 128,
+    },
+  },
 };
 
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+const CREDIT_UPDATE_INTERVAL = 30 * MS_PER_DAY;
+
+const currentDate = Date.now();
+const expiryDate = new Date(currentDate + CREDIT_UPDATE_INTERVAL);
+
 const emptyUser = {
-  uid           : '',
-  name          : '',
-  username      : '',
-  biography     : '',
-  image         : '',
-  email         : '',
-  emailVerified : false,
-  phone         : '',
-  phoneVerified : false,
-  links         : [],
-  msgToken      : null,
-  role          : ROLE_ANONYMOUS,
-  signMethod    : SIGN_METHOD_EMAIL,
-  approved      : false
-}
+  uid: "",
+  name: "",
+  username: "",
+  biography: "",
+  image: "",
+  email: "",
+  emailVerified: false,
+  phone: "",
+  phoneVerified: false,
+  links: [],
+  msgToken: null,
+  signMethod: SIGN_METHOD_EMAIL,
+  approved: false,
+  free_credits_expiry_date: expiryDate.toISOString(),
+};
 
-
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     minHeight: `calc(100vh)`,
     width: MAX_ARTICLE_WIDTH,
-    maxWidth: '100%',
-    margin: '0 auto',
+    maxWidth: "100%",
+    margin: "0 auto",
     backgroundColor: theme.palette.background.default,
   },
   appbar: {
     width: MAX_ARTICLE_WIDTH,
     maxWidth: "100%",
     height: "56px",
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       height: "64px",
     },
   },
   container: {
     paddingLeft: 8,
     paddingRight: 8,
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   title: {
     flexGrow: 1,
-    textAlign: "center"
+    textAlign: "center",
   },
   slider: {
-    marginBottom: 16
+    marginBottom: 16,
   },
   textField: {
     color: theme.palette.text.primary,
     marginTop: 8,
-    marginBottom: 0
+    marginBottom: 0,
   },
   customInput: {
     "&:before": {
-      borderBottomColor: theme.palette.text.secondary
+      borderBottomColor: theme.palette.text.secondary,
     },
     "&:after": {
-      borderBottomColor: theme.palette.text.secondary
+      borderBottomColor: theme.palette.text.secondary,
     },
     "&.MuiInput-underline:hover:not(.Mui-disabled):before": {
-      borderBottomColor: theme.palette.text.secondary
-    }
+      borderBottomColor: theme.palette.text.secondary,
+    },
   },
   signupline: {
     color: theme.palette.text.secondary,
     textAlign: "center",
     marginTop: 20,
-    marginBottom: 4
+    marginBottom: 4,
   },
   resetline: {
     color: theme.palette.text.secondary,
     textAlign: "center",
     marginTop: 4,
-    marginBottom: 10
+    marginBottom: 10,
   },
   submitBtn: {
     backgroundColor: "#1878F3",
@@ -150,11 +135,11 @@ const styles = theme => ({
     "&:hover": {
       backgroundColor: "#1878F3",
       color: "#FFFFFF",
-    }
+    },
   },
   signinForm: {
     marginLeft: 16,
-    marginRight: 16
+    marginRight: 16,
   },
   socialIcons: {
     display: "flex",
@@ -176,15 +161,33 @@ const styles = theme => ({
     padding: 4,
   },
   error: {
-    color: theme.palette.error.main
+    color: theme.palette.error.main,
   },
   info: {
-    color: theme.palette.info.main
+    color: theme.palette.info.main,
   },
   signlink: {
     color: theme.palette.text.primary,
-    textDecoration: "none"
-  }
+    textDecoration: "none",
+  },
+  iconContainer: {
+    textAlign: "center",
+    margin: "5px",
+  },
+  iconText: {
+    marginTop: "5px",
+    cursor: "pointer",
+    fontFamily: "Roboto",
+  },
+  iconWrapper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  signlinkBtn: {
+    color: "#FFFFFF",
+    textDecoration: "none",
+  },
 });
 
 class SignInEmail extends React.Component {
@@ -194,10 +197,14 @@ class SignInEmail extends React.Component {
     this.state = {
       msgToken: null,
       isValid: false,
+      emailVerified: true,
+      isSent: false,
       values: {},
       touched: {},
-      errors: {}
+      errors: {},
     };
+
+    this.getStartedRef = React.createRef();
 
     this.handleChange = this.handleChange.bind(this);
     this.handleNavBack = this.handleNavBack.bind(this);
@@ -207,12 +214,13 @@ class SignInEmail extends React.Component {
     this.handleGoogleSignIn = this.handleGoogleSignIn.bind(this);
     this.handleAppleSignIn = this.handleAppleSignIn.bind(this);
     this.handlePhoneSignIn = this.handlePhoneSignIn.bind(this);
-    // this.handleFacebookSignIn = this.handleFacebookSignIn.bind(this);
+
+    this.onSendEmailVerification = this.onSendEmailVerification.bind(this);
   }
 
   componentDidMount = () => {
-    if (this.props.firebase.messaging) {
-      const messaging = this.props.firebase.messaging;
+    if (this.props.firebase?.messaging) {
+      const messaging = this.props.firebase?.messaging;
       messaging
         .requestPermission()
         .then(() => {
@@ -221,12 +229,12 @@ class SignInEmail extends React.Component {
         .then((data) => {
           this.setState({
             ...this.state,
-            msgToken: data
+            msgToken: data,
           });
           console.warn("token :", data);
         });
     }
-  }
+  };
 
   setWaiting = (waiting) => {
     if (waiting) {
@@ -238,7 +246,7 @@ class SignInEmail extends React.Component {
 
   handleNavBack = () => {
     const location = {
-      pathname: ROUTES.HOME,
+      pathname: ROUTES.CLEANAIRMAP,
       state: { animation: "top" },
     };
     this.props.history.push(location);
@@ -246,13 +254,13 @@ class SignInEmail extends React.Component {
 
   handleSkip = () => {
     const location = {
-      pathname: ROUTES.HOME,
+      pathname: ROUTES.CLEANAIRMAP,
       state: { animation: "top" },
     };
     this.props.history.push(location);
-  }
+  };
 
-  handleChange = event => {
+  handleChange = (event) => {
     event.persist();
 
     this.setState(
@@ -263,366 +271,43 @@ class SignInEmail extends React.Component {
           [event.target.name]:
             event.target.type === "checkbox"
               ? event.target.checked
-              : event.target.value
+              : event.target.value,
         },
         touched: {
           ...this.state.touched,
-          [event.target.name]: true
-        }
+          [event.target.name]: true,
+        },
       },
       () => {
         const errors = validate(this.state.values, schema);
         this.setState({
           ...this.state,
           isValid: errors ? false : true,
-          errors: errors || {}
+          errors: errors || {},
         });
       }
     );
   };
 
-  isInvited = async (user_id, feed_join_info) => {
-    const gqlservice = new GraphqlService();
-    const invited = await gqlservice
-      .invites_by_user(user_id)
-      .then(
-        (result) => {
-          const invites = result.data.user_invites;
-          for (let invite of invites) {
-            if (
-              !invite.is_phone &&
-              invite.invitee === user_id &&
-              invite.invited_to === feed_join_info.feed_id
-            ) {
-              return true;
-            }
-          }
-          return false;
-        },
-        (reason) => {
-          return false;
-        }
-      )
-      .catch((err) => {
-        return false;
-      });
+  _signInProc = async (uid, email, emailVerified, method) => {
+    let pathname = ROUTES.CLEANAIRMAP;
 
-    return invited;
-  };
-
-  isShared = async (feed_share_info) => {
-    const gqlservice = new GraphqlService();
-    const shared = await gqlservice
-      .feed_share_by_id(feed_share_info.share_id)
-      .then(
-        (result) => {
-          const feed_shares = result.data.feed_share;
-          if (feed_shares.length > 0) {
-            const feed_share = feed_shares[0];
-            const now = new Date();
-            const expired = new Date(feed_share.expired);
-            return now < expired;
-          } else {
-            return false;
-          }
-        },
-        (reason) => {
-          return false;
-        }
-      )
-      .catch((err) => {
-        return false;
-      });
-
-    return shared;
-  };
-
-  addFeedFollower = async (feed_id, user) => {
-    const gqlservice = new GraphqlService();
-    gqlservice.set_auth_jwt(user.token);
-
-    // get followed feeds of this user
-    let follows = 0;
-    let result = await gqlservice.feed_followers(user.uid);
-    if (result.status_code === GRAPHQL_SUCCESS) {
-      follows = result.data.feed_followers.length;
-    }
-
-    const follower = {
-      id: `${feed_id}-${user.uid}`,
-      feed_id: feed_id,
-      user_id: user.uid,
-      order: follows,
+    const location = {
+      pathname: pathname,
+      state: { animation: "top" },
     };
-    await gqlservice.insert_feed_follower(follower);
+    this.props.history.push(location);
   };
 
-  _signInProc = async (uid, email, method) => {
-    const { firebase } = this.props;
-
-    const token = await firebase.auth.currentUser.getIdToken();
-    const idTokenResult = await firebase.auth.currentUser.getIdTokenResult();
-    console.log("idTokenResult :", idTokenResult);
-    const hasuraClaim = idTokenResult.claims['https://hasura.io/jwt/claims'];
-
-    if (!hasuraClaim) {
-      // console.log("signInProc hasuraClaim undefined");
-      ToastSuccess("Successfully registered in the Raven. Please sign in again please.");
-      return;
-    }
-
-    let authUser = {};
-    if (hasuraClaim) {
-      authUser = {
-        uid,
-        token,
-        hasuraClaim,
-      };
-    } else {
-      ToastError(ERROR_MSG_ACCOUNT_UNREGISTERED);
-      return;
-      // const userRef = firebase.db.ref('users/' + uid + '/refreshTime');
-      // userRef.on('value', async data => {
-      //   if (!data.exists) {
-      //     this.setState({
-      //       ...this.state,
-      //       autherror: {
-      //         code: ERROR_CODE_ACCOUNT_UNREGISTERED,
-      //         message: ERROR_MSG_ACCOUNT_UNREGISTERED
-      //       }
-      //     });
-      //     return;
-      //   }
-
-      //   // Force refresh to pick up the latest custom claims changes.
-      //   const token = await firebase.auth.currentUser.getIdToken();
-      //   authUser = {
-      //     uid,
-      //     token,
-      //     hasuraClaim,
-      //   };
-      // });
-    }
-
-    this.props.setAuthUser(authUser);
-
-    // Create a user in database on graphql+postgresql
-    let new_user = {...emptyUser};
-    new_user.uid = authUser.uid;
-    new_user.role = ROLE_USER;
-    new_user.email = email;
-    new_user.approved = false;
-    new_user.signMethod = method;
-    new_user.msgToken = this.state.msgToken;
-
-    const gqlservice = new GraphqlService();
-    gqlservice.set_auth_jwt(token);
-
-    const result = await gqlservice.add_user(new_user);
-    // console.log("add_user :", result);
-    if (result.status_code !== GRAPHQL_SUCCESS || result.data.length === 0) {
-      ToastError(ERROR_MSG_ACCOUNT_UNREGISTERED);
-      return;
-    }
-
-    const user = result.data[0];
-    const isNewUser = result.data.isNew; 
-    // console.log("User by graphql :", user, isNewUser);
-
-    // if (user.approved === true) {
-    //   this.props.signIn(user);
-    //   this.props.history.push(ROUTES.PROFILE);
-    // } else {
-    //   let error = {
-    //     status_code: AUTH_NOT_APPROVED,
-    //     message: "This account was not approved yet."
-    //   };
-    //   this.setState({
-    //     ...this.state,
-    //     autherror: error
-    //   });
-    // }
-
-    this.props.signIn(user);
-    this.props.resetAllData();
-
-    // check if onboarding tags
-    // const mytags = tags.filter(tag => 
-    //   tag.tag_users.findIndex(tag_user => tag_user.user_id === user.uid) !== -1
-    // );
-
-    if ( user.skipProfile ||
-      (user.name !== undefined && user.name !== "" &&
-      user.username !== undefined && user.username !== "" &&
-      user.email !== undefined && user.email !== "")
-    ) {
-      if (isNewUser) {
-        const location = {
-          pathname: ROUTES.ONBOARDING,
-          state: { animation: "top" },
-        };
-        this.props.history.push(location);
-      } else {
-        const { feed_join_info, feed_share_info } = this.props;
-
-        if (feed_join_info) {
-          const invited = await this.isInvited(
-            user.uid,
-            feed_join_info
-          );
-          if (invited) {
-            // add this user to the feed followers
-            await this.addFeedFollower(feed_join_info.feed_id, user.uid);
-          }
-
-          // go to the feed
-          let pathname = ROUTES.HOME;
-          if (invited) {
-            const { login_backroute } = this.props;
-            pathname = login_backroute === null ? ROUTES.HOME : login_backroute;
-          } else {
-            pathname = ROUTES.HOME;
-          }
-          const location = {
-            pathname: pathname,
-            state: { animation: "top" },
-          };
-          this.props.history.push(location);
-          this.props.deleteFeedJoinInfo();
-          this.props.setLoginBackRoute(null);
-
-        } else if (feed_share_info) {
-          const shared = this.isShared(feed_share_info);
-          if (shared) {
-            // add this user to the feed followers
-            await this.addFeedFollower(feed_share_info.feed_id, user.uid);
-          }
-
-          // go to the feed
-          let pathname = ROUTES.HOME;
-          if (shared) {
-            const { login_backroute } = this.props;
-            pathname = login_backroute === null ? ROUTES.HOME : login_backroute;
-          } else {
-            pathname = ROUTES.HOME;
-          }
-          const location = {
-            pathname: pathname,
-            state: { animation: "top" },
-          };
-          this.props.history.push(location);
-
-          this.props.deleteFeedShareInfo();
-          this.props.setLoginBackRoute(null);
-        
-        } else {
-
-          // this.props.refreshArticles();
-          const { login_backroute } = this.props;
-          const pathname = login_backroute === null ? ROUTES.HOME : login_backroute;
-          const location = {
-            pathname: pathname,
-            state: { animation: "top" },
-          };
-          this.props.history.push(location);
-          this.props.setLoginBackRoute(null);
-        }
-      }
-    } else {
-      const location = {
-        pathname: ROUTES.PROFILE,
-        state: { animation: "top" },
-      };
-      this.props.history.push(location);
-    }
-  }
-
-
-  handleSignIn = event => {
-    const { email, password } = this.state.values;
-    const { firebase } = this.props;
-
-    firebase
-      .doSignInWithEmailAndPassword(email, password)
-      .then(result => {
-        const uid = result.user.uid;
-        this._signInProc(uid, email, SIGN_METHOD_EMAIL);
-      })
-      .catch(error => {
-        ToastError(error.message);
-        //this.props.history.push(ROUTES.LANDING);
-      });
-
-    event.preventDefault();
+  handleSignIn = (event) => {
+    this._signInProc();
   };
 
-  handleGoogleSignIn = event => {
-    const { firebase } = this.props;
-    firebase
-      .doSignInWithGoogle()
-      .then(socialAuthUser => {
-        const uid = socialAuthUser.user.uid;
-        const email = socialAuthUser.user.email;
-        this._signInProc(uid, email, SIGN_METHOD_GOOGLE);
-      })
-      .catch(error => {
-        // console.log("Google Sign In Error :", error);
-        if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
-          ToastError(ERROR_MSG_ACCOUNT_EXISTS);
-        } else {
-          ToastError(error.message);
-        }
-        //this.props.history.push(ROUTES.LANDING);
-      });
-
-    event.preventDefault();
+  handleGoogleSignIn = (event) => {
+    this._signInProc();
   };
 
-  handleAppleSignIn = event => {
-    const { firebase } = this.props;
-    firebase
-      .doSignInWithApple()
-      .then(socialAuthUser => {
-        const uid = socialAuthUser.user.uid;
-        const email = socialAuthUser.user.email;
-        this._signInProc(uid, email, SIGN_METHOD_APPLE);
-      })
-      .catch(error => {
-        // console.log("Apple Sign In Error :", error);
-        if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
-          ToastError(ERROR_MSG_ACCOUNT_EXISTS);
-        } else {
-          ToastError(error.message);
-        }
-      });
-
-    event.preventDefault();
-  };
-
-  // handleFacebookSignIn = event => {
-  //   const { firebase } = this.props;
-  //   firebase
-  //     .doSignInWithFacebook()
-  //     .then(socialAuthUser => {
-  //       const uid = socialAuthUser.user.uid;
-  //       const email = socialAuthUser.additionalUserInfo.profile.email;
-  //       this._signInProc(uid, email);
-  //     })
-  //     .catch(error => {
-  //       if (error.code === ERROR_CODE_ACCOUNT_EXISTS) {
-  //         error.message = ERROR_MSG_ACCOUNT_EXISTS;
-  //       }
-
-  //       console.log("Facebook Sign In Error :", error);
-  //       this.setState({
-  //         ...this.state,
-  //         autherror: error
-  //       });
-  //       this.props.history.push(ROUTES.LANDING);
-  //     });
-
-  //   event.preventDefault();
-  // };
+  handleAppleSignIn = (event) => {};
 
   handlePhoneSignIn = () => {
     const location = {
@@ -630,29 +315,32 @@ class SignInEmail extends React.Component {
       state: { animation: "top" },
     };
     this.props.history.push(location);
-  }
+  };
 
   handleSuccessClose = () => {
     this.setState({
       ...this.state,
       success: false,
-      successMsg: ''
+      successMsg: "",
     });
   };
+
+  onSendEmailVerification = () => {};
 
   render() {
     const { classes, theme_mode, requesting } = this.props;
     const { email, password } = this.state.values;
-    const { errors, touched, isValid } = this.state;
+    const { emailVerified, isSent, errors, touched, isValid } = this.state;
 
-    const hasError = field => (touched[field] && errors[field] ? true : false);
+    const hasError = (field) =>
+      touched[field] && errors[field] ? true : false;
 
     return (
       <div className={classes.root}>
         <div className={classes.appbar}>
           <BasicAppBar
             width={MAX_ARTICLE_WIDTH}
-            title={"Sign In"}
+            title={"Sign in to Raven"}
             action={"SKIP"}
             onNavBack={this.handleNavBack}
             onAction={this.handleSkip}
@@ -663,32 +351,63 @@ class SignInEmail extends React.Component {
           <Box className={classes.slider}>
             <ImageSlider />
           </Box>
+
           <Box className={classes.socialIcons}>
-            <IconButton onClick={this.handleAppleSignIn}>
-              <Icon className={classes.socialIcon}>
-                <i className="fa fa-lg fa-apple"></i>
-              </Icon>
-            </IconButton>
-            <IconButton onClick={this.handleGoogleSignIn}>
-              <Icon className={classes.socialIcon}>
-                <i className="fa fa-lg fa-google"></i>
-              </Icon>
-            </IconButton>
-            <IconButton onClick={this.handlePhoneSignIn}>
-              <img
-                className={classes.emailIcon}
-                alt="phone"
-                src={`/static/images/icons/${theme_mode}/message.png`}
-              />
-            </IconButton>
-            <IconButton>
-              <img
-                className={classes.emailIcon}
-                alt="email"
-                src={`/static/images/icons/${theme_mode}/email.png`}
-              />
-            </IconButton>
+            <div
+              className={classes.iconContainer}
+              onClick={this.handleAppleSignIn}
+            >
+              <div className={classes.iconWrapper}>
+                <IconButton>
+                  <Icon className={classes.socialIcon}>
+                    <i className="fa fa-lg fa-apple"></i>
+                  </Icon>
+                </IconButton>
+                <span className={classes.iconText}>Apple</span>
+              </div>
+            </div>
+            <div
+              className={classes.iconContainer}
+              onClick={this.handleGoogleSignIn}
+            >
+              <div className={classes.iconWrapper}>
+                <IconButton>
+                  <Icon className={classes.socialIcon}>
+                    <i className="fa fa-lg fa-google"></i>
+                  </Icon>
+                </IconButton>
+                <span className={classes.iconText}>Google</span>
+              </div>
+            </div>
+            <div
+              className={classes.iconContainer}
+              onClick={this.handlePhoneSignIn}
+            >
+              <div className={classes.iconWrapper}>
+                <IconButton>
+                  <img
+                    className={classes.emailIcon}
+                    alt="phone"
+                    src={`/static/images/icons/${theme_mode}/message.png`}
+                  />
+                </IconButton>
+                <span className={classes.iconText}>SMS</span>
+              </div>
+            </div>
+            <div className={classes.iconContainer}>
+              <div className={classes.iconWrapper}>
+                <IconButton>
+                  <img
+                    className={classes.emailIcon}
+                    alt="email"
+                    src={`/static/images/icons/${theme_mode}/email.png`}
+                  />
+                </IconButton>
+                <span className={classes.iconText}>Email</span>
+              </div>
+            </div>
           </Box>
+
           <Box className={classes.signinForm}>
             <Box>
               <TextField
@@ -711,8 +430,8 @@ class SignInEmail extends React.Component {
                 onChange={this.handleChange}
                 InputProps={{
                   classes: {
-                    root: classes.customInput
-                  }
+                    root: classes.customInput,
+                  },
                 }}
               />
               <TextField
@@ -736,26 +455,12 @@ class SignInEmail extends React.Component {
                 value={password || ""}
                 InputProps={{
                   classes: {
-                    root: classes.customInput
-                  }
+                    root: classes.customInput,
+                  },
                 }}
               />
             </Box>
-            <Box>
-              <Typography className={classes.signupline}>
-                Don't have an account?&nbsp;&nbsp;
-                <Link className={classes.signlink} to={ROUTES.SIGN_UP}>
-                  Sign Up
-                </Link>
-              </Typography>
-              <Typography className={classes.resetline}>
-                Forgot password?&nbsp;&nbsp;
-                <Link className={classes.signlink} to={ROUTES.RESET_PASSWORD}>
-                  Reset Passowrd
-                </Link>
-              </Typography>
-            </Box>
-            <Box>
+            <div>
               <Button
                 className={classes.submitBtn}
                 disabled={!isValid}
@@ -763,10 +468,20 @@ class SignInEmail extends React.Component {
               >
                 Get Started
               </Button>
-            </Box>
+              {!emailVerified && (
+                <Button
+                  className={classes.submitBtn}
+                  disabled={isSent}
+                  onClick={this.onSendEmailVerification}
+                >
+                  Send Verification Email
+                </Button>
+              )}
+            </div>
           </Box>
         </Box>
-        <WaitingDialog open={requesting} />
+
+        <WaitingSpinner open={requesting} />
         <ToastContainer />
       </div>
     );
@@ -775,17 +490,14 @@ class SignInEmail extends React.Component {
 
 SignInEmail.propTypes = {
   history: PropTypes.object,
-  firebase: PropTypes.object
+  firebase: PropTypes.object,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   authUser: state.sessionState.authUser,
-  tags: state.dataState.tags,
-  feed_join_info: state.dataState.feed_join_info,
-  feed_share_info: state.dataState.feed_share_info,
   login_backroute: state.uiState.login_backroute,
   theme_mode: state.uiState.theme_mode,
-  requesting: state.uiState.requesting
+  requesting: state.uiState.requesting,
 });
 
 function mapDispatchToProps(dispatch) {
@@ -793,7 +505,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default compose(
-  withFirebase,
   withRouter,
   connect(mapStateToProps, mapDispatchToProps),
   withStyles(styles)

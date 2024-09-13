@@ -1,1 +1,5 @@
-export { default as configureStore } from './configureStore';
+import configureStore from "./configureStore";
+
+const store = configureStore();
+
+export default store;

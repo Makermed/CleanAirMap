@@ -1,0 +1,44 @@
+.hide-class {
+  overflow: hidden;
+}
+
+
+@keyframes mymoveone {
+  from {
+    bottom: 50px;
+  }
+
+  to {
+    bottom: 0px;
+  }
+}
+
+.animation {
+  position: relative;
+  animation: mymove 0.2s;
+}
+
+@keyframes mymove {
+  from {
+    bottom: 50px;
+  }
+
+  to {
+    bottom: 0px;
+  }
+}
+
+.animationDown {
+  position: relative;
+  animation: mymove 0.2s;
+}
+
+@keyframes mymoveone {
+  from {
+    bottom: 0px;
+  }
+
+  to {
+    bottom: 50px;
+  }
+}

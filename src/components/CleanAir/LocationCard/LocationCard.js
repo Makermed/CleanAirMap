@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { ActionCreators } from "actions";
+import { ActionCreators } from "../../../actions";
 import { withStyles } from "@material-ui/core/styles";
 import {
   Card,
@@ -11,29 +11,29 @@ import {
   CardActions,
   Grid,
   Typography,
-  IconButton,
-  Menu,
 } from "@material-ui/core";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {
-  PopMenuMapLocation,
-  PopMenuMapLocationMod,
-  DlgLoginConfirm,
-  DlgReport,
-  DlgShare,
-} from "components";
-import { MAX_CARD_WIDTH, MIN_CARD_WIDTH } from "constants/types";
+  MAX_CARD_WIDTH,
+  MIN_CARD_WIDTH,
+  THEME_MODE_DARK,
+} from "../../../constants/types";
 import {
   CONF_LOCATION_TYPES,
   CONF_MASKS,
   MASK_NOT_REQUIRED,
   MASK_STAFF,
-  MASK_REQUIRED
-} from "constants/maplocation";
-import { ToastError } from "utility/toast";
-import * as ROUTES from "constants/routes";
-import { GraphqlService } from "services";
-import { get_region_name } from "utility/cleanair";
+  MASK_REQUIRED,
+  CONF_ADJUST_ACTIVITIES,
+  CONF_AIR_QUALITY_COLORS,
+} from "../../../constants/maplocation";
+import { ToastError } from "../../../utility/toast";
+import * as ROUTES from "../../../constants/routes";
+import {
+  get_adjusted_co2_level,
+  get_region_name,
+  get_air_quality,
+} from "../../../utility/cleanair";
+import { logger } from "../../../utility/logging";
 
 const styles = (theme) => ({
   card: {
@@ -48,6 +48,9 @@ const styles = (theme) => ({
     paddingBottom: 0,
     borderRadius: 10,
     borderTopLeftRadius: 30,
+    borderColor: theme.palette.text.primary,
+    borderWidth: 2,
+    borderStyle: "solid",
     backgroundColor: theme.palette.background.article,
     boxShadow: `0 1px 1px 1px rgba(63,63,68,0.05), 0 3px 3px 0 rgba(63,63,68,0.15)`,
   },
@@ -66,8 +69,8 @@ const styles = (theme) => ({
   },
   following: {
     position: "absolute",
-    top: 16,
-    right: 32,
+    top: 32,
+    right: 24,
     width: 40,
     height: 40,
     zIndex: 100,
@@ -81,7 +84,7 @@ const styles = (theme) => ({
   },
   titleline: {
     position: "relative",
-    marginLeft: 48,
+    marginLeft: 38,
     marginRight: 40,
     marginTop: 10,
     marginBottom: 0,
@@ -96,26 +99,31 @@ const styles = (theme) => ({
   region: {
     fontFamily: "Roboto, sans-serif",
     fontSize: "16px",
-    marginTop: 4,
     marginBottom: 4,
     color: theme.palette.text.primary,
     cursor: "pointer",
+    padding: 0,
   },
   content: {
     paddingTop: theme.spacing(1),
     paddingBottom: 0,
-    marginLeft: 48,
-    marginRight: 10,
+    marginLeft: 38,
+    marginRight: -14,
   },
   airlevel_titlebox: {
     display: "flex",
     alignItems: "center",
+    marginBottom: "16px",
   },
   airlevel_title: {
-    fontFamily: "Merriweather",
-    fontSize: "24px",
-    lineHeight: "28px",
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: 700,
+    fontSize: 14,
+    letterSpacing: "0.0357143em,",
     color: theme.palette.text.primary,
+    textAlign: "center",
+    textTransform: "uppercase",
   },
   airlevel_description: {
     fontFamily: "Roboto, sans-serif",
@@ -123,8 +131,11 @@ const styles = (theme) => ({
     color: theme.palette.text.primary,
   },
   descriptionblock: {
-    marginTop: 8,
-    marginBottom: 8,
+    marginTop: -14,
+    marginBottom: 0,
+  },
+  maskfriendlyblock: {
+    marginTop: 0,
   },
   description: {
     fontFamily: "Roboto, sans-serif",
@@ -132,20 +143,29 @@ const styles = (theme) => ({
     lineHeight: "18px",
     color: theme.palette.text.primary,
   },
+  roomblock: {
+    marginTop: 8,
+    marginBottom: 8,
+  },
   maskblock: {
-    position: "absolute",
-    top: 56,
-    right: 24,
+    display: "flex",
+    justifyContent: "start",
     textAlign: "center",
+    marginTop: "3px",
   },
   maskimg: {
     width: 24,
     height: 24,
+    marginTop: "-5px",
   },
   masknote: {
     fontFamily: "Roboto, sans-serif",
     fontSize: "14px",
+    lineHeight: "16px",
     color: theme.palette.text.primary,
+    padding: 0,
+    display: "flex",
+    justifyContent: "start",
   },
   actionbtn: {
     position: "absolute",
@@ -166,6 +186,87 @@ const styles = (theme) => ({
     right: 0,
     bottom: 5,
   },
+  mapairimg: {
+    width: 20,
+    height: 20,
+    marginLeft: 8,
+    marginRight: 8,
+  },
+  mapairimgclock: {
+    width: 20,
+    height: 20,
+    marginLeft: 8,
+    marginRight: 8,
+    marginTop: 8,
+  },
+  maskFriendlyHourday: {
+    fontSize: 20,
+    fontWeight: "bold",
+    fontFamily: "Roboto, sans-serif",
+    color: theme.palette.text.primary,
+    marginLeft: "10px",
+    marginBottom: "10px",
+  },
+  maskFriendlyHourtext: {
+    fontSize: 15,
+    fontFamily: "Roboto, sans-serif",
+    color: theme.palette.text.primary,
+    marginBottom: 3,
+  },
+  airlevel_title_column: {
+    marginTop: 8,
+    paddingBottom: 12,
+    textAlign: "left",
+    fontWeight: 100,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontSize: 20,
+    color: theme.palette.text.primary,
+  },
+  arrow_down: {
+    margin: "auto",
+    display: "block",
+    width: "auto",
+    height: 44,
+    cursor: "pointer",
+  },
+  nodescription: {
+    display: "flex",
+    justifyContent: "start",
+    alignItems: "center",
+    marginTop: "3px",
+  },
+  airlevel_title_head: {
+    maxWidth: "86%",
+    lineHeight: 1,
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: 700,
+    fontSize: "37px",
+    letterSpacing: "0.0357143em,",
+    color: theme.palette.text.primary,
+    textAlign: "center",
+    textTransform: "uppercase",
+  },
+  w30: {
+    width: "30%",
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: 700,
+    fontSize: 14,
+    letterSpacing: "0.0357143em,",
+    color: theme.palette.text.primary,
+    textAlign: "center",
+    textTransform: "uppercase",
+  },
+  borderLeft: {
+    textAlign: "center",
+  },
+  textend: {
+    textAlign: "left",
+    marginLeft: -5,
+    marginRight: -22,
+  },
 });
 
 class LocationCard extends React.Component {
@@ -178,6 +279,8 @@ class LocationCard extends React.Component {
       reportDlg: false,
       loginDlg: false,
       shareDlg: false,
+      openRoom: false,
+      maskFriendlyHours: "",
     };
 
     this.handleExpand = this.handleExpand.bind(this);
@@ -195,6 +298,8 @@ class LocationCard extends React.Component {
 
     this.handleLogin = this.handleLogin.bind(this);
     this.handleCancelLogin = this.handleCancelLogin.bind(this);
+    this.openRooms = this.openRooms.bind(this);
+    this.handleLocationDelete = this.handleLocationDelete.bind(this);
   }
 
   setError = (message) => {
@@ -205,11 +310,14 @@ class LocationCard extends React.Component {
     const { loggedIn, authUser, selected_location } = this.props;
     let following = false;
     if (loggedIn) {
-      following = authUser.locations_followed.find(follow => follow.location_id === selected_location.id) !== undefined;
+      following =
+        authUser.locations_followed.find(
+          (follow) => follow.location_id === selected_location.id
+        ) !== undefined;
     }
     this.setState({
       ...this.state,
-      following: following
+      following: following,
     });
   };
 
@@ -227,96 +335,9 @@ class LocationCard extends React.Component {
     });
   };
 
-  _getAuthToken = async () => {
-    const { authUser } = this.props;
-    let token = authUser.token;
-    if (Date.now() >= authUser.expiredTS) {
-      const result = await this.props.firebase.refreshToken();
-      if (result.error) {
-        this.setError(result.msg);
-        token = null;
-      } else {
-        token = result.token;
-      }
-    }
-    return token;
-  };
+  _getAuthToken = async () => {};
 
-  handleFollow = async () => {
-    const following = !this.state.following;
-    const { loggedIn, authUser, selected_location } = this.props;
-
-    // check if the user was logged in
-    if (!loggedIn) {
-      this.setState({
-        ...this.state,
-        loginDlg: true,
-      });
-      return;
-    }
-
-    let follower = {
-      location_id: selected_location.id,
-      user_id: authUser.uid,
-    };
-
-    const gqlservice = new GraphqlService();
-    const token = await this._getAuthToken();
-    if (!token) {
-      this.props.onLogin();
-      return;
-    }
-
-    gqlservice.set_auth_jwt(token);
-    if (following) {
-      await gqlservice
-        .insert_location_follower(follower)
-        .then(
-          (result) => {
-            if (result.data.insert_location_followers.affected_rows > 0) {
-              this.props.insertFollowingLocation(selected_location.id);
-            } else {
-              this.setError("Failed to follow this location");
-              return;
-            }
-          },
-          (reason) => {
-            this.setError(reason.msg);
-            return;
-          }
-        )
-        .catch((err) => {
-          this.setError(JSON.stringify(err));
-          return;
-        });
-    } else {
-      await gqlservice
-        .delete_location_follower(follower)
-        .then(
-          (result) => {
-            if (result.data.delete_location_followers.affected_rows > 0) {
-              this.props.deleteFollowingLocation(selected_location.id);
-            } else {
-              this.setError("Failed to unfollow this location");
-              return;
-            }
-          },
-          (reason) => {
-            this.setError(reason.msg);
-            return;
-          }
-        )
-        .catch((err) => {
-          this.setError(JSON.stringify(err));
-          return;
-        });
-    }
-
-    this.setState({
-      ...this.state,
-      following: following,
-    });
-  };
+  handleFollow = async () => {};
 
   showReportDlg = () => {
     const { loggedIn } = this.props;
@@ -367,7 +388,7 @@ class LocationCard extends React.Component {
 
     this.setState({
       ...this.state,
-      anchorEl: null
+      anchorEl: null,
     });
   };
 
@@ -375,18 +396,17 @@ class LocationCard extends React.Component {
     this.props.onModerateRegion(this.props.selected_location.region);
     this.setState({
       ...this.state,
-      anchorEl: null
+      anchorEl: null,
     });
   };
 
   handleEdit = () => {
     this.props.onEdit(this.props.location);
-  }
+  };
 
   handleResign = () => {
     this.props.onResign(this.props.onResign);
-  }
-
+  };
 
   handleLogin = () => {
     this.props.onLogin();
@@ -406,6 +426,13 @@ class LocationCard extends React.Component {
     });
   };
 
+  openRooms = () => {
+    this.setState({
+      ...this.state,
+      openRoom: !this.state.openRoom,
+    });
+  };
+
   _getShareInfo = () => {
     const { selected_location } = this.props;
 
@@ -413,7 +440,7 @@ class LocationCard extends React.Component {
     if (typeof window !== "undefined") {
       shareUrl = window.location.protocol + "//" + window.location.host;
     }
-    shareUrl += `/${ROUTES.CLEANAIRMAP_PREFIX}/${selected_location.slug}`;
+    shareUrl += `/${ROUTES.CLEANAIRMAP_PREFIX}/${selected_location.slug}-${selected_location.id}`;
 
     return {
       title: "Raven Cleanair Map Location: " + selected_location.name,
@@ -422,10 +449,18 @@ class LocationCard extends React.Component {
       hashtag: "",
       url: shareUrl,
     };
-  }
+  };
+
+  handleLocationDelete = () => {
+    this.setState({
+      ...this.state,
+      anchorEl: null,
+    });
+    this.props.onDelete();
+  };
 
   render() {
-    const { 
+    const {
       classes,
       loggedIn,
       authUser,
@@ -433,13 +468,7 @@ class LocationCard extends React.Component {
       reading,
       selected_location,
     } = this.props;
-    const { 
-      following, 
-      anchorEl, 
-      reportDlg, 
-      loginDlg, 
-      shareDlg 
-    } = this.state;
+    const { anchorEl, openRoom } = this.state;
 
     let width =
       document.documentElement.clientWidth ||
@@ -448,9 +477,6 @@ class LocationCard extends React.Component {
     width -= 16;
     if (width > MAX_CARD_WIDTH - 16) width = MAX_CARD_WIDTH - 16;
     if (width < MIN_CARD_WIDTH - 16) width = MIN_CARD_WIDTH - 16;
-
-    const following_img = `/static/images/icons/${theme_mode}/following.png`;
-    const unfollowing_img = `/static/images/icons/${theme_mode}/unfollowing.png`;
 
     // popup menu position
     let menuPos = { top: -1000, left: -1000 };
@@ -462,24 +488,67 @@ class LocationCard extends React.Component {
     const locationType = CONF_LOCATION_TYPES.find(
       (loctype) => loctype.value === selected_location.type
     );
-    
-    console.log("selected_location :", selected_location);
 
-    // const reading = selected_location.readings.reduce((prev, current) => {
-    //   return prev.id > current.id ? prev : current;
-    // });
+    logger.log("selected_location :", selected_location);
 
-    console.log("reading :", reading);
+    // readings by rooms
+    let mainReading = null;
+    const mainReadings = selected_location.readings.filter(
+      (reading) => reading.location_room === null
+    );
+    if (mainReadings.length > 0) {
+      mainReading = mainReadings.reduce((prev, current) => {
+        return prev.id > current.id ? prev : current;
+      });
+    } else {
+      mainReading = selected_location.readings.reduce((prev, current) => {
+        return prev.id > current.id ? prev : current;
+      });
+    }
+    const roomReadings = selected_location.location_rooms
+      .filter(
+        (location_room) =>
+          location_room.readings && location_room.readings.length > 0
+      )
+      .map((location_room) =>
+        location_room.readings.reduce((prev, current) => {
+          return prev.id > current.id ? prev : current;
+        })
+      );
+    const bgColor = theme_mode === THEME_MODE_DARK ? "white" : "black";
+
+    logger.log("reading :", mainReading, roomReadings);
 
     let air_title = "";
     let air_description = "";
-    if (reading.co2) {
-      air_title = `${reading.co2} ppm`;
+    if (mainReading.adjusted) {
+      const adjusted_co2 = get_adjusted_co2_level(
+        mainReading.co2_in,
+        CONF_ADJUST_ACTIVITIES[mainReading.activity].cfm,
+        mainReading.people_no,
+        mainReading.hepa_cadr,
+        mainReading.uvgi_cap
+      );
+      air_title = `${parseInt(adjusted_co2)} ppm (adjusted)`;
       air_description = "";
-    } else if (reading.ach) {
-      air_title = "HEPA filters";
-      air_description = `${reading.ach} Air Changes an Hour`;
+    } else {
+      if (mainReading.co2) {
+        air_title = `${mainReading.co2} ppm`;
+        air_description = "";
+      } else if (mainReading.ach) {
+        air_title = "HEPA filters";
+        air_description = `${mainReading.ach} Air Changes an Hour`;
+      }
     }
+
+    const stroke_color =
+      theme_mode === THEME_MODE_DARK
+        ? locationType.color.dark.stroke
+        : locationType.color.light.stroke;
+    const fill_color =
+      theme_mode === THEME_MODE_DARK
+        ? locationType.color.dark.fill
+        : locationType.color.light.fill;
 
     // location image style
     const location_style = {
@@ -489,20 +558,20 @@ class LocationCard extends React.Component {
       width: 48,
       height: 48,
       borderRadius: "50%",
-      backgroundColor: locationType.color,
+      backgroundColor: stroke_color,
       padding: 2,
     };
 
     // mask notification
     let mask_note1 = "";
     let mask_note2 = "";
-    if (reading.mask === MASK_NOT_REQUIRED) {
+    if (mainReading.mask === MASK_NOT_REQUIRED) {
       mask_note1 = "Masks not";
       mask_note2 = "required";
-    } else if (reading.mask === MASK_STAFF) {
+    } else if (mainReading.mask === MASK_STAFF) {
       mask_note1 = "Staff";
       mask_note2 = "masked";
-    } else if (reading.mask === MASK_REQUIRED) {
+    } else if (mainReading.mask === MASK_REQUIRED) {
       mask_note1 = "Masks";
       mask_note2 = "required";
     }
@@ -511,34 +580,49 @@ class LocationCard extends React.Component {
     let moderator = null;
     let region_moderator = null;
     if (loggedIn) {
-      moderator = authUser.locations_moderated.find(moderated => 
-        moderated.location_id === selected_location.id
+      moderator = authUser.locations_moderated.find(
+        (moderated) => moderated.location_id === selected_location.id
       );
       if (moderator === undefined) {
         moderator = null;
       }
-      region_moderator = authUser.regions_moderated.find(moderated =>
-        moderated.region_id === selected_location.region.id
+      region_moderator = authUser.regions_moderated.find(
+        (moderated) => moderated.region_id === selected_location.region.id
       );
       if (region_moderator === undefined) {
         region_moderator = null;
       }
     }
-
+    let air_quality = get_air_quality(selected_location);
+    if (air_quality < 0) {
+      return <></>;
+    }
+    const air_quality_style = {
+      height: "20px",
+      width: "20px",
+      backgroundColor: CONF_AIR_QUALITY_COLORS[air_quality].color,
+      borderRadius: "50%",
+      display: "inline-block",
+      marginLeft: "16px",
+    };
     return (
       <>
-        <Card className={classes.card} style={{ width: width }}>
-          <div className={classes.carddiv}>
+        <Card
+          className={classes.card}
+          style={{ width: width, backgroundColor: fill_color }}
+        >
+          <div
+            className={classes.carddiv}
+            style={{ backgroundColor: fill_color, borderColor: stroke_color }}
+          >
             <CardHeader
               className={classes.header}
               avatar={
                 <div>
-                  {/* <span style={location_style} /> */}
                   <img
                     alt={locationType.name}
                     src={`/static/images/icons/loc_types/${locationType.image}`}
                     style={location_style}
-                    // onClick={e => onClickSource(source, feed)}
                   />
                   <img
                     alt={"cleanair location"}
@@ -558,110 +642,184 @@ class LocationCard extends React.Component {
                 </div>
               }
             />
-            <div>
-              <IconButton
-                className={classes.expand}
-                onClick={this.handleExpand}
-              >
-                <ExpandMoreIcon />
-              </IconButton>
-            </div>
-            <div onClick={this.handleFollow}>
-              <img
-                className={classes.following}
-                alt={"following"}
-                src={following ? following_img : unfollowing_img}
-              />
-            </div>
             <CardContent className={classes.content}>
               <div className={classes.airlevel_titlebox}>
-                <Typography className={classes.airlevel_title}>
+                <Typography className={classes.airlevel_title_head}>
                   {air_title}
                 </Typography>
+                <span
+                  style={
+                    mainReading?.co2 == null && mainReading?.co2_in === -1
+                      ? {}
+                      : air_quality_style
+                  }
+                ></span>
+                {mainReading.location_room && (
+                  <Typography className={classes.w30}>
+                    {mainReading.location_room.name}
+                  </Typography>
+                )}
               </div>
               <Typography className={classes.airlevel_description}>
                 {air_description}
               </Typography>
+
+              {reading.location_mask_friendly_hours.length > 0 && (
+                <Grid
+                  container
+                  direction="row"
+                  spacing={1}
+                  className={classes.maskfriendlyblock}
+                >
+                  <Grid item xs={2} className={classes.textend}>
+                    <img
+                      alt={"cleanair location"}
+                      src={`/static/images/icons/${theme_mode}/stopwatch_night.png`}
+                      className={classes.mapairimgclock}
+                    />
+                  </Grid>
+                  <Grid className={classes.textmaskfriendly} item xs={10}>
+                    {reading.location_mask_friendly_hours.length > 0 && (
+                      <Typography className={classes.maskFriendlyHourtext}>
+                        Mask Friendly Hours
+                      </Typography>
+                    )}
+
+                    {reading.location_mask_friendly_hours.length > 0 &&
+                      reading.location_mask_friendly_hours.map(
+                        (item, index) => {
+                          const dayTime = `${
+                            item?.day
+                          } ${item?.time.toLowerCase()}`;
+                          return (
+                            <Typography
+                              className={classes.maskFriendlyHourday}
+                              key={`friendly_hours-${index}`}
+                            >
+                              {dayTime}
+                            </Typography>
+                          );
+                        }
+                      )}
+                  </Grid>
+                </Grid>
+              )}
+              {roomReadings.length > 0 && (
+                <img
+                  alt={"cleanair location"}
+                  src={`/static/images/icons/${theme_mode}/arrow_drop_down.png`}
+                  className={classes.arrow_down}
+                  style={{ transform: openRoom ? " rotate(180deg)" : "" }}
+                  onClick={this.openRooms}
+                />
+              )}
+              {roomReadings && openRoom && (
+                <Grid
+                  container
+                  direction="row"
+                  spacing={1}
+                  className={classes.roomblock}
+                >
+                  {roomReadings.map((reading, index) => {
+                    let title = "";
+                    if (reading.adjusted) {
+                      let adjusted_co2 = get_adjusted_co2_level(
+                        reading.co2_in,
+                        CONF_ADJUST_ACTIVITIES[reading.activity].cfm,
+                        reading.people_no,
+                        reading.hepa_cadr,
+                        reading.uvgi_cap
+                      );
+                      title = `${parseInt(adjusted_co2)} ppm (adjusted)`;
+                    } else {
+                      title = reading.co2
+                        ? `${reading.co2} ppm`
+                        : `${reading.ach} HEPA`;
+                    }
+
+                    return (
+                      <>
+                        <Grid
+                          item
+                          xs={6}
+                          className={classes.borderLeft}
+                          style={{
+                            borderRight: `1px solid ${bgColor}`,
+                            borderBottom:
+                              roomReadings.length === index + 1
+                                ? 0
+                                : `1px solid #ccc`,
+                          }}
+                        >
+                          <Typography className={classes.airlevel_title_column}>
+                            {reading.location_room.name}
+                          </Typography>
+                        </Grid>
+
+                        <Grid
+                          item
+                          xs={5}
+                          className={classes.borderLeft}
+                          style={{
+                            borderLeft: `1px solid ${bgColor}`,
+                            borderBottom:
+                              roomReadings.length === index + 1
+                                ? 0
+                                : `1px solid #ccc`,
+                          }}
+                        >
+                          <Typography className={classes.airlevel_title_column}>
+                            {title}
+                          </Typography>
+                        </Grid>
+                      </>
+                    );
+                  })}
+                </Grid>
+              )}
               <Grid
                 container
-                direction="row"
+                direction="column"
                 spacing={1}
                 className={classes.descriptionblock}
               >
-                <Grid item xs={9}>
-                  <Typography className={classes.description}>
-                    {selected_location.description}
-                  </Typography>
+                <Grid item xs={12}>
+                  <div
+                    className={
+                      selected_location.description
+                        ? classes.maskblock
+                        : classes.nodescription
+                    }
+                  >
+                    <img
+                      alt={"cleanair location"}
+                      src={`/static/images/icons/${theme_mode}/${
+                        CONF_MASKS[reading.mask + 1].image
+                      }`}
+                      className={classes.maskimg}
+                      style={{ marginRight: "4px" }}
+                    />
+                    <Typography className={classes.masknote}>
+                      {mask_note1}
+                    </Typography>
+                    <Typography className={classes.masknote}>
+                      &nbsp;{mask_note2}
+                    </Typography>
+                  </div>
                 </Grid>
-                <Grid item xs={3}>
-                </Grid>
+                {selected_location.description && (
+                  <Grid item xs={9}>
+                    <Typography className={classes.description}>
+                      {selected_location.description}
+                    </Typography>
+                  </Grid>
+                )}
               </Grid>
             </CardContent>
-            <div className={classes.maskblock}>
-              <img
-                alt={"cleanair location"}
-                src={`/static/images/icons/${theme_mode}/${CONF_MASKS[reading.mask + 1].image}`}
-                className={classes.maskimg}
-              />
-              <Typography className={classes.masknote}>
-                {mask_note1}
-              </Typography>
-              <Typography className={classes.masknote}>
-                {mask_note2}
-              </Typography>
-            </div>
+
             <CardActions></CardActions>
           </div>
         </Card>
-        <Menu
-          id="source-menu"
-          // anchorEl={anchorEl}
-          anchorReference="anchorPosition"
-          anchorPosition={{ top: menuPos.top, left: menuPos.left + 24 }}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          transformOrigin={{ vertical: "top", horizontal: "right" }}
-          open={anchorEl !== null}
-          onClose={this.handleCloseMenu}
-        >
-          {((moderator && moderator.approved) || (region_moderator && region_moderator.approved)) ? (
-            <PopMenuMapLocationMod
-              theme={theme_mode}
-              location={selected_location}
-              region_moderator={region_moderator}
-              onEdit={this.handleEdit}
-              onReport={this.showReportDlg}
-              onModerateRegion={this.handleModerateRegion}
-              onResign={this.handleResign}
-            />
-          ) : (
-            <PopMenuMapLocation
-              theme={theme_mode}
-              location={selected_location}
-              moderator={moderator}
-              region_moderator={region_moderator}
-              onReport={this.showReportDlg}
-              onModerate={this.handleModerate}
-              onModerateRegion={this.handleModerateRegion}
-            />
-          )}
-        </Menu>
-        <DlgLoginConfirm
-          open={loginDlg}
-          onLogin={this.handleLogin}
-          onCancel={this.handleCancelLogin}
-        />
-        <DlgReport
-          open={reportDlg}
-          title={"Report Location"}
-          theme={theme_mode}
-          onReport={this.handleReport}
-          onCancel={this.handleCancelReport}
-        />
-        <DlgShare
-          open={shareDlg}
-          shareInfo={this._getShareInfo()}
-          onClose={this.handleCloseShare}
-        />
       </>
     );
   }
@@ -669,7 +827,6 @@ class LocationCard extends React.Component {
 
 LocationCard.propTypes = {
   classes: PropTypes.object,
-  // location: PropTypes.object,
   reading: PropTypes.object,
   onLogin: PropTypes.func,
   onReport: PropTypes.func,
@@ -677,12 +834,11 @@ LocationCard.propTypes = {
   onModerateRegion: PropTypes.func,
   onReadMore: PropTypes.func,
   onEdit: PropTypes.func,
-  onResign: PropTypes.func
+  onResign: PropTypes.func,
+  onDelete: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
-  loggedIn: state.sessionState.loggedIn,
-  authUser: state.sessionState.authUser,
   theme_mode: state.uiState.theme_mode,
   selected_location: state.mapState.selected_location,
 });

@@ -2,21 +2,22 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const styles = (theme) => ({
   root: {
     position: "relative",
-    width: 170,
+    width: 140,
     cursor: "pointer",
     padding: theme.spacing(2),
-    border : `2px solid ${theme.palette.text.secondary}`
+    border: `2px solid  #8053E5`,
   },
   root_selected: {
     position: "relative",
-    width: 170,
+    width: 140,
     cursor: "pointer",
     padding: theme.spacing(2),
-    border: `2px solid ${theme.palette.text.primary}`
+    border: `3px solid #8053E5`,
   },
   container: {
     textAlign: "center",
@@ -24,16 +25,21 @@ const styles = (theme) => ({
   },
   container_selected: {
     textAlign: "center",
-    opacity: 1.0
+    opacity: 1.0,
   },
   image: {
     height: 48,
     width: 48,
   },
   title: {
+    fontFamily: "Roboto",
+    fontStyle: "normal",
+    fontWeight: 500,
     fontSize: "24px",
     lineHeight: "28px",
-    color: theme.palette.text.primary,
+    textAlign: "center",
+    letterSpacing: "0.0357143em",
+    color: " #8053E5",
   },
   levelinput: {
     color: theme.palette.text.primary,
@@ -90,9 +96,21 @@ const styles = (theme) => ({
 });
 
 class AirlevelInput extends React.Component {
-
   render() {
-    const { classes, name, min, max, selected, image, text1, text2, placeholder, level, onSelect, onChange } = this.props;
+    const {
+      classes,
+      name,
+      min,
+      max,
+      selected,
+      image,
+      text1,
+      text2,
+      placeholder,
+      level,
+      onSelect,
+      onChange,
+    } = this.props;
 
     const real_level = level === -1 ? "" : level;
     let input_class = classes.levelinput;
@@ -101,28 +119,31 @@ class AirlevelInput extends React.Component {
     }
 
     return (
-      <div 
-        className={selected ? classes.root_selected : classes.root} 
-        onClick={e => onSelect(name)}
+      <div
+        className={selected ? classes.root_selected : classes.root}
+        onClick={(e) => onSelect(name)}
       >
-        <div className={selected ? classes.container_selected : classes.container}>
-          <img 
-            className={classes.image} 
-            src={image} 
-            alt={`${text1} ${text2}`} 
+        <div
+          className={selected ? classes.container_selected : classes.container}
+        >
+          <LazyLoadImage
+            className={classes.image}
+            style={{ display: "inline" }}
+            src={image}
+            alt={`${text1} ${text2}`}
           />
           <Typography className={classes.title}>{text1}</Typography>
           <Typography className={classes.title}>{text2}</Typography>
-          <input 
+          <input
             type="number"
             name={name}
             min={min}
             max={max}
             placeholder={placeholder}
-            value={ real_level }
+            value={real_level}
             className={input_class}
-            style={{width: 120}}
-            onChange={e => onChange(e.target.value)}
+            style={{ width: 104 }}
+            onChange={(e) => onChange(e.target.value)}
           />
         </div>
       </div>
@@ -142,7 +163,7 @@ AirlevelInput.propTypes = {
   placeholder: PropTypes.string,
   level: PropTypes.number,
   onSelect: PropTypes.func,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
 };
 
 export default withStyles(styles)(AirlevelInput);

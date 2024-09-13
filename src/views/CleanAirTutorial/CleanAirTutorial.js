@@ -1,23 +1,22 @@
 import React from "react";
 import { compose } from "recompose";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import { ActionCreators } from "../../actions";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import ReactPlayer from "react-player";
-import { withFirebase } from 'services';
-import { CleanairAppBar } from "components";
-import { 
-  MAX_ARTICLE_WIDTH,
-} from "constants/types";
-import * as ROUTES from "constants/routes";
-
+import { CleanairAppBar } from "../../components";
+import { MAX_ARTICLE_WIDTH } from "../../constants/types";
+import * as ROUTES from "../../constants/routes";
 
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
     minHeight: `calc(100vh)`,
     width: MAX_ARTICLE_WIDTH,
-    maxWidth: '100%',
-    margin: '0 auto',
+    maxWidth: "100%",
+    margin: "0 auto",
     backgroundColor: theme.palette.background.default,
   },
   appbar: {
@@ -31,6 +30,13 @@ const styles = (theme) => ({
   content: {
     textAlign: "center",
     margin: theme.spacing(2),
+  },
+  help: {
+    margin: theme.spacing(1),
+  },
+  helpimage: {
+    objectFit: "contain",
+    width: "100%",
   },
   playerwrapper: {
     position: "relative",
@@ -46,12 +52,11 @@ const styles = (theme) => ({
 });
 
 class CleanAirTutorial extends React.Component {
-
   constructor(props) {
     super(props);
 
     this.handleNavBack = this.handleNavBack.bind(this);
-    this.handleProfileMenu = this.handleProfileMenu.bind(this);
+    this.handleHelp = this.handleHelp.bind(this);
     this.handleSignOut = this.handleSignOut.bind(this);
   }
 
@@ -63,10 +68,10 @@ class CleanAirTutorial extends React.Component {
     this.props.history.push(location);
   };
 
-  handleProfileMenu = (route) => {
+  handleHelp = () => {
     const location = {
-      pathname: route,
-      state: { animation: "left" },
+      pathname: ROUTES.CLEANAIRMAP_TUTORIAL,
+      state: { animation: "right" },
     };
     this.props.history.push(location);
   };
@@ -77,9 +82,7 @@ class CleanAirTutorial extends React.Component {
   };
 
   render() {
-    const { 
-      classes
-    } = this.props;
+    const { classes, theme_mode } = this.props;
 
     return (
       <div className={classes.root}>
@@ -87,11 +90,21 @@ class CleanAirTutorial extends React.Component {
           <CleanairAppBar
             tutorial
             onNavBack={this.handleNavBack}
+            onHelp={this.handleHelp}
+            onLeaderboards={this.handleLeaderboards}
+            onComment={this.handleComments}
             onProfileMenu={this.handleProfileMenu}
             onSignOut={this.handleSignOut}
           />
         </div>
         <div className={classes.content}>
+          <div className={classes.help}>
+            <img
+              className={classes.helpimage}
+              alt={"CO2 level help"}
+              src={`/static/images/help/${theme_mode}/CleanAirMap_CO2_level.png`}
+            />
+          </div>
           <div className={classes.playerwrapper}>
             <ReactPlayer
               className={classes.reactplayer}
@@ -117,10 +130,18 @@ class CleanAirTutorial extends React.Component {
 }
 
 CleanAirTutorial.propTypes = {
-  classes: PropTypes.object
+  classes: PropTypes.object,
 };
 
+const mapStateToProps = (state) => ({
+  theme_mode: state.uiState.theme_mode,
+});
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(ActionCreators, dispatch);
+}
+
 export default compose(
-  withFirebase,
+  connect(mapStateToProps, mapDispatchToProps),
   withStyles(styles)
 )(CleanAirTutorial);

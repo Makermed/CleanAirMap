@@ -1,29 +1,28 @@
-import React from 'react';
+import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { ActionCreators } from "actions";
-import { withStyles } from '@material-ui/core/styles';
-import { 
-  AppBar, 
-  Toolbar, 
-  IconButton, 
+import { ActionCreators } from "../../../actions";
+import { withStyles } from "@material-ui/core/styles";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
   Typography,
   Avatar,
-  Menu
-} from '@material-ui/core';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+  Menu,
+} from "@material-ui/core";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-import { PopMenuProfile } from "components";
-import { 
+import { PopMenuProfile } from "../../PopMenus";
+import {
   MAX_ARTICLE_WIDTH,
-  THEME_MODE_LIGHT, 
-  THEME_MODE_DARK
-} from 'constants/types';
+  THEME_MODE_LIGHT,
+  THEME_MODE_DARK,
+  BLANK_USER_IMAGE,
+} from "../../../constants/types";
 
-
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     position: "fixed",
     width: MAX_ARTICLE_WIDTH,
@@ -33,24 +32,25 @@ const styles = theme => ({
   },
   appbar: {
     position: "absolute",
-    // borderBottom: `2px solid ${theme.palette.text.secondary}`
   },
   navbefore: {
+    padding: 0,
+    paddingLeft: theme.spacing(1),
     color: theme.palette.text.primary,
   },
   toolbox: {
-    display: 'flex'
+    display: "flex",
   },
   titlebox: {
     display: "flex",
-    alignItems: "center"
+    alignItems: "center",
   },
   image: {
     height: 32,
     width: 32,
     padding: 4,
     borderRadius: 16,
-    backgroundColor: "#BFDBFF"
+    backgroundColor: "#BFDBFF",
   },
   title: {
     display: "inline",
@@ -63,20 +63,25 @@ const styles = theme => ({
     flexGrow: 1,
     marginLeft: theme.spacing(1),
   },
-  account: {
+  iconButton: {
     padding: 0,
-    marginLeft: 4,
+    marginLeft: theme.spacing(0.5),
+    borderRadius: "50%",
+    backgroundColor: theme.palette.background.light,
+  },
+  useravatar: {
+    width: 32,
+    height: 32,
   },
   avatar: {
     margin: 0,
-    padding: 0,
+    padding: 4,
     width: 32,
-    height: 32
+    height: 32,
   },
 });
 
 class CleanairAppBar extends React.Component {
-
   constructor(props) {
     super(props);
 
@@ -94,27 +99,27 @@ class CleanairAppBar extends React.Component {
   handleProfileMenuOpen = (event) => {
     this.setState({
       ...this.state,
-      anchorEl: event.currentTarget
+      anchorEl: event.currentTarget,
     });
-  }
+  };
 
   handleMenuClose = () => {
     this.setState({
       ...this.state,
-      anchorEl: null
+      anchorEl: null,
     });
-  }
+  };
 
-  handleProfileMenuItem = route => event => {
+  handleProfileMenuItem = (route) => (event) => {
     this.handleMenuClose();
-    // this.props.history.push(path);
+
     this.props.onProfileMenu(route);
   };
 
   handleSignOut = () => {
     this.handleMenuClose();
     this.props.onSignOut();
-  }
+  };
 
   handleChangeTheme = () => {
     const theme =
@@ -122,43 +127,35 @@ class CleanairAppBar extends React.Component {
         ? THEME_MODE_DARK
         : THEME_MODE_LIGHT;
     this.props.selectThemeMode(theme);
-    localStorage.setItem('themeMode', theme);
+    localStorage.setItem("themeMode", theme);
     this.handleMenuClose();
   };
 
-
   render() {
-    const {
-      classes,
-      theme_mode,
-      authUser,
-      tutorial,
-      onNavBack,
-      onHelp,
-      onComments
-    } = this.props;
-    const { 
-      anchorEl 
-    } = this.state;
+    const { classes, theme_mode, authUser, tutorial, onNavBack, onHelp } =
+      this.props;
+    const { anchorEl } = this.state;
 
     return (
       <div className={classes.root}>
         <AppBar className={classes.appbar}>
           <Toolbar>
-            <IconButton 
-              edge="start" 
-              className={classes.navbefore} 
-              aria-label="nav before"
-              onClick={onNavBack}
-            >
-              <ArrowBackIosIcon />
-            </IconButton>
+            {tutorial && (
+              <IconButton
+                edge="start"
+                className={classes.navbefore}
+                aria-label="nav before"
+                onClick={onNavBack}
+              >
+                <ArrowBackIosIcon />
+              </IconButton>
+            )}
             <div className={classes.titlebox}>
               {tutorial ? (
                 <Typography className={classes.title} variant="h6" noWrap>
                   Tutorial
                 </Typography>
-              ):(
+              ) : (
                 <>
                   <img
                     className={classes.image}
@@ -171,45 +168,36 @@ class CleanairAppBar extends React.Component {
                 </>
               )}
             </div>
+
             <div className={classes.mainBtnGroup} />
-            <IconButton
-              className={classes.account}
-              aria-label={`central comments`}
-              color="inherit"
-              onClick={onComments}
-            >
-              <img 
-                className={classes.avatar}
-                alt="userimage" 
-                src={`/static/images/icons/${theme_mode}/comments_all.png`}
-              />
-            </IconButton>
-            {!tutorial &&
+
+            {!tutorial && (
               <IconButton
-                className={classes.account}
+                className={classes.iconButton}
                 aria-label={`play help videos`}
                 color="inherit"
                 onClick={onHelp}
               >
-                <HelpOutlineIcon className={classes.avatar} />
+                <img
+                  className={classes.avatar}
+                  alt="help"
+                  src={`/static/images/icons/${theme_mode}/question.png`}
+                />
               </IconButton>
-            }
+            )}
             <IconButton
-              className={classes.account}
+              className={classes.iconButton}
               edge="end"
               aria-owns={anchorEl !== null ? "material-appbar" : undefined}
               aria-haspopup="true"
               onClick={this.handleProfileMenuOpen}
               color="inherit"
             >
-              {authUser.image !== undefined && authUser.image.length > 0 ? (
+              {authUser.image ? (
                 <Avatar
                   alt={"userimage"}
-                  src={
-                    authUser.image ||
-                    "/static/images/avatars/blank_avatar.png"
-                  }
-                  className={classes.avatar}
+                  src={authUser.image || BLANK_USER_IMAGE}
+                  className={classes.useravatar}
                 />
               ) : (
                 <AccountCircle className={classes.avatar} />
@@ -241,15 +229,16 @@ CleanairAppBar.propTypes = {
   classes: PropTypes.object,
   onNavBack: PropTypes.func,
   onHelp: PropTypes.func,
+  onLeaderboards: PropTypes.func,
   onComments: PropTypes.func,
   onProfileMenu: PropTypes.func,
-  onSignOut: PropTypes.func
+  onSignOut: PropTypes.func,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   loggedIn: state.sessionState.loggedIn,
   authUser: state.sessionState.authUser,
-  theme_mode: state.uiState.theme_mode
+  theme_mode: state.uiState.theme_mode,
 });
 
 function mapDispatchToProps(dispatch) {

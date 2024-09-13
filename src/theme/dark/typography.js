@@ -43,19 +43,6 @@ const typography = {
     letterSpacing: '-0.05px',
     lineHeight: '20px'
   },
-  // subtitle1: {
-  //   color: palette.text.primary,
-  //   fontSize: '16px',
-  //   letterSpacing: '-0.05px',
-  //   lineHeight: '25px'
-  // },
-  // subtitle2: {
-  //   color: palette.text.secondary,
-  //   fontWeight: 400,
-  //   fontSize: '14px',
-  //   letterSpacing: '-0.05px',
-  //   lineHeight: '21px'
-  // },
   subtitle1: {
     color: palette.text.primary,
     fontFamily: "Roboto, sans-serif",
@@ -76,18 +63,6 @@ const typography = {
     letterSpacing: '-0.05px',
     lineHeight: '21px'
   },
-  // body2: {
-  //   color: palette.text.secondary,
-  //   fontSize: '12px',
-  //   letterSpacing: '-0.04px',
-  //   lineHeight: '18px'
-  // },
-  // body1: {
-  //   color: palette.text.primary,
-  //   fontFamily: "Roboto, sans-serif",
-  //   fontSize: "16px",
-  //   lineHeight: "18px",
-  // },
   body2: {
     color: palette.text.primary,
     fontFamily: "Roboto, sans-serif",

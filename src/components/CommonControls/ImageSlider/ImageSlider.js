@@ -4,15 +4,15 @@ import { withStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import Slider from "react-slick";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     flexGrow: 1,
     "& li.slick-active button:before": {
-      color: theme.palette.text.primary
+      color: theme.palette.text.primary,
     },
     "& li button:before": {
-      color: theme.palette.text.secondary
-    }
+      color: theme.palette.text.secondary,
+    },
   },
   bannerTxt: {
     color: theme.palette.text.primary,
@@ -20,12 +20,17 @@ const styles = theme => ({
     lineHeight: 1.2,
     marginLeft: theme.spacing(2),
     marginRight: theme.spacing(2),
-    zIndex: 2
+    zIndex: 2,
   },
   bannerImg: {
     marginTop: -20,
-    width: "100%"
-  }
+    width: "80%",
+    marginLeft: "auto",
+    marginRight: "auto",
+    "@media (max-width: 1920px)": {
+      width: "60%",
+    },
+  },
 });
 
 class ImageSlider extends React.Component {
@@ -37,7 +42,7 @@ class ImageSlider extends React.Component {
       speed: 500,
       slidesToShow: 1,
       slidesToScroll: 1,
-      arrows: false
+      arrows: false,
     };
 
     return (
@@ -90,7 +95,7 @@ class ImageSlider extends React.Component {
 }
 
 ImageSlider.propTypes = {
-  classes: PropTypes.object
+  classes: PropTypes.object,
 };
 
 export default withStyles(styles)(ImageSlider);

@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import parse from "html-react-parser";
 
 export const ToastSuccess = (text) => {
   toast.success(text, {
@@ -45,5 +46,20 @@ export const ToastWarning = (text) => {
     pauseOnHover: true,
     draggable: true,
     theme: "colored",
+  });
+};
+
+export const ToastSocketSuccess = (htmlContent) => {
+  const parsedHtml = parse(htmlContent);
+
+  toast.success(parsedHtml, {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    theme: "colored",
+    html: true,
   });
 };

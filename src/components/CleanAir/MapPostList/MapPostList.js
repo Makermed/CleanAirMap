@@ -3,21 +3,20 @@ import PropTypes from "prop-types";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { ActionCreators } from "actions";
+import { ActionCreators } from "../../../actions";
 import { withStyles } from "@material-ui/core/styles";
 import { List, ListItem } from "@material-ui/core";
-import { MapPost } from "components";
-
-const styles = theme => ({
+import MapPost from "../MapPost/MapPost";
+const styles = (theme) => ({
   root: {
     width: "100%",
     padding: theme.spacing(1),
     marginTop: theme.spacing(1),
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   listitem: {
-    padding: 0
-  }
+    padding: 0,
+  },
 });
 
 class PostList extends React.Component {
@@ -37,7 +36,7 @@ class PostList extends React.Component {
     window.removeEventListener("scroll", this.scrollFn);
   }
 
-  handleClick = article => {
+  handleClick = (article) => {
     this.props.saveScrollPos(window.scrollX, window.scrollY);
     this.props.onSelectMapPost(article);
   };
@@ -47,13 +46,12 @@ class PostList extends React.Component {
 
     const winScroll =
       document.body.scrollTop || document.documentElement.scrollTop;
-    const height =
-      document.documentElement.scrollHeight - window.innerHeight;
+    const height = document.documentElement.scrollHeight - window.innerHeight;
     if (height === 0) {
       return;
     }
 
-    const scrolled = winScroll * 1.0 / height;
+    const scrolled = (winScroll * 1.0) / height;
 
     this.props.saveScrollPos(window.scrollX, window.scrollY);
     if (scrolled === 1.0 || scrolled >= 0.99) {
@@ -63,13 +61,13 @@ class PostList extends React.Component {
   };
 
   render() {
-    const { 
+    const {
       classes,
       loggedIn,
       saved,
-      articles, 
+      articles,
       selected_location,
-      theme_mode, 
+      theme_mode,
       onReport,
       onSave,
       onDeleteSaved,
@@ -77,13 +75,13 @@ class PostList extends React.Component {
     } = this.props;
 
     if (articles.length === 0) {
-      return <div></div>;
+      return <div style={{ display: "none" }}></div>;
     }
 
     return (
       <div className={classes.root}>
         <List component="map-post-list" aria-label="map post list">
-          {articles.map(article => (
+          {articles.map((article) => (
             <ListItem className={classes.listitem} key={article.nid}>
               <MapPost
                 saved={saved !== undefined}
@@ -114,15 +112,14 @@ PostList.propTypes = {
   onReport: PropTypes.func,
   onSave: PropTypes.func,
   onDeleteSaved: PropTypes.func,
-  onSelectMapPost: PropTypes.func
+  onSelectMapPost: PropTypes.func,
 };
 
-
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   loggedIn: state.sessionState.loggedIn,
   scrollPos: state.uiState.scrollPos,
   theme_mode: state.uiState.theme_mode,
-  selected_location: state.mapState.selected_location
+  selected_location: state.mapState.selected_location,
 });
 
 function mapDispatchToProps(dispatch) {

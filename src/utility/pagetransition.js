@@ -1,7 +1,6 @@
 import React, { memo } from "react";
 import { TransitionGroup, Transition } from "react-transition-group";
-import styled, { css, keyframes } from 'styled-components';
-
+import styled, { css, keyframes } from "styled-components";
 
 export const animations = {
   moveToLeft: {
@@ -10,16 +9,16 @@ export const animations = {
       to { transform: translateX(-100%) rotateZ(0.01deg); }
     `,
     duration: 600,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveFromLeft: {
     keyframes: keyframes`
       from {  transform: translateX(-100%) rotateZ(0.01deg); }
     `,
     duration: 600,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveToRight: {
     keyframes: keyframes`
@@ -27,16 +26,16 @@ export const animations = {
       to { transform: translateX(100%) rotateZ(0.01deg); }
     `,
     duration: 600,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveFromRight: {
     keyframes: keyframes`
       from { transform: translateX(100%) rotateZ(0.01deg); }
     `,
     duration: 600,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveToTop: {
     keyframes: keyframes`
@@ -44,16 +43,16 @@ export const animations = {
       to { transform: translateY(-100%) rotateZ(0.01deg); }
     `,
     duration: 600,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveFromTop: {
     keyframes: keyframes`
       from { transform: translateY(-100%) rotateZ(0.01deg); }
     `,
     duration: 600,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveToBottom: {
     keyframes: keyframes`
@@ -61,16 +60,16 @@ export const animations = {
       to { transform: translateY(100%) rotateZ(0.01deg); }
     `,
     duration: 600,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveFromBottom: {
     keyframes: keyframes`
       from { transform: translateY(100%) rotateZ(0.01deg); }
     `,
     duration: 600,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   fade: {
     keyframes: keyframes`
@@ -78,8 +77,8 @@ export const animations = {
       to { opacity: 0.3; }
     `,
     duration: 600,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveToLeftFade: {
     keyframes: keyframes`
@@ -87,16 +86,16 @@ export const animations = {
       to { opacity: 0.3; transform: translateX(-100%) rotateZ(0.01deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveFromLeftFade: {
     keyframes: keyframes`
       from { opacity: 0.3;  transform: translateX(-100%) rotateZ(0.01deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveToRightFade: {
     keyframes: keyframes`
@@ -104,16 +103,16 @@ export const animations = {
       to { opacity: 0.3;  transform: translateX(100%) rotateZ(0.01deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveFromRightFade: {
     keyframes: keyframes`
       from { opacity: 0.3; transform: translateX(100%) rotateZ(0.01deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveToTopFade: {
     keyframes: keyframes`
@@ -121,16 +120,16 @@ export const animations = {
       to { opacity: 0.3; transform: translateY(-100%) rotateZ(0.01deg); }
     `,
     duration: 600,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveFromTopFade: {
     keyframes: keyframes`
       from { opacity: 0.3; transform: translateY(-100%) rotateZ(0.01deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveToBottomFade: {
     keyframes: keyframes`
@@ -138,16 +137,16 @@ export const animations = {
       to { opacity: 0.3;  transform: translateY(100%) rotateZ(0.01deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   moveFromBottomFade: {
     keyframes: keyframes`
       from { opacity: 0.3; transform: translateY(100%) rotateZ(0.01deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   scaleDown: {
     keyframes: keyframes`
@@ -155,24 +154,24 @@ export const animations = {
       to { opacity: 0; transform: scale(0.8); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   scaleUp: {
     keyframes: keyframes`
 	    from { opacity: 0;  transform: scale(0.8); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   scaleUpDown: {
     keyframes: keyframes`
       from { opacity: 0; transform: scale(1.2); }
     `,
     duration: 500,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   scaleDownUp: {
     keyframes: keyframes`
@@ -180,8 +179,8 @@ export const animations = {
 	    to { opacity: 0; transform: scale(1.2); }
     `,
     duration: 500,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   scaleDownCenter: {
     keyframes: keyframes`
@@ -189,16 +188,16 @@ export const animations = {
       to { opacity: 0; transform: scale(0.7); }
     `,
     duration: 400,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   scaleUpCenter: {
     keyframes: keyframes`
       from { opacity: 0;  transform: scale(0.7); }
     `,
     duration: 400,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   rotateRightSideFirst: {
     keyframes: keyframes`
@@ -207,9 +206,9 @@ export const animations = {
       100% { transform: scale(0.8) translateZ(-200px); opacity:0; }
     `,
     duration: 800,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "0% 50%",
   },
   rotateLeftSideFirst: {
     keyframes: keyframes`
@@ -218,9 +217,9 @@ export const animations = {
       100% { transform: scale(0.8) translateZ(-200px); opacity:0; }
     `,
     duration: 800,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "0% 50%",
   },
   rotateTopSideFirst: {
     keyframes: keyframes`
@@ -229,9 +228,9 @@ export const animations = {
       100% { transform: scale(0.8) translateZ(-200px); opacity:0; }
     `,
     duration: 800,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "0% 50%",
   },
   rotateBottomSideFirst: {
     keyframes: keyframes`
@@ -240,9 +239,9 @@ export const animations = {
       100% {transform: scale(0.8) translateZ(-200px); opacity:0; }
     `,
     duration: 800,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "0% 50%",
   },
   flipOutRight: {
     keyframes: keyframes`
@@ -250,18 +249,18 @@ export const animations = {
       to { transform: translateZ(-1000px) rotateY(90deg); opacity: 0.2; }
     `,
     duration: 500,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '50% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "50% 50%",
   },
   flipInLeft: {
     keyframes: keyframes`
       from { transform: translateZ(-1000px) rotateY(-90deg); opacity: 0.2; }
     `,
     duration: 500,
-    timing: 'ease-out',
-    fill: 'both',
-    origin: '50% 50%'
+    timing: "ease-out",
+    fill: "both",
+    origin: "50% 50%",
   },
   flipOutLeft: {
     keyframes: keyframes`
@@ -269,18 +268,18 @@ export const animations = {
       to { transform: translateZ(-1000px) rotateY(-90deg); opacity: 0.2; }
     `,
     duration: 500,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '50% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "50% 50%",
   },
   flipInRight: {
     keyframes: keyframes`
       from { transform: translateZ(-1000px) rotateY(90deg); opacity: 0.2; }
     `,
     duration: 500,
-    timing: 'ease-out',
-    fill: 'both',
-    origin: '50% 50%'
+    timing: "ease-out",
+    fill: "both",
+    origin: "50% 50%",
   },
   flipOutTop: {
     keyframes: keyframes`
@@ -288,18 +287,18 @@ export const animations = {
       to { transform: translateZ(-1000px) rotateX(90deg); opacity: 0.2; }
     `,
     duration: 500,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '50% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "50% 50%",
   },
   flipInBottom: {
     keyframes: keyframes`
       from { transform: translateZ(-1000px) rotateX(-90deg); opacity: 0.2; }
     `,
     duration: 500,
-    timing: 'ease-out',
-    fill: 'both',
-    origin: '50% 50%'
+    timing: "ease-out",
+    fill: "both",
+    origin: "50% 50%",
   },
   flipOutBottom: {
     keyframes: keyframes`
@@ -307,18 +306,18 @@ export const animations = {
       to { transform: translateZ(-1000px) rotateX(-90deg); opacity: 0.2; }
     `,
     duration: 500,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '50% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "50% 50%",
   },
   flipInTop: {
     keyframes: keyframes`
       from { transform: translateZ(-1000px) rotateX(90deg); opacity: 0.2; }
     `,
     duration: 500,
-    timing: 'ease-out',
-    fill: 'both',
-    origin: '50% 50%'
+    timing: "ease-out",
+    fill: "both",
+    origin: "50% 50%",
   },
   rotateFall: {
     keyframes: keyframes`
@@ -329,9 +328,9 @@ export const animations = {
       100% { transform: translateY(100%) rotateZ(17deg); }
     `,
     duration: 1000,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '0% 0%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "0% 0%",
   },
   rotateOutNewspaper: {
     keyframes: keyframes`
@@ -339,18 +338,18 @@ export const animations = {
       to { transform: translateZ(-3000px) rotateZ(360deg); opacity: 0; }
     `,
     duration: 500,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '50% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "50% 50%",
   },
   rotateInNewspaper: {
     keyframes: keyframes`
       from { transform: translateZ(-3000px) rotateZ(-360deg); opacity: 0; }
     `,
     duration: 500,
-    timing: 'ease-out',
-    fill: 'both',
-    origin: '50% 50%'
+    timing: "ease-out",
+    fill: "both",
+    origin: "50% 50%",
   },
   rotatePushLeft: {
     keyframes: keyframes`
@@ -358,9 +357,9 @@ export const animations = {
       to { opacity: 0; transform: rotateY(90deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "0% 50%",
   },
   rotatePushRight: {
     keyframes: keyframes`
@@ -368,9 +367,9 @@ export const animations = {
       to { opacity: 0; transform: rotateY(-90deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '100% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "100% 50%",
   },
   rotatePushTop: {
     keyframes: keyframes`
@@ -378,9 +377,9 @@ export const animations = {
       to { opacity: 0; transform: rotateX(-90deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 0%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 0%",
   },
   rotatePushBottom: {
     keyframes: keyframes`
@@ -388,45 +387,45 @@ export const animations = {
       to { opacity: 0; transform: rotateX(90deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 100%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 100%",
   },
   rotatePullRight: {
     keyframes: keyframes`
       from { opacity: 0; transform: rotateY(-90deg); }
     `,
     duration: 500,
-    timing: 'ease',
-    fill: 'both',
-    origin: '100% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "100% 50%",
   },
   rotatePullLeft: {
     keyframes: keyframes`
       from { opacity: 0; transform: rotateY(90deg); }
     `,
     duration: 500,
-    timing: 'ease',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "0% 50%",
   },
   rotatePullTop: {
     keyframes: keyframes`
       from { opacity: 0; transform: rotateX(-90deg); }
     `,
     duration: 500,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 0%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 0%",
   },
   rotatePullBottom: {
     keyframes: keyframes`
       from { opacity: 0; transform: rotateX(90deg); }
     `,
     duration: 500,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 100%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 100%",
   },
   rotateFoldRight: {
     keyframes: keyframes`
@@ -434,9 +433,9 @@ export const animations = {
       to { opacity: 0; transform: translateX(100%) rotateY(90deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "0% 50%",
   },
   rotateFoldLeft: {
     keyframes: keyframes`
@@ -444,9 +443,9 @@ export const animations = {
       to { opacity: 0; transform: translateX(-100%) rotateY(-90deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both',
-    origin: '100% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "100% 50%",
   },
   rotateFoldTop: {
     keyframes: keyframes`
@@ -454,9 +453,9 @@ export const animations = {
       to { opacity: 0; transform: translateY(-100%) rotateX(90deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 100%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 100%",
   },
   rotateFoldBottom: {
     keyframes: keyframes`
@@ -464,45 +463,45 @@ export const animations = {
       to { opacity: 0; transform: translateY(100%) rotateX(-90deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 0%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 0%",
   },
   rotateUnfoldLeft: {
     keyframes: keyframes`
       from { opacity: 0; transform: translateX(-100%) rotateY(-90deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both',
-    origin: '100% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "100% 50%",
   },
   rotateUnfoldRight: {
     keyframes: keyframes`
       from { opacity: 0;  transform: translateX(100%) rotateY(90deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "0% 50%",
   },
   rotateUnfoldTop: {
     keyframes: keyframes`
       from { opacity: 0; transform: translateY(-100%) rotateX(90deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 100%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 100%",
   },
   rotateUnfoldBottom: {
     keyframes: keyframes`
       from { opacity: 0; transform: translateY(100%) rotateX(-90deg); }
     `,
     duration: 700,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 0%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 0%",
   },
   rotateRoomLeftOut: {
     keyframes: keyframes`
@@ -510,18 +509,18 @@ export const animations = {
       to { opacity: 0.3; transform: translateX(-100%) rotateY(90deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '100% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "100% 50%",
   },
   rotateRoomLeftIn: {
     keyframes: keyframes`
       from { opacity: 0.3; transform: translateX(100%) rotateY(-90deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "0% 50%",
   },
   rotateRoomRightOut: {
     keyframes: keyframes`
@@ -529,18 +528,18 @@ export const animations = {
       to { opacity: 0.3; transform: translateX(100%) rotateY(-90deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "0% 50%",
   },
   rotateRoomRightIn: {
     keyframes: keyframes`
       from { opacity: 0.3; transform: translateX(-100%) rotateY(90deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '100% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "100% 50%",
   },
   rotateRoomTopOut: {
     keyframes: keyframes`
@@ -548,18 +547,18 @@ export const animations = {
       to { opacity: 0.3; transform: translateY(-100%) rotateX(-90deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 100%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 100%",
   },
   rotateRoomTopIn: {
     keyframes: keyframes`
       from { opacity: 0.3; transform: translateY(100%) rotateX(90deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 0%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 0%",
   },
   rotateRoomBottomOut: {
     keyframes: keyframes`
@@ -567,18 +566,18 @@ export const animations = {
       to { opacity: 0.3; transform: translateY(100%) rotateX(90deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 0%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 0%",
   },
   rotateRoomBottomIn: {
     keyframes: keyframes`
       from { opacity: 0.3; transform: translateY(-100%) rotateX(-90deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 100%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 100%",
   },
   rotateCubeLeftOut: {
     keyframes: keyframes`
@@ -587,9 +586,9 @@ export const animations = {
       100% { opacity: 0.3; transform: translateX(-100%) rotateY(-90deg); }
     `,
     duration: 600,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '100% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "100% 50%",
   },
   rotateCubeLeftIn: {
     keyframes: keyframes`
@@ -597,9 +596,9 @@ export const animations = {
       50% { animation-timing-function: ease-out; transform: translateX(50%) translateZ(-200px) rotateY(45deg); }
     `,
     duration: 600,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "0% 50%",
   },
   rotateCubeRightOut: {
     keyframes: keyframes`
@@ -608,9 +607,9 @@ export const animations = {
       100% { opacity: 0.3; transform: translateX(100%) rotateY(90deg); }
     `,
     duration: 600,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "0% 50%",
   },
   rotateCubeRightIn: {
     keyframes: keyframes`
@@ -618,9 +617,9 @@ export const animations = {
       50% { animation-timing-function: ease-out; transform: translateX(-50%) translateZ(-200px) rotateY(-45deg); }
     `,
     duration: 600,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '100% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "100% 50%",
   },
   rotateCubeTopOut: {
     keyframes: keyframes`
@@ -629,9 +628,9 @@ export const animations = {
       100% { opacity: 0.3; transform: translateY(-100%) rotateX(90deg); }
     `,
     duration: 600,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '50% 100%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "50% 100%",
   },
   rotateCubeTopIn: {
     keyframes: keyframes`
@@ -639,9 +638,9 @@ export const animations = {
       50% { animation-timing-function: ease-out; transform: translateY(50%) translateZ(-200px) rotateX(-45deg); }
     `,
     duration: 600,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '50% 0%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "50% 0%",
   },
   rotateCubeBottomOut: {
     keyframes: keyframes`
@@ -650,9 +649,9 @@ export const animations = {
       100% { opacity: 0.3; -webkit-transform: translateY(100%) rotateX(-90deg); transform: translateY(100%) rotateX(-90deg); }
     `,
     duration: 600,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '50% 0%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "50% 0%",
   },
   rotateCubeBottomIn: {
     keyframes: keyframes`
@@ -660,9 +659,9 @@ export const animations = {
       50% { animation-timing-function: ease-out; transform: translateY(-50%) translateZ(-200px) rotateX(45deg); }
     `,
     duration: 600,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '50% 100%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "50% 100%",
   },
   rotateCarouselLeftOut: {
     keyframes: keyframes`
@@ -670,18 +669,18 @@ export const animations = {
       to { opacity: 0.3; transform: translateX(-150%) scale(0.4) rotateY(-65deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '100% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "100% 50%",
   },
   rotateCarouselLeftIn: {
     keyframes: keyframes`
       from { opacity: 0.3; transform: translateX(200%) scale(0.4) rotateY(65deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "0% 50%",
   },
   rotateCarouselRightOut: {
     keyframes: keyframes`
@@ -689,18 +688,18 @@ export const animations = {
       to { opacity: 0.3; transform: translateX(200%) scale(0.4) rotateY(65deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '0% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "0% 50%",
   },
   rotateCarouselRightIn: {
     keyframes: keyframes`
       from { opacity: 0.3; transform: translateX(-200%) scale(0.4) rotateY(-65deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '100% 50%'
+    timing: "ease",
+    fill: "both",
+    origin: "100% 50%",
   },
   rotateCarouselTopOut: {
     keyframes: keyframes`
@@ -708,18 +707,18 @@ export const animations = {
       to { opacity: 0.3; transform: translateY(-200%) scale(0.4) rotateX(65deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 100%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 100%",
   },
   rotateCarouselTopIn: {
     keyframes: keyframes`
       from { opacity: 0.3; transform: translateY(200%) scale(0.4) rotateX(-65deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 0%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 0%",
   },
   rotateCarouselBottomOut: {
     keyframes: keyframes`
@@ -727,18 +726,18 @@ export const animations = {
       to { opacity: 0.3; transform: translateY(200%) scale(0.4) rotateX(-65deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 0%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 0%",
   },
   rotateCarouselBottomIn: {
     keyframes: keyframes`
       from { opacity: 0.3; transform: translateY(-200%) scale(0.4) rotateX(65deg); }
     `,
     duration: 800,
-    timing: 'ease',
-    fill: 'both',
-    origin: '50% 100%'
+    timing: "ease",
+    fill: "both",
+    origin: "50% 100%",
   },
   rotateSidesOut: {
     keyframes: keyframes`
@@ -746,18 +745,18 @@ export const animations = {
       to { opacity: 0; transform: translateZ(-500px) rotateY(90deg); }
     `,
     duration: 500,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '-50% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "-50% 50%",
   },
   rotateSidesIn: {
     keyframes: keyframes`
       from { opacity: 0; transform: translateZ(-500px) rotateY(-90deg); }
     `,
     duration: 500,
-    timing: 'ease-in',
-    fill: 'both',
-    origin: '150% 50%'
+    timing: "ease-in",
+    fill: "both",
+    origin: "150% 50%",
   },
   rotateSlideOut: {
     keyframes: keyframes`
@@ -767,8 +766,8 @@ export const animations = {
       100% { opacity: 0.5; transform: translateZ(-500px) translateX(-200%); }
     `,
     duration: 1000,
-    timing: 'ease',
-    fill: 'both'
+    timing: "ease",
+    fill: "both",
   },
   rotateSlideIn: {
     keyframes: keyframes`
@@ -777,562 +776,562 @@ export const animations = {
       100% { opacity: 1; transform: translateZ(0) translateX(0); }
     `,
     duration: 1000,
-    timing: 'ease',
-    fill: 'both'
-  }
+    timing: "ease",
+    fill: "both",
+  },
 };
 
 export const presets = {
   moveToLeftFromRight: {
     exit: {
-      name: 'moveToLeft'
+      name: "moveToLeft",
     },
     enter: {
-      name: 'moveFromRight'
-    }
+      name: "moveFromRight",
+    },
   },
   moveToRightFromLeft: {
     exit: {
-      name: 'moveToRight'
+      name: "moveToRight",
     },
     enter: {
-      name: 'moveFromLeft'
-    }
+      name: "moveFromLeft",
+    },
   },
   moveToTopFromBottom: {
     exit: {
-      name: 'moveToTop'
+      name: "moveToTop",
     },
     enter: {
-      name: 'moveFromBottom'
-    }
+      name: "moveFromBottom",
+    },
   },
   moveToBottomFromTop: {
     exit: {
-      name: 'moveToBottom'
+      name: "moveToBottom",
     },
     enter: {
-      name: 'moveFromTop'
-    }
+      name: "moveFromTop",
+    },
   },
   fadeFromRight: {
     exit: {
-      name: 'fade'
+      name: "fade",
     },
     enter: {
-      name: 'moveFromRight',
-      onTop: true
-    }
+      name: "moveFromRight",
+      onTop: true,
+    },
   },
   fadeFromLeft: {
     exit: {
-      name: 'fade'
+      name: "fade",
     },
     enter: {
-      name: 'moveFromLeft',
-      onTop: true
-    }
+      name: "moveFromLeft",
+      onTop: true,
+    },
   },
   fadeFromBottom: {
     exit: {
-      name: 'fade'
+      name: "fade",
     },
     enter: {
-      name: 'moveFromBottom',
-      onTop: true
-    }
+      name: "moveFromBottom",
+      onTop: true,
+    },
   },
   fadeFromTop: {
     exit: {
-      name: 'fade'
+      name: "fade",
     },
     enter: {
-      name: 'moveFromTop',
-      onTop: true
-    }
+      name: "moveFromTop",
+      onTop: true,
+    },
   },
   fadeLeftFadeRight: {
     exit: {
-      name: 'moveToLeftFade'
+      name: "moveToLeftFade",
     },
     enter: {
-      name: 'moveFromRightFade'
-    }
+      name: "moveFromRightFade",
+    },
   },
   fadeRightFadeLeft: {
     exit: {
-      name: 'moveToRightFade'
+      name: "moveToRightFade",
     },
     enter: {
-      name: 'moveFromLeftFade'
-    }
+      name: "moveFromLeftFade",
+    },
   },
   fadeTopFadeBottom: {
     exit: {
-      name: 'moveToTopFade'
+      name: "moveToTopFade",
     },
     enter: {
-      name: 'moveFromBottomFade'
-    }
+      name: "moveFromBottomFade",
+    },
   },
   fadeBottomFadeTop: {
     exit: {
-      name: 'moveToBottomFade'
+      name: "moveToBottomFade",
     },
     enter: {
-      name: 'moveFromTopFade'
-    }
+      name: "moveFromTopFade",
+    },
   },
   scaleDownFromRight: {
     exit: {
-      name: 'scaleDown'
+      name: "scaleDown",
     },
     enter: {
-      name: 'moveFromRight',
-      onTop: true
-    }
+      name: "moveFromRight",
+      onTop: true,
+    },
   },
   scaleDownFromLeft: {
     exit: {
-      name: 'scaleDown'
+      name: "scaleDown",
     },
     enter: {
-      name: 'moveFromLeft',
-      onTop: true
-    }
+      name: "moveFromLeft",
+      onTop: true,
+    },
   },
   scaleDownFromBottom: {
     exit: {
-      name: 'scaleDown'
+      name: "scaleDown",
     },
     enter: {
-      name: 'moveFromBottom',
-      onTop: true
-    }
+      name: "moveFromBottom",
+      onTop: true,
+    },
   },
   scaleDownFromTop: {
     exit: {
-      name: 'scaleDown'
+      name: "scaleDown",
     },
     enter: {
-      name: 'moveFromTop',
-      onTop: true
-    }
+      name: "moveFromTop",
+      onTop: true,
+    },
   },
   scaleDownScaleDown: {
     exit: {
-      name: 'scaleDown'
+      name: "scaleDown",
     },
     enter: {
-      name: 'scaleUpDown',
-      delay: 300
-    }
+      name: "scaleUpDown",
+      delay: 300,
+    },
   },
   scaleUpScaleUp: {
     exit: {
-      name: 'scaleDownUp'
+      name: "scaleDownUp",
     },
     enter: {
-      name: 'scaleUp',
-      delay: 300
-    }
+      name: "scaleUp",
+      delay: 300,
+    },
   },
   moveToLeftScaleUp: {
     exit: {
-      name: 'moveToLeft',
-      onTop: true
+      name: "moveToLeft",
+      onTop: true,
     },
     enter: {
-      name: 'scaleUp'
-    }
+      name: "scaleUp",
+    },
   },
   moveToRightScaleUp: {
     exit: {
-      name: 'moveToRight',
-      onTop: true
+      name: "moveToRight",
+      onTop: true,
     },
     enter: {
-      name: 'scaleUp'
-    }
+      name: "scaleUp",
+    },
   },
   moveToTopScaleUp: {
     exit: {
-      name: 'moveToTop',
-      onTop: true
+      name: "moveToTop",
+      onTop: true,
     },
     enter: {
-      name: 'scaleUp'
-    }
+      name: "scaleUp",
+    },
   },
   moveToBottomScaleUp: {
     exit: {
-      name: 'moveToBottom',
-      onTop: true
+      name: "moveToBottom",
+      onTop: true,
     },
     enter: {
-      name: 'scaleUp'
-    }
+      name: "scaleUp",
+    },
   },
   scaleDownScaleUp: {
     exit: {
-      name: 'scaleDownCenter'
+      name: "scaleDownCenter",
     },
     enter: {
-      name: 'scaleUpCenter',
-      delay: 400
-    }
+      name: "scaleUpCenter",
+      delay: 400,
+    },
   },
   glueLeftFromRight: {
     exit: {
-      name: 'rotateRightSideFirst'
+      name: "rotateRightSideFirst",
     },
     enter: {
-      name: 'moveFromRight',
+      name: "moveFromRight",
       delay: 200,
-      onTop: true
-    }
+      onTop: true,
+    },
   },
   glueRightFromLeft: {
     exit: {
-      name: 'rotateLeftSideFirst'
+      name: "rotateLeftSideFirst",
     },
     enter: {
-      name: 'moveFromLeft',
+      name: "moveFromLeft",
       delay: 200,
-      onTop: true
-    }
+      onTop: true,
+    },
   },
   glueBottomFromTop: {
     exit: {
-      name: 'rotateTopSideFirst'
+      name: "rotateTopSideFirst",
     },
     enter: {
-      name: 'moveFromTop',
+      name: "moveFromTop",
       delay: 200,
-      onTop: true
-    }
+      onTop: true,
+    },
   },
   glueTopFromBottom: {
     exit: {
-      name: 'rotateBottomSideFirst'
+      name: "rotateBottomSideFirst",
     },
     enter: {
-      name: 'moveFromBottom',
+      name: "moveFromBottom",
       delay: 200,
-      onTop: true
-    }
+      onTop: true,
+    },
   },
   flipRight: {
     exit: {
-      name: 'flipOutRight'
+      name: "flipOutRight",
     },
     enter: {
-      name: 'flipInLeft',
-      delay: 500
-    }
+      name: "flipInLeft",
+      delay: 500,
+    },
   },
   flipLeft: {
     exit: {
-      name: 'flipOutLeft'
+      name: "flipOutLeft",
     },
     enter: {
-      name: 'flipInRight',
-      delay: 500
-    }
+      name: "flipInRight",
+      delay: 500,
+    },
   },
   flipTop: {
     exit: {
-      name: 'flipOutTop'
+      name: "flipOutTop",
     },
     enter: {
-      name: 'flipInBottom',
-      delay: 500
-    }
+      name: "flipInBottom",
+      delay: 500,
+    },
   },
   flipBottom: {
     exit: {
-      name: 'flipOutBottom'
+      name: "flipOutBottom",
     },
     enter: {
-      name: 'flipInTop',
-      delay: 500
-    }
+      name: "flipInTop",
+      delay: 500,
+    },
   },
   fall: {
     exit: {
-      name: 'rotateFall',
-      onTop: true
+      name: "rotateFall",
+      onTop: true,
     },
     enter: {
-      name: 'scaleUp'
-    }
+      name: "scaleUp",
+    },
   },
   newspaper: {
     exit: {
-      name: 'rotateOutNewspaper'
+      name: "rotateOutNewspaper",
     },
     enter: {
-      name: 'rotateInNewspaper',
-      delay: 500
-    }
+      name: "rotateInNewspaper",
+      delay: 500,
+    },
   },
   pushLeftFromRight: {
     exit: {
-      name: 'rotatePushLeft'
+      name: "rotatePushLeft",
     },
     enter: {
-      name: 'moveFromRight'
-    }
+      name: "moveFromRight",
+    },
   },
   pushRightFromLeft: {
     exit: {
-      name: 'rotatePushRight'
+      name: "rotatePushRight",
     },
     enter: {
-      name: 'moveFromLeft'
-    }
+      name: "moveFromLeft",
+    },
   },
   pushTopFromBottom: {
     exit: {
-      name: 'rotatePushTop'
+      name: "rotatePushTop",
     },
     enter: {
-      name: 'moveFromBottom'
-    }
+      name: "moveFromBottom",
+    },
   },
   pushBottomFromTop: {
     exit: {
-      name: 'rotatePushBottom'
+      name: "rotatePushBottom",
     },
     enter: {
-      name: 'moveFromTop'
-    }
+      name: "moveFromTop",
+    },
   },
   pushLeftPullRight: {
     exit: {
-      name: 'rotatePushLeft'
+      name: "rotatePushLeft",
     },
     enter: {
-      name: 'rotatePullRight',
-      delay: 180
-    }
+      name: "rotatePullRight",
+      delay: 180,
+    },
   },
   pushRightPullLeft: {
     exit: {
-      name: 'rotatePushRight'
+      name: "rotatePushRight",
     },
     enter: {
-      name: 'rotatePullLeft',
-      delay: 180
-    }
+      name: "rotatePullLeft",
+      delay: 180,
+    },
   },
   pushTopPullBottom: {
     exit: {
-      name: 'rotatePushTop'
+      name: "rotatePushTop",
     },
     enter: {
-      name: 'rotatePullBottom',
-      delay: 180
-    }
+      name: "rotatePullBottom",
+      delay: 180,
+    },
   },
   pushBottomPullTop: {
     exit: {
-      name: 'rotatePushBottom'
+      name: "rotatePushBottom",
     },
     enter: {
-      name: 'rotatePullTop',
-      delay: 180
-    }
+      name: "rotatePullTop",
+      delay: 180,
+    },
   },
   foldLeftFromRight: {
     exit: {
-      name: 'rotateFoldLeft'
+      name: "rotateFoldLeft",
     },
     enter: {
-      name: 'moveFromRightFade'
-    }
+      name: "moveFromRightFade",
+    },
   },
   foldRightFromLeft: {
     exit: {
-      name: 'rotateFoldRight'
+      name: "rotateFoldRight",
     },
     enter: {
-      name: 'moveFromLeftFade'
-    }
+      name: "moveFromLeftFade",
+    },
   },
   foldTopFromBottom: {
     exit: {
-      name: 'rotateFoldTop'
+      name: "rotateFoldTop",
     },
     enter: {
-      name: 'moveFromBottomFade'
-    }
+      name: "moveFromBottomFade",
+    },
   },
   foldBottomFromTop: {
     exit: {
-      name: 'rotateFoldBottom'
+      name: "rotateFoldBottom",
     },
     enter: {
-      name: 'moveFromTopFade'
-    }
+      name: "moveFromTopFade",
+    },
   },
   moveToRightUnfoldLeft: {
     exit: {
-      name: 'moveToRightFade'
+      name: "moveToRightFade",
     },
     enter: {
-      name: 'rotateUnfoldLeft'
-    }
+      name: "rotateUnfoldLeft",
+    },
   },
   moveToLeftUnfoldRight: {
     exit: {
-      name: 'moveToLeftFade'
+      name: "moveToLeftFade",
     },
     enter: {
-      name: 'rotateUnfoldRight'
-    }
+      name: "rotateUnfoldRight",
+    },
   },
   moveToBottomUnfoldTop: {
     exit: {
-      name: 'moveToBottomFade'
+      name: "moveToBottomFade",
     },
     enter: {
-      name: 'rotateUnfoldTop'
-    }
+      name: "rotateUnfoldTop",
+    },
   },
   moveToTopUnfoldBottom: {
     exit: {
-      name: 'moveToTopFade'
+      name: "moveToTopFade",
     },
     enter: {
-      name: 'rotateUnfoldBottom'
-    }
+      name: "rotateUnfoldBottom",
+    },
   },
   roomToLeft: {
     exit: {
-      name: 'rotateRoomLeftOut',
-      onTop: true
+      name: "rotateRoomLeftOut",
+      onTop: true,
     },
     enter: {
-      name: 'rotateRoomLeftIn'
-    }
+      name: "rotateRoomLeftIn",
+    },
   },
   roomToRight: {
     exit: {
-      name: 'rotateRoomRightOut',
-      onTop: true
+      name: "rotateRoomRightOut",
+      onTop: true,
     },
     enter: {
-      name: 'rotateRoomRightIn'
-    }
+      name: "rotateRoomRightIn",
+    },
   },
   roomToTop: {
     exit: {
-      name: 'rotateRoomTopOut',
-      onTop: true
+      name: "rotateRoomTopOut",
+      onTop: true,
     },
     enter: {
-      name: 'rotateRoomTopIn'
-    }
+      name: "rotateRoomTopIn",
+    },
   },
   roomToBottom: {
     exit: {
-      name: 'rotateRoomBottomOut',
-      onTop: true
+      name: "rotateRoomBottomOut",
+      onTop: true,
     },
     enter: {
-      name: 'rotateRoomBottomIn'
-    }
+      name: "rotateRoomBottomIn",
+    },
   },
   cubeToLeft: {
     exit: {
-      name: 'rotateCubeLeftOut',
-      onTop: true
+      name: "rotateCubeLeftOut",
+      onTop: true,
     },
     enter: {
-      name: 'rotateCubeLeftIn'
-    }
+      name: "rotateCubeLeftIn",
+    },
   },
   cubeToRight: {
     exit: {
-      name: 'rotateCubeRightOut',
-      onTop: true
+      name: "rotateCubeRightOut",
+      onTop: true,
     },
     enter: {
-      name: 'rotateCubeRightIn'
-    }
+      name: "rotateCubeRightIn",
+    },
   },
   cubeToTop: {
     exit: {
-      name: 'rotateCubeTopOut',
-      onTop: true
+      name: "rotateCubeTopOut",
+      onTop: true,
     },
     enter: {
-      name: 'rotateCubeTopIn'
-    }
+      name: "rotateCubeTopIn",
+    },
   },
   cubeToBottom: {
     exit: {
-      name: 'rotateCubeBottomOut',
-      onTop: true
+      name: "rotateCubeBottomOut",
+      onTop: true,
     },
     enter: {
-      name: 'rotateCubeBottomIn'
-    }
+      name: "rotateCubeBottomIn",
+    },
   },
   carouselToLeft: {
     exit: {
-      name: 'rotateCarouselLeftOut',
-      onTop: true
+      name: "rotateCarouselLeftOut",
+      onTop: true,
     },
     enter: {
-      name: 'rotateCarouselLeftIn'
-    }
+      name: "rotateCarouselLeftIn",
+    },
   },
   carouselToRight: {
     exit: {
-      name: 'rotateCarouselRightOut',
-      onTop: true
+      name: "rotateCarouselRightOut",
+      onTop: true,
     },
     enter: {
-      name: 'rotateCarouselRightIn'
-    }
+      name: "rotateCarouselRightIn",
+    },
   },
   carouselToTop: {
     exit: {
-      name: 'rotateCarouselTopOut',
-      onTop: true
+      name: "rotateCarouselTopOut",
+      onTop: true,
     },
     enter: {
-      name: 'rotateCarouselTopIn'
-    }
+      name: "rotateCarouselTopIn",
+    },
   },
   carouselToBottom: {
     exit: {
-      name: 'rotateCarouselBottomOut',
-      onTop: true
+      name: "rotateCarouselBottomOut",
+      onTop: true,
     },
     enter: {
-      name: 'rotateCarouselBottomIn'
-    }
+      name: "rotateCarouselBottomIn",
+    },
   },
   slides: {
     exit: {
-      name: 'rotateSidesOut'
+      name: "rotateSidesOut",
     },
     enter: {
-      name: 'rotateSidesIn',
-      delay: 200
-    }
+      name: "rotateSidesIn",
+      delay: 200,
+    },
   },
   slide: {
     exit: {
-      name: 'rotateSlideOut'
+      name: "rotateSlideOut",
     },
     enter: {
-      name: 'rotateSlideIn'
-    }
-  }
+      name: "rotateSlideIn",
+    },
+  },
 };
 
 const createAnimationStyles = ({
@@ -1342,18 +1341,18 @@ const createAnimationStyles = ({
   timing,
   fill,
   origin,
-  onTop
+  onTop,
 }) => css`
   animation-name: ${keyframes};
   animation-delay: ${delay};
   animation-duration: ${duration}ms;
   animation-timing-function: ${timing};
   animation-fill-mode: ${fill};
-  transform-origin: ${origin || '50% 50%'};
+  transform-origin: ${origin || "50% 50%"};
   ${onTop &&
-    css`
-      z-index: 1;
-    `}
+  css`
+    z-index: 1;
+  `}
 `;
 
 const stateMap = {
@@ -1366,7 +1365,7 @@ const stateMap = {
     return css`
       ${createAnimationStyles(exitAnimation)};
     `;
-  }
+  },
 };
 
 const PageTransitionGroup = styled.div`
@@ -1396,59 +1395,55 @@ const PageTransition = ({
 }) => {
   const selectEnterAnimation = () => {
     if (enterAnimationOverride) {
-      if (typeof enterAnimationOverride === 'string') {
+      if (typeof enterAnimationOverride === "string") {
         return animations[enterAnimationOverride];
       }
       return {
         ...animations[enterAnimationOverride.name],
         delay: enterAnimationOverride.delay,
-        onTop: enterAnimationOverride.onTop
+        onTop: enterAnimationOverride.onTop,
       };
     }
     if (preset) {
       return {
         ...animations[presets[preset].enter.name],
         delay: presets[preset].enter.delay,
-        onTop: presets[preset].enter.onTop
+        onTop: presets[preset].enter.onTop,
       };
     }
-    return 'rotateSlideIn';
+    return "rotateSlideIn";
   };
 
   const selectExitAnimation = () => {
     if (exitAnimationOverride) {
-      if (typeof exitAnimationOverride === 'string') {
+      if (typeof exitAnimationOverride === "string") {
         return animations[exitAnimationOverride];
       }
       return {
         ...animations[exitAnimationOverride.name],
         delay: exitAnimationOverride.delay,
-        onTop: exitAnimationOverride.onTop
+        onTop: exitAnimationOverride.onTop,
       };
     }
     if (preset) {
       return {
         ...animations[presets[preset].exit.name],
         delay: presets[preset].exit.delay,
-        onTop: presets[preset].exit.onTop
+        onTop: presets[preset].exit.onTop,
       };
     }
-    return 'rotateSlideIn';
+    return "rotateSlideIn";
   };
 
   const enterAnimation = selectEnterAnimation();
   const exitAnimation = selectExitAnimation();
   const timeout = Math.max(enterAnimation.duration, exitAnimation.duration);
-  // console.log("EnterAnimation :", enterAnimation);
-  // console.log("ExitAnimation :", exitAnimation);
-  // console.log("timeout: ", timeout);
 
   return (
     <PageTransitionGroup {...rest}>
       <TransitionGroup component={null}>
         <Transition key={transitionKey} timeout={timeout}>
-          {state => {
-            // console.log("Transition state :", state);
+          {(state) => {
             return (
               <PageTransitionWrapper
                 enterAnimation={enterAnimation}
@@ -1463,6 +1458,6 @@ const PageTransition = ({
       </TransitionGroup>
     </PageTransitionGroup>
   );
-}
+};
 
 export default memo(PageTransition);

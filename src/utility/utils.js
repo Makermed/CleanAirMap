@@ -1,4 +1,4 @@
-import { ARTICLE_BRANCH_USERPOST } from "constants/branches";
+
 
 export const get_timestring = (timestamp) => {
   // timestamp is in UTC 0
@@ -29,6 +29,8 @@ export const get_timestring = (timestamp) => {
   var diff = now_ts - timestamp;
   if (diff > 24 * 3600) {
     timeText = month + " " + date + ", " + year;
+  } else if (diff < 0) {
+    timeText = "0h ago";
   } else {
     timeText = Math.floor(diff / 3600) + "h ago";
   }
@@ -41,6 +43,9 @@ export const get_elapsed_time = (datetime) => {
   const timeDiff = Math.round((now - timestamp) / 1000);
 
   let result = 0;
+  if (timeDiff < 0) {
+    return "0m ago";
+  }
   if (timeDiff < 3600) {
     result = Math.round(timeDiff / 60);
     return `${result}m ago`;
@@ -68,35 +73,14 @@ export const get_today_string = () => {
   return year + "-" + month + "-" + date;
 };
 
-export const get_now_datetime_string = ()=> {
-  const d = new Date()
-  const date = d.toISOString().split('T')[0];
-  const time = d.toTimeString().split(' ')[0];
-  return `${date} ${time}`
-}
-
-export const get_current_local_datetime_string = () => {
-  var now = new Date();
-  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-  return now.toISOString().slice(0,16);
-}
-
-// Check if source is alive (updated before 14 days from now)
-export const is_source_alive = (source) => {
-  if (source.branch === ARTICLE_BRANCH_USERPOST) {
-    return true;
+export const get_local_datetime_string = (utcString = "") => {
+  var dt = utcString === "" ? new Date() : new Date(Date.parse(utcString));
+  if (utcString === "") {
+    dt.setMinutes(dt.getMinutes() - dt.getTimezoneOffset());
+  } else {
+    dt.setMinutes(dt.getMinutes() - 2 * dt.getTimezoneOffset());
   }
-  const last_updated_ts = Date.parse(source.last_updated);
-  const now = new Date();
-  const now_ts = now.getTime();
-  return last_updated_ts > (now_ts - 86400 * 14000);
-};
-
-export const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-  return result;
+  return dt.toISOString().slice(0, 16);
 };
 
 function round(value, decimals) {
@@ -125,17 +109,6 @@ export const int2kstring = (value) => {
   return kstring;
 };
 
-export const get_textwidth = (text, font) => {
-  // re-use canvas object for better performance
-  var canvas =
-    get_textwidth.canvas ||
-    (get_textwidth.canvas = document.createElement("canvas"));
-  var context = canvas.getContext("2d");
-  context.font = font;
-  var metrics = context.measureText(text);
-  return metrics.width;
-};
-
 export const int2commastring = (x) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
@@ -160,11 +133,10 @@ export const slugify = (string) => {
 };
 
 /*
-*/
+ */
 export const gen_random_int = (max) => {
   return Math.floor(Math.random() * Math.floor(max));
-}
-
+};
 
 /*
     Get sub string of instr between startstr and endstr.
@@ -193,12 +165,15 @@ export const summarize_text = (text, length) => {
   if (text === null || text === undefined || text === "") {
     return "";
   }
-  
+
   let words = text.split(" ");
   let characters = 0;
   let word_count = 0;
   let new_words = [];
-  while (characters < length && word_count < words.length) {
+  while (
+    word_count < words.length &&
+    characters + words[word_count].length < length
+  ) {
     new_words.push(words[word_count]);
     characters += words[word_count].length;
     word_count++;
@@ -212,17 +187,17 @@ export const summarize_text = (text, length) => {
 };
 
 export const decodeHTMLEntities = (text) => {
-  var textArea = document.createElement('textarea');
+  var textArea = document.createElement("textarea");
   textArea.innerHTML = text;
   return textArea.value;
-}
+};
 
 export const extract_text = (text) => {
   const div = document.createElement("div");
   div.innerHTML = text;
   const pureText = div.textContent || div.innerText || "";
   return pureText;
-}
+};
 
 export const urlify = (text) => {
   let words = [];
@@ -250,7 +225,7 @@ export const urlify = (text) => {
     });
     temp_sentence = get_substring(temp_sentence, match);
   }
-  if (temp_sentence.length > 0) {
+  if (temp_sentence) {
     words.push({
       type: "text",
       value: temp_sentence,
@@ -259,24 +234,38 @@ export const urlify = (text) => {
   return words;
 };
 
-export const render_text = (text, dark=false) => {
+export const render_text = (text, dark = false) => {
+  if (!text) {
+    return <></>;
+  }
+
   const decoded_sentence = decodeHTMLEntities(text);
   const words = urlify(decoded_sentence);
   return (
     <>
       {words.map((word) => {
-        if (word.type === "text")
-          return word.value;
+        if (word.type === "text") return word.value;
         if (word.type === "link") {
           if (dark) {
             return (
-              <a href={word.value} key={word.value} target="_blank" rel="noreferrer" style={{color: "white", textDecoration: "underline"}}>
+              <a
+                href={word.value}
+                key={word.value}
+                target="_blank"
+                rel="noreferrer"
+                style={{ color: "white", textDecoration: "underline" }}
+              >
                 {word.value}
               </a>
             );
-          } else { 
+          } else {
             return (
-              <a href={word.value} key={word.value} target="_blank" rel="noreferrer">
+              <a
+                href={word.value}
+                key={word.value}
+                target="_blank"
+                rel="noreferrer"
+              >
                 {word.value}
               </a>
             );
@@ -290,123 +279,143 @@ export const render_text = (text, dark=false) => {
 
 export const is_valid_url = (string) => {
   // var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
-  var res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g);
-  return (res !== null)
+  var res = string.match(
+    /(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g
+  );
+  return res !== null;
 };
 
 export const get_urls = (string) => {
   // var matches = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g);
   var matches = string.match(/(http(s)?:\/\/[^\s]+)/g);
   return matches;
-}
-
-export const get_hostname = (url) => {
-  var urlParts = url.replace('http://','').replace('https://','').split(/[/?#]/);
-  return urlParts[0];
-}
+};
 
 export const get_domainname = (url) => {
-  var urlParts = url.replace('http://','').replace('https://','').replace('www.','').split(/[/?#]/);
+  if (!url) {
+    return;
+  }
+  var urlParts = url
+    .replace("http://", "")
+    .replace("https://", "")
+    .replace("www.", "")
+    .split(/[/?#]/);
   return urlParts[0];
-}
+};
 
-export const validate_email = (email) => {
-  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
-}
-
-
-const MD5 = function(e) {
+const MD5 = function (e) {
   function h(a, b) {
-      var c, d, e, f, g;
-      e = a & 2147483648;
-      f = b & 2147483648;
-      c = a & 1073741824;
-      d = b & 1073741824;
-      g = (a & 1073741823) + (b & 1073741823);
-      return c & d ? g ^ 2147483648 ^ e ^ f : c | d ? g & 1073741824 ? g ^ 3221225472 ^ e ^ f : g ^ 1073741824 ^ e ^ f : g ^ e ^ f
+    var c, d, e, f, g;
+    e = a & 2147483648;
+    f = b & 2147483648;
+    c = a & 1073741824;
+    d = b & 1073741824;
+    g = (a & 1073741823) + (b & 1073741823);
+    return c & d
+      ? g ^ 2147483648 ^ e ^ f
+      : c | d
+      ? g & 1073741824
+        ? g ^ 3221225472 ^ e ^ f
+        : g ^ 1073741824 ^ e ^ f
+      : g ^ e ^ f;
   }
 
   function k(a, b, c, d, e, f, g) {
-      a = h(a, h(h((b & c) | (~b & d), e), g));
-      return h((a << f) | (a >>> 32 - f), b)
+    a = h(a, h(h((b & c) | (~b & d), e), g));
+    return h((a << f) | (a >>> (32 - f)), b);
   }
 
   function l(a, b, c, d, e, f, g) {
-      a = h(a, h(h((b & d) | (c & ~d), e), g));
-      return h((a << f) | (a >>> 32 - f), b)
+    a = h(a, h(h((b & d) | (c & ~d), e), g));
+    return h((a << f) | (a >>> (32 - f)), b);
   }
 
   function m(a, b, d, c, e, f, g) {
-      a = h(a, h(h(b ^ d ^ c, e), g));
-      return h((a << f) | (a >>> 32 - f), b)
+    a = h(a, h(h(b ^ d ^ c, e), g));
+    return h((a << f) | (a >>> (32 - f)), b);
   }
 
   function n(a, b, d, c, e, f, g) {
-      a = h(a, h(h(d ^ (b | ~c), e), g));
-      return h((a << f) | (a >>> 32 - f), b)
+    a = h(a, h(h(d ^ (b | ~c), e), g));
+    return h((a << f) | (a >>> (32 - f)), b);
   }
 
   function p(a) {
-      var b = "",
-          d = "",
-          c;
-      for (c = 0; 3 >= c; c++) { 
-        d = (a >>> 8 * c) & 255; 
-        d = "0" + d.toString(16); 
-        b += d.substr(d.length - 2, 2); 
-      }
-      return b
+    var b = "",
+      d = "",
+      c;
+    for (c = 0; 3 >= c; c++) {
+      d = (a >>> (8 * c)) & 255;
+      d = "0" + d.toString(16);
+      b += d.substr(d.length - 2, 2);
+    }
+    return b;
   }
   var f = [],
-      q, r, s, t, a, b, c, d;
-  e = function(a) {
-      a = a.replace(/\r\n/g, "\n");
-      for (var b = "", d = 0; d < a.length; d++) {
-          var c = a.charCodeAt(d);
-          if (128 > c) {
-            b += String.fromCharCode(c)
-          } else {
-            if (127 < c && 2048 > c ) {
-               b += String.fromCharCode((c >> 6) | 192);
-            } else {
-              b += String.fromCharCode((c >> 12) | 224);
-              b += String.fromCharCode(((c >> 6) & 63) | 128); b += String.fromCharCode((c & 63) | 128);
-            }
-          }
+    q,
+    r,
+    s,
+    t,
+    a,
+    b,
+    c,
+    d;
+  e = (function (a) {
+    a = a.replace(/\r\n/g, "\n");
+    for (var b = "", d = 0; d < a.length; d++) {
+      var c = a.charCodeAt(d);
+      if (128 > c) {
+        b += String.fromCharCode(c);
+      } else {
+        if (127 < c && 2048 > c) {
+          b += String.fromCharCode((c >> 6) | 192);
+        } else {
+          b += String.fromCharCode((c >> 12) | 224);
+          b += String.fromCharCode(((c >> 6) & 63) | 128);
+          b += String.fromCharCode((c & 63) | 128);
+        }
       }
-      return b
-  }(e);
-  f = function(b) {
-      var a, c = b.length;
-      a = c + 8;
-      for (var d = 16 * ((a - a % 64) / 64 + 1), e = Array(d - 1), f = 0, g = 0; g < c;) {
-        a = (g - g % 4) / 4;
-        f = g % 4 * 8;
-        e[a] |= b.charCodeAt(g) << f;
-        g++;
-      }
-      a = (g - g % 4) / 4;
-      e[a] |= 128 << g % 4 * 8;
-      e[d - 2] = c << 3;
-      e[d - 1] = c >>> 29;
-      return e
-  }(e);
+    }
+    return b;
+  })(e);
+  f = (function (b) {
+    var a,
+      c = b.length;
+    a = c + 8;
+    for (
+      var d = 16 * ((a - (a % 64)) / 64 + 1), e = Array(d - 1), f = 0, g = 0;
+      g < c;
+
+    ) {
+      a = (g - (g % 4)) / 4;
+      f = (g % 4) * 8;
+      e[a] |= b.charCodeAt(g) << f;
+      g++;
+    }
+    a = (g - (g % 4)) / 4;
+    e[a] |= 128 << ((g % 4) * 8);
+    e[d - 2] = c << 3;
+    e[d - 1] = c >>> 29;
+    return e;
+  })(e);
   a = 1732584193;
   b = 4023233417;
   c = 2562383102;
   d = 271733878;
-  for (e = 0; e < f.length; e += 16) { 
-    q = a; r = b; s = c; t = d; 
-    a = k(a, b, c, d, f[e + 0], 7, 3614090360); 
-    d = k(d, a, b, c, f[e + 1], 12, 3905402710); 
-    c = k(c, d, a, b, f[e + 2], 17, 606105819); 
-    b = k(b, c, d, a, f[e + 3], 22, 3250441966); 
-    a = k(a, b, c, d, f[e + 4], 7, 4118548399); 
-    d = k(d, a, b, c, f[e + 5], 12, 1200080426); 
-    c = k(c, d, a, b, f[e + 6], 17, 2821735955); 
-    b = k(b, c, d, a, f[e + 7], 22, 4249261313); 
-    a = k(a, b, c, d, f[e + 8], 7, 1770035416); 
+  for (e = 0; e < f.length; e += 16) {
+    q = a;
+    r = b;
+    s = c;
+    t = d;
+    a = k(a, b, c, d, f[e + 0], 7, 3614090360);
+    d = k(d, a, b, c, f[e + 1], 12, 3905402710);
+    c = k(c, d, a, b, f[e + 2], 17, 606105819);
+    b = k(b, c, d, a, f[e + 3], 22, 3250441966);
+    a = k(a, b, c, d, f[e + 4], 7, 4118548399);
+    d = k(d, a, b, c, f[e + 5], 12, 1200080426);
+    c = k(c, d, a, b, f[e + 6], 17, 2821735955);
+    b = k(b, c, d, a, f[e + 7], 22, 4249261313);
+    a = k(a, b, c, d, f[e + 8], 7, 1770035416);
     d = k(d, a, b, c, f[e + 9], 12, 2336552879);
     c = k(c, d, a, b, f[e + 10], 17, 4294925233);
     b = k(b, c, d, a, f[e + 11], 22, 2304563134);
@@ -462,54 +471,62 @@ const MD5 = function(e) {
     d = n(d, a, b, c, f[e + 11], 10, 3174756917);
     c = n(c, d, a, b, f[e + 2], 15, 718787259);
     b = n(b, c, d, a, f[e + 9], 21, 3951481745);
-    a = h(a, q); b = h(b, r); c = h(c, s); d = h(d, t); 
+    a = h(a, q);
+    b = h(b, r);
+    c = h(c, s);
+    d = h(d, t);
   }
   return (p(a) + p(b) + p(c) + p(d)).toLowerCase();
 };
 
 export const get_hash = (text) => {
   return MD5(text);
-}
+};
 
 export const is_valid_slug = (slug) => {
   const regex = /^[a-zA-Z0-9]+(?:[-_][a-zA-Z0-9]+)*$/g;
   const found = slug.match(regex);
   return found !== null;
-}
+};
 
 export const is_valid_token_address = (address) => {
   const regex = /^0x[0-9a-fA-F]+$/g;
   const found = address.match(regex);
   return found !== null;
-}
+};
 
 export const objects_equal = (o1, o2) => {
-  return Object.keys(o1).length === Object.keys(o2).length 
-    && Object.keys(o1).every(p => o1[p] === o2[p]);
-}
+  return (
+    Object.keys(o1).length === Object.keys(o2).length &&
+    Object.keys(o1).every((p) => o1[p] === o2[p])
+  );
+};
 
+export const copy2clipboard = (url) => {
+  navigator.clipboard.writeText(url);
+};
 
-// function test() {
-  // var now = new Date();
-  // console.log("timezone offset ", now.getTimezoneOffset());
-  // console.log("TimeText for 1560282316 ", timeConverter(1560282316));
-  // console.log("TimeText for 1560616393 ", timeConverter(1560616393));
-  // console.log(get_textwidth("hello there!", "bold 12pt arial"));  // close to 86
+export const extractVideoId = (url) => {
+  const shortenedMatch = url.match(/youtu\.be\/([^?]+)/);
+  if (shortenedMatch) {
+    return shortenedMatch[1] || null;
+  }
 
-  // var somestring = 'first "${searchTerm}" from the beginning';
-  // var midstring = get_substring(somestring, '"${', '}"');
-  // var startstring = get_substring(somestring, '"${');
-  // var laststring = get_substring(somestring, '', "from");
+  const match = url.match(/[?&]v=([^&]+)/);
+  return (match && match[1]) || null;
+};
 
-  // console.log("original string :", somestring);
-  // console.log("midding string :", midstring);
-  // console.log("start string :", startstring);
-  // console.log("last string :", laststring);
+export const extractPodcastId = (url) => {
+  try {
+    const videoId = parseInt(url?.match(/id(\d+)/)[1] || url?.match(/\d+/)[0]);
+    return videoId;
+  } catch (error) {
+    console.error("Error retrieving podcast ID:", error);
+    return null;
+  }
+};
 
-  // var text = "hello world";
-  // var hashval = get_hash(text);
-  // console.log("hash value :", hashval);
-// };
-
-
-// test();
+export const capitalizeFirstLetter = (str) => {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};

@@ -2,34 +2,32 @@ import React from "react";
 import { compose } from "recompose";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { ActionCreators } from "actions";
+import { ActionCreators } from "../../../../actions";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Tabs, Tab } from "@material-ui/core";
-import { 
-  THEME_MODE_DARK, 
+import {
+  THEME_MODE_DARK,
   TAB_LOC_READINGS,
-  TAB_LOC_FEEDS, 
-  // TAB_LOC_MODERATORS, 
-  MAX_ARTICLE_WIDTH 
-} from "constants/types";
+  TAB_LOC_FEEDS,
+  MAX_ARTICLE_WIDTH,
+} from "../../../../constants/types";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     flexGrow: 1,
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
-    padding: 0
+    padding: 0,
   },
   tabs: {
     margin: 0,
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
     minHeight: 18,
-    // maxWidth: MAX_ARTICLE_WIDTH - 32,
     borderRadius: 12,
     backgroundColor: theme.palette.background.light,
-    boxShadow: `0 1px 1px 1px rgba(63,63,68,0.05), 0 3px 3px 0 rgba(63,63,68,0.15)`
+    boxShadow: `0 1px 1px 1px rgba(63,63,68,0.05), 0 3px 3px 0 rgba(63,63,68,0.15)`,
   },
   indicator_light: {
     backgroundColor: "#1878f3",
@@ -58,8 +56,8 @@ const styles = theme => ({
     marginRight: theme.spacing(1),
     margin: 0,
     width: 16,
-    height: 16
-  }
+    height: 16,
+  },
 });
 
 class LocationTabs extends React.Component {
@@ -80,15 +78,26 @@ class LocationTabs extends React.Component {
   render() {
     const { classes, locationtab, theme_mode } = this.props;
 
-    const readings_tab = { value: TAB_LOC_READINGS, name: "Logged Values", icon: "edit.png" };
+    const readings_tab = {
+      value: TAB_LOC_READINGS,
+      name: "Logged Values",
+      icon: "edit.png",
+    };
     const feeds_tab = { value: TAB_LOC_FEEDS, name: "Feed", icon: "home.png" };
-    // const moderators_tab = { value: TAB_LOC_MODERATORS, name: "Mod", icon: "moderator.png" };
 
-    let classes_indicator = theme_mode === THEME_MODE_DARK ? classes.indicator_dark : classes.indicator_light;
-    let classes_tab = theme_mode === THEME_MODE_DARK ? classes.tab_dark : classes.tab_light;
+    let classes_indicator =
+      theme_mode === THEME_MODE_DARK
+        ? classes.indicator_dark
+        : classes.indicator_light;
+    let classes_tab =
+      theme_mode === THEME_MODE_DARK ? classes.tab_dark : classes.tab_light;
 
-    const width = document.documentElement.clientWidth || document.body.clientWidth || window.innerWidth;
-    const tabsWidth = width > MAX_ARTICLE_WIDTH ? MAX_ARTICLE_WIDTH - 32 : width - 32;
+    const width =
+      document.documentElement.clientWidth ||
+      document.body.clientWidth ||
+      window.innerWidth;
+    const tabsWidth =
+      width > MAX_ARTICLE_WIDTH ? MAX_ARTICLE_WIDTH - 32 : width - 32;
 
     return (
       <div className={classes.root}>
@@ -97,9 +106,8 @@ class LocationTabs extends React.Component {
           classes={{ indicator: classes_indicator }}
           value={locationtab}
           onChange={this.handleLocationTab}
-          // variant={width > MAX_ARTICLE_WIDTH ? "fullWidth": "scrollable"}
           variant={"fullWidth"}
-          style={{ width: tabsWidth}}
+          style={{ width: tabsWidth }}
         >
           <Tab
             value={readings_tab.value}
@@ -127,19 +135,6 @@ class LocationTabs extends React.Component {
               />
             }
           />
-          {/* <Tab
-            value={moderators_tab.value}
-            key={moderators_tab.value}
-            label={moderators_tab.name}
-            className={classes_tab}
-            icon={
-              <img
-                alt={moderators_tab.name}
-                src={`/static/images/icons/${theme_mode}/${moderators_tab.icon}`}
-                className={classes.icon}
-              />
-            }
-          /> */}
         </Tabs>
       </div>
     );
@@ -148,12 +143,12 @@ class LocationTabs extends React.Component {
 
 LocationTabs.propTypes = {
   classes: PropTypes.object,
-  onChangeTab: PropTypes.func
+  onChangeTab: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   theme_mode: state.uiState.theme_mode,
-  locationtab: state.mapState.locationtab
+  locationtab: state.mapState.locationtab,
 });
 
 function mapDispatchToProps(dispatch) {

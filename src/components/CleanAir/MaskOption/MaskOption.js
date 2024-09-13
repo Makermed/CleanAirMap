@@ -6,25 +6,27 @@ import Typography from "@material-ui/core/Typography";
 const styles = (theme) => ({
   root: {
     position: "relative",
-    width: 95,
+    width: 104,
     cursor: "pointer",
     padding: theme.spacing(1),
-    border : `2px solid ${theme.palette.text.secondary}`
+    border: `2px solid #1A71E5`,
+    minHeight: 115,
   },
   root_selected: {
     position: "relative",
-    width: 95,
+    width: 104,
     cursor: "pointer",
     padding: theme.spacing(1),
-    border: `2px solid ${theme.palette.text.primary}`
+    border: `2px solid #1A71E5`,
+    minHeight: 115,
   },
   container: {
     textAlign: "center",
-    opacity: 0.31,
+    opacity: 0.5,
   },
   container_selected: {
     textAlign: "center",
-    opacity: 1.0
+    opacity: 1.0,
   },
   image: {
     height: 32,
@@ -33,28 +35,42 @@ const styles = (theme) => ({
   title: {
     fontSize: "16px",
     lineHeight: "20px",
-    color: theme.palette.text.primary,
+    color: "rgba(26, 113, 229, 0.5)",
+  },
+  titleSelected: {
+    fontSize: "16px",
+    lineHeight: "20px",
+    color: "#1A71E5",
   },
 });
 
 class MaskOption extends React.Component {
-
   render() {
     const { classes, id, selected, image, text1, text2, onSelect } = this.props;
 
     return (
-      <div 
-        className={selected ? classes.root_selected : classes.root} 
-        onClick={e => onSelect(id)}
+      <div
+        className={selected ? classes.root_selected : classes.root}
+        onClick={(e) => onSelect(id)}
       >
-        <div className={selected ? classes.container_selected : classes.container}>
-          <img 
-            className={classes.image} 
-            src={image} 
-            alt={`${text1} ${text2}`} 
+        <div
+          className={selected ? classes.container_selected : classes.container}
+        >
+          <img
+            className={classes.image}
+            src={image}
+            alt={`${text1} ${text2}`}
           />
-          <Typography className={classes.title}>{text1}</Typography>
-          <Typography className={classes.title}>{text2}</Typography>
+          <Typography
+            className={selected ? classes.titleSelected : classes.title}
+          >
+            {text1}
+          </Typography>
+          <Typography
+            className={selected ? classes.titleSelected : classes.title}
+          >
+            {text2}
+          </Typography>
         </div>
       </div>
     );

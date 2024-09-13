@@ -2,8 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Card, CardMedia, CardContent, Typography } from "@material-ui/core";
+import { RAVEN_PLACEHOLDER_IMAGE } from "../../../constants/types";
 
-const styles = theme => ({
+const styles = (theme) => ({
   card: {
     display: "flex",
     cursor: "pointer",
@@ -13,7 +14,7 @@ const styles = theme => ({
     flex: "1 0 auto",
     padding: 0,
     "&:last-child": {
-      padding: 0
+      padding: 0,
     },
     backgroundColor: theme.palette.background.default,
   },
@@ -21,7 +22,7 @@ const styles = theme => ({
     flex: "1 0 auto",
     padding: 0,
     "&:last-child": {
-      padding: 0
+      padding: 0,
     },
     backgroundColor: theme.palette.background.default,
     opacity: 0.3,
@@ -45,7 +46,7 @@ const styles = theme => ({
     lineHeight: "14px",
     fontWeight: 500,
     color: "white",
-  }
+  },
 });
 
 class IconTextItem extends React.Component {
@@ -54,17 +55,21 @@ class IconTextItem extends React.Component {
 
     return (
       <Card className={classes.card}>
-        <CardContent className={selected === undefined || selected ? classes.content : classes.content_nonselected}>
+        <CardContent
+          className={
+            selected === undefined || selected
+              ? classes.content
+              : classes.content_nonselected
+          }
+        >
           <div style={{ position: "relative" }}>
             <CardMedia
               component="img"
               className={classes.media}
-              image={image}
+              image={image || RAVEN_PLACEHOLDER_IMAGE}
             />
             <div className={classes.title_div}>
-              <Typography className={classes.title}>
-                {title}
-              </Typography>
+              <Typography className={classes.title}>{title}</Typography>
             </div>
           </div>
         </CardContent>
@@ -77,7 +82,7 @@ IconTextItem.propTypes = {
   classes: PropTypes.object,
   title: PropTypes.string,
   image: PropTypes.string,
-  selected: PropTypes.bool
+  selected: PropTypes.bool,
 };
 
 export default withStyles(styles)(IconTextItem);

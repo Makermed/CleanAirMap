@@ -9,26 +9,22 @@ import {
   Grid,
   Typography,
   IconButton,
-  Menu
+  Menu,
 } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
-  PopMenuMapReadingMod,
-} from "components";
-import { 
-  MAX_CARD_WIDTH, 
-  MIN_CARD_WIDTH 
-} from "constants/types";
+  BLANK_USER_IMAGE,
+  MAX_CARD_WIDTH,
+  MIN_CARD_WIDTH,
+} from "../../../constants/types";
 import {
+  CONF_ADJUST_ACTIVITIES,
   CONF_MASKS,
-} from "constants/maplocation";
-import {
-  ToastError
-} from "utility/toast";
-import { 
-  get_elapsed_time 
-} from "utility/utils";
-
+} from "../../../constants/maplocation";
+import { ToastError } from "../../../utility/toast";
+import { get_elapsed_time } from "../../../utility/utils";
+import { get_adjusted_co2_level } from "../../../utility/cleanair";
 
 const styles = (theme) => ({
   card: {
@@ -42,7 +38,10 @@ const styles = (theme) => ({
     marginBottom: theme.spacing(1),
     paddingBottom: theme.spacing(1),
     borderRadius: 10,
-    backgroundColor: theme.palette.background.article,
+    borderColor: theme.palette.feedstroke.default,
+    borderWidth: 2,
+    borderStyle: "solid",
+    backgroundColor: theme.palette.feedbackground.default,
     boxShadow: `0 1px 1px 1px rgba(63,63,68,0.05), 0 3px 3px 0 rgba(63,63,68,0.15)`,
   },
   readerimage: {
@@ -117,10 +116,9 @@ const styles = (theme) => ({
     marginRight: 10,
   },
   airlevel_titlebox: {
-    display: "flex",
     marginLeft: 24,
-    alignItems: "center"
-  }, 
+    alignItems: "center",
+  },
   airlevel_title: {
     fontFamily: "Roboto, sans-serif",
     fontSize: "20px",
@@ -166,13 +164,32 @@ const styles = (theme) => ({
     width: "100%",
     marginLeft: "auto",
     marginRight: "auto",
+    paddingTop: "20px",
+  },
+  verifiedimage: {
+    position: "absolute",
+    bottom: 72,
+    right: 32,
+    padding: 2,
+    width: 28,
+    height: 28,
+    background: "white",
+    borderRadius: 14,
+  },
+  verifiedtext: {
+    fontWeight: 200,
   },
   actionbtn: {
     position: "absolute",
     let: 40,
     textTransform: "inherit",
-    // float: "right",
     color: theme.palette.text.secondary,
+  },
+  comments: {
+    cursor: "pointer",
+  },
+  recommends: {
+    cursor: "pointer",
   },
   reaction: {
     left: "50%",
@@ -205,6 +222,7 @@ class ReadingItemMod extends React.Component {
 
     this.state = {
       anchorEl: null,
+      showComments: false,
     };
 
     this.handleExpand = this.handleExpand.bind(this);
@@ -215,11 +233,16 @@ class ReadingItemMod extends React.Component {
     this.handleShare = this.handleShare.bind(this);
     this.handleMakeModerator = this.handleMakeModerator.bind(this);
     this.handleBanUser = this.handleBanUser.bind(this);
+
+    this.handleClickComments = this.handleClickComments.bind(this);
+    this.handleDeleteBan1d = this.handleDeleteBan1d.bind(this);
+    this.handleDeleteBan7d = this.handleDeleteBan7d.bind(this);
+    this.handleDeleteBanPerm = this.handleDeleteBanPerm.bind(this);
   }
 
   setError = (message) => {
     ToastError(message);
-  }
+  };
 
   handleExpand = (event) => {
     this.setState({
@@ -233,59 +256,79 @@ class ReadingItemMod extends React.Component {
       ...this.state,
       anchorEl: null,
     });
-  }
+  };
 
   handleEditComment = () => {
     const { reading } = this.props;
-    this.props.onEdit(reading);
     this.handleCloseMenu();
-  }
+    this.props.onEdit(reading);
+  };
 
   handleDeleteComment = () => {
     const { reading } = this.props;
-    this.props.onDelete(reading);
     this.handleCloseMenu();
-  }
+    this.props.onDelete(reading);
+  };
 
   handleShare = () => {
     const { reading } = this.props;
-    this.props.onShare(reading);
     this.handleCloseMenu();
-  }
+    this.props.onShare(reading);
+  };
 
   handleMakeModerator = () => {
     const { reading } = this.props;
-    this.props.onMakeModerator(reading);
     this.handleCloseMenu();
-  }
+    this.props.onMakeModerator(reading);
+  };
 
   handleBanUser = () => {
     const { reading } = this.props;
-    this.props.onBanUser(reading);
     this.handleCloseMenu();
-  }
+    this.props.onBanUser(reading);
+  };
+
+  handleClickComments = () => {
+    this.setState({
+      ...this.state,
+      showComments: !this.state.showComments,
+    });
+  };
+
+  handleDeleteBan1d = () => {
+    const { reading } = this.props;
+    this.handleCloseMenu();
+    this.props.onBan1d(reading);
+  };
+
+  handleDeleteBan7d = () => {
+    const { reading } = this.props;
+    this.handleCloseMenu();
+    this.props.onBan7d(reading);
+  };
+
+  handleDeleteBanPerm = () => {
+    const { reading } = this.props;
+    this.handleCloseMenu();
+    this.props.onBanPerm(reading);
+  };
 
   render() {
-    const { 
-      classes, 
-      theme,
-      reading, 
-    } = this.props;
-    const { 
-      anchorEl, 
-    } = this.state;
+    const { classes, theme, reading, onRecommends } = this.props;
+    const { anchorEl } = this.state;
 
     let reader_image = reading.reader.image;
     if (!reading.reader.image) {
-      reader_image = `/static/images/avatars/blank_avatar.png`;
+      reader_image = BLANK_USER_IMAGE;
     }
 
-    let width = document.documentElement.clientWidth || document.body.clientWidth || window.innerWidth;
+    let width =
+      document.documentElement.clientWidth ||
+      document.body.clientWidth ||
+      window.innerWidth;
     width -= 16;
-    if (width > MAX_CARD_WIDTH - 16)
-      width = MAX_CARD_WIDTH - 16;
-    if (width < MIN_CARD_WIDTH - 16)
-      width = MIN_CARD_WIDTH - 16;
+    if (width > MAX_CARD_WIDTH - 16) width = MAX_CARD_WIDTH - 16;
+    if (width < MIN_CARD_WIDTH - 16) width = MIN_CARD_WIDTH - 16;
 
     // popup menu position
     let menuPos = { top: -1000, left: -1000 };
@@ -296,12 +339,24 @@ class ReadingItemMod extends React.Component {
 
     let air_title = "";
     let air_description = "";
-    if (reading.co2) {
-      air_title = `${reading.co2} ppm`;
+    if (reading.adjusted) {
+      const adjusted_co2 = get_adjusted_co2_level(
+        reading.co2_in,
+        CONF_ADJUST_ACTIVITIES[reading.activity].cfm,
+        reading.people_no,
+        reading.hepa_cadr,
+        reading.uvgi_cap
+      );
+      air_title = `${parseInt(adjusted_co2)} ppm (adjusted)`;
       air_description = "";
-    } else if (reading.ach) {
-      air_title = "HEPA filters";
-      air_description = `${reading.ach} Air Changes an Hour`;
+    } else {
+      if (reading.co2) {
+        air_title = `${reading.co2} ppm`;
+        air_description = "";
+      } else if (reading.ach) {
+        air_title = "HEPA filters";
+        air_description = `${reading.ach} Air Changes an Hour`;
+      }
     }
 
     return (
@@ -312,7 +367,7 @@ class ReadingItemMod extends React.Component {
               className={classes.header}
               avatar={
                 <div>
-                  <img
+                  <LazyLoadImage
                     className={classes.readerimage}
                     alt={reading.reader.name}
                     src={reader_image}
@@ -334,7 +389,10 @@ class ReadingItemMod extends React.Component {
               <Typography className={classes.posted}>
                 {get_elapsed_time(reading.reading_at)}
               </Typography>
-              <IconButton className={classes.expand} onClick={this.handleExpand}>
+              <IconButton
+                className={classes.expand}
+                onClick={this.handleExpand}
+              >
                 <ExpandMoreIcon />
               </IconButton>
             </div>
@@ -343,87 +401,95 @@ class ReadingItemMod extends React.Component {
                 <Typography className={classes.airlevel_title}>
                   {air_title}
                 </Typography>
+                {reading.location_room && (
+                  <Typography className={classes.airlevel_title}>
+                    {reading.location_room.name}
+                  </Typography>
+                )}
               </div>
-              <Typography className={classes.airlevel_description}>{air_description}</Typography>
-              <Grid 
-                container 
-                direction="row" 
-                spacing={1} 
+              <Typography className={classes.airlevel_description}>
+                {air_description}
+              </Typography>
+              <Grid
+                container
+                direction="row"
+                spacing={1}
                 className={classes.descriptionblock}
               >
                 <Grid item xs={9}>
-                  <Typography className={classes.description}>{reading.comment}</Typography>
+                  <Typography className={classes.description}>
+                    {reading.comment}
+                  </Typography>
                 </Grid>
-                <Grid item xs={3}>
-                </Grid>
+                <Grid item xs={3}></Grid>
               </Grid>
             </CardContent>
             <div className={classes.maskblock}>
               <img
                 alt={"cleanair location"}
-                src={`/static/images/icons/${theme}/${CONF_MASKS[reading.mask + 1].image}`}
+                src={`/static/images/icons/${theme}/${
+                  CONF_MASKS[reading.mask + 1].image
+                }`}
                 className={classes.maskimg}
               />
-              {/* <Typography className={classes.masknote}>{mask_note1}</Typography>
-              <Typography className={classes.masknote}>{mask_note2}</Typography> */}
             </div>
-            {reading.image && 
+            {reading.image && (
               <div className={classes.imageblock}>
-                <img
+                <LazyLoadImage
                   alt={"reading"}
                   src={reading.image}
                   className={classes.image}
                 />
+                {reading.gps_verified && (
+                  <>
+                    <img
+                      alt={"verified"}
+                      src={`/static/images/icons/${theme}/shield.png`}
+                      className={classes.verifiedimage}
+                    />
+                    <Typography className={classes.verifiedtext}>
+                      GPS Verified
+                    </Typography>
+                  </>
+                )}
               </div>
-            }
+            )}
             <CardActions>
-              <Grid 
-                container
-                direction="row"
-                className={classes.actionbtn}
-              >
+              <Grid container direction="row" className={classes.actionbtn}>
                 <Grid item xs={5}>
-                  <img
-                    alt={"comments"}
-                    src={`/static/images/icons/${theme}/comments_all.png`}
-                    className={classes.reactionimg}
-                  />
-                  <Typography className={classes.reactionvalue}>
-                    {`0 comments`}
-                  </Typography>
+                  <div
+                    className={classes.comments}
+                    onClick={this.handleClickComments}
+                  >
+                    <img
+                      alt={"comments"}
+                      src={`/static/images/icons/${theme}/comments_all.png`}
+                      className={classes.reactionimg}
+                    />
+                    <Typography className={classes.reactionvalue}>
+                      {`0 comments`}
+                    </Typography>
+                  </div>
                 </Grid>
                 <Grid item xs={5}>
-                  <img
-                    alt={"Recommend"}
-                    src={`/static/images/icons/${theme}/like.png`}
-                    className={classes.reactionimg}
-                  />
-                  <Typography className={classes.reactionvalue}>
-                    {`Recommend 0`}
-                  </Typography>
+                  <div
+                    className={classes.recommends}
+                    onClick={(e) => onRecommends(reading)}
+                  >
+                    <img
+                      alt={"Recommend"}
+                      src={`/static/images/icons/${theme}/like.png`}
+                      className={classes.reactionimg}
+                    />
+                    <Typography className={classes.reactionvalue}>
+                      {`Recommend ${reading.recommends}`}
+                    </Typography>
+                  </div>
                 </Grid>
               </Grid>
             </CardActions>
           </div>
         </Card>
-        <Menu
-          id="source-menu"
-          anchorReference="anchorPosition"
-          anchorPosition={{ top: menuPos.top, left: menuPos.left + 24 }}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
-          transformOrigin={{ vertical: "top", horizontal: "right" }}
-          open={anchorEl !== null}
-          onClose={this.handleCloseMenu}
-        >
-          <PopMenuMapReadingMod
-            theme={theme}
-            onEdit={this.handleEditComment}
-            onDelete={this.handleDeleteComment}
-            onShare={this.handleShare}
-            onMakeModerator={this.handleMakeModerator}
-            onBanUser={this.handleBanUser}
-          />
-        </Menu>
       </>
     );
   }
@@ -433,11 +499,15 @@ ReadingItemMod.propTypes = {
   classes: PropTypes.object,
   theme: PropTypes.string,
   reading: PropTypes.object,
+  onRecommends: PropTypes.func,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
   onShare: PropTypes.func,
   onMakeModerator: PropTypes.func,
-  onBanUser: PropTypes.func
+  onBanUser: PropTypes.func,
+  onBan1d: PropTypes.func,
+  onBan7d: PropTypes.func,
+  onBanPerm: PropTypes.func,
 };
 
 export default withStyles(styles)(ReadingItemMod);

@@ -1,29 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import ShareIcon from "@material-ui/icons/Share";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { DlgShare } from "components";
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
-} from "@material-ui/core";
+import { AppBar, Toolbar, IconButton, Typography } from "@material-ui/core";
+import { MAX_WINDOW_WIDTH } from "../../../../constants/types";
 
 const styles = (theme) => ({
   root: {
     position: "fixed",
-    width: theme.breakpoints.values.lg,
+    width: MAX_WINDOW_WIDTH,
     maxWidth: "100%",
     zIndex: 1200,
   },
   appbar: {
     position: "absolute",
   },
-  toolbar: {
-    // borderBottom: `2px solid ${theme.palette.text.secondary}`
-  },
+  toolbar: {},
   title: {
     flexGrow: 1,
     position: "relative",
@@ -46,7 +38,7 @@ const styles = (theme) => ({
     "&:hover": {
       backgroundColor: "#7289DA",
       color: theme.palette.info.contrastText,
-    }
+    },
   },
   shareicon: {
     width: 24,
@@ -78,13 +70,7 @@ class MainAppBar extends React.Component {
   }
 
   render() {
-    const {
-      classes,
-      title,
-      share_info,
-      onNavBack,
-    } = this.props;
-    const { showShareDlg } = this.state;
+    const { classes, title, onNavBack } = this.props;
 
     return (
       <div className={classes.root}>
@@ -101,21 +87,8 @@ class MainAppBar extends React.Component {
             <Typography className={classes.title} variant="h6" noWrap>
               {title}
             </Typography>
-            <div className={classes.toolbox}>
-              <IconButton
-                className={classes.share}
-                onClick={this.handleClickShare}
-              >
-                <ShareIcon className={classes.shareicon} />
-              </IconButton>
-            </div>
           </Toolbar>
         </AppBar>
-        <DlgShare
-          open={showShareDlg}
-          shareInfo={share_info}
-          onClose={this.handleCloseShare}
-        />
       </div>
     );
   }
@@ -125,7 +98,7 @@ MainAppBar.propTypes = {
   classes: PropTypes.object,
   title: PropTypes.string,
   share_info: PropTypes.object,
-  onNavBack: PropTypes.func
+  onNavBack: PropTypes.func,
 };
 
 export default withStyles(styles)(MainAppBar);

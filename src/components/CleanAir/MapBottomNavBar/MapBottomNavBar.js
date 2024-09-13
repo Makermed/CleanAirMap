@@ -2,42 +2,37 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { ActionCreators } from "actions";
+import { ActionCreators } from "../../../actions";
 import { withStyles } from "@material-ui/core/styles";
-import { 
-  AppBar, 
-  Tabs, 
-  Tab, 
-  Avatar, 
-  Typography, 
-  Fade 
-} from "@material-ui/core";
+import { AppBar, Tabs, Tab, Avatar, Typography, Fade } from "@material-ui/core";
+import MapTagsMultiSelect from "../MapTagsMultiSelect";
 import { ToggleButton } from "@material-ui/lab";
-import { 
-  CONF_LOCATION_TYPES, 
+import {
+  CONF_LOCATION_TYPES,
   LOCATION_TYPE_ALL,
   CONF_MASKS,
-  MASK_ALL
-} from "constants/maplocation";
-import { 
-  MIN_CARD_WIDTH, 
-  MAX_ARTICLE_WIDTH 
-} from "constants/types";
+  MASK_ALL,
+} from "../../../constants/maplocation";
+import {
+  MIN_CARD_WIDTH,
+  MAX_ARTICLE_WIDTH,
+  THEME_MODE_DARK,
+} from "../../../constants/types";
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     position: "fixed",
     width: MAX_ARTICLE_WIDTH,
     maxWidth: "100%",
-    bottom: 72,
-    zIndex: 1100
+    bottom: 96,
+    zIndex: 1100,
   },
   appbar: {
     position: "absolute",
     bottom: theme.spacing(1),
   },
-  indicator: {
-    backgroundColor: theme.palette.primary.contrastText
+  tagscontainer: {
+    marginLeft: theme.spacing(1),
   },
   masktabs: {
     paddingLeft: theme.spacing(2),
@@ -51,7 +46,10 @@ const styles = theme => ({
     maxWidth: MAX_ARTICLE_WIDTH,
     borderRadius: 15,
     backgroundColor: theme.palette.background.default,
-    boxShadow: `0 1px 1px 1px rgba(63,63,68,0.05), 0 3px 3px 0 rgba(63,63,68,0.15)`
+    boxShadow: `0 1px 1px 1px rgba(63,63,68,0.05), 0 3px 3px 0 rgba(63,63,68,0.15)`,
+  },
+  indicator: {
+    backgroundColor: theme.palette.primary.contrastText,
   },
   masktab: {
     padding: 0,
@@ -61,7 +59,7 @@ const styles = theme => ({
     fontSize: 14,
     textTransform: "inherit",
     fullWidth: false,
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   tabbutton: {
     marginLeft: 5,
@@ -71,12 +69,12 @@ const styles = theme => ({
     maxHeight: 24,
     textTransform: "inherit",
     backgroundColor: theme.palette.background.default,
-    border: "none"
+    border: "none",
   },
   all: {
     textAlign: "center",
     fontFamily: "Arial",
-    fontSize: 14
+    fontSize: 14,
   },
   maskname: {
     textAlign: "center",
@@ -88,7 +86,7 @@ const styles = theme => ({
   avatar: {
     margin: 0,
     width: 24,
-    height: 24
+    height: 24,
   },
   typetabs: {
     margin: 0,
@@ -102,7 +100,7 @@ const styles = theme => ({
     paddingBottom: 2,
     borderRadius: 15,
     backgroundColor: theme.palette.background.default,
-    boxShadow: `0 1px 1px 1px rgba(63,63,68,0.05), 0 3px 3px 0 rgba(63,63,68,0.15)`
+    boxShadow: `0 1px 1px 1px rgba(63,63,68,0.05), 0 3px 3px 0 rgba(63,63,68,0.15)`,
   },
   typetab: {
     marginRight: 4,
@@ -114,7 +112,7 @@ const styles = theme => ({
     fontSize: 14,
     textTransform: "inherit",
     fullWidth: false,
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
   },
   typeimg: {
     margin: 0,
@@ -122,7 +120,7 @@ const styles = theme => ({
     width: 28,
     height: 28,
     borderRadius: "50%",
-  }
+  },
 });
 
 class MapBottomNavBar extends React.Component {
@@ -131,6 +129,7 @@ class MapBottomNavBar extends React.Component {
 
     this.handleChangeMask = this.handleChangeMask.bind(this);
     this.handleChangeType = this.handleChangeType.bind(this);
+    this.handleChangeTag = this.handleChangeTag.bind(this);
   }
 
   handleChangeMask = (event, newValue) => {
@@ -149,22 +148,46 @@ class MapBottomNavBar extends React.Component {
     this.props.onChangeType(newValue);
   };
 
+  handleChangeTag = (tag) => {
+    this.props.onChangeTag(tag);
+  };
+
   render() {
     const {
       classes,
       mask,
       locationtype,
+      maptags,
+      selectedtags,
       show,
-      theme_mode
+      theme_mode,
     } = this.props;
 
     const masks = CONF_MASKS.slice(1);
     const locationtypes = CONF_LOCATION_TYPES.slice(1);
 
+    const width =
+      document.documentElement.clientWidth ||
+      document.body.clientWidth ||
+      window.innerWidth;
+    const innerWidth = width > MAX_ARTICLE_WIDTH ? MAX_ARTICLE_WIDTH : width;
+
+    const bottom = maptags.length > 0 ? 112 + 8 : 72 + 8;
+
     return (
-      <div className={classes.root}>
+      <div className={classes.root} style={{ bottom: bottom }}>
         <Fade in={show} timeout={{ enter: 300, exit: 300 }}>
           <AppBar className={classes.appbar}>
+            {maptags.length > 0 && (
+              <div className={classes.tagscontainer}>
+                <MapTagsMultiSelect
+                  width={innerWidth - 16}
+                  tags={maptags}
+                  selecteditems={selectedtags}
+                  onSelect={this.handleChangeTag}
+                />
+              </div>
+            )}
 
             <Tabs
               className={classes.masktabs}
@@ -186,22 +209,22 @@ class MapBottomNavBar extends React.Component {
                   className={classes.masktab}
                   icon={
                     <>
-                    <ToggleButton
-                      component="span"
-                      className={classes.tabbutton}
-                      value={item.name}
-                    >
-                      <Avatar 
-                        className={classes.avatar}
-                        src={`/static/images/icons/${theme_mode}/${item.image}`} 
-                      />
-                      <Typography
-                        className={classes.maskname}
-                        style={{ opacity: 1.0 }}
+                      <ToggleButton
+                        component="span"
+                        className={classes.tabbutton}
+                        value={item.name}
                       >
-                        {item.name}
-                      </Typography>
-                    </ToggleButton>
+                        <Avatar
+                          className={classes.avatar}
+                          src={`/static/images/icons/${theme_mode}/${item.image}`}
+                        />
+                        <Typography
+                          className={classes.maskname}
+                          style={{ opacity: 1.0 }}
+                        >
+                          {item.name}
+                        </Typography>
+                      </ToggleButton>
                     </>
                   }
                 />
@@ -232,13 +255,17 @@ class MapBottomNavBar extends React.Component {
                       alt={item.name}
                       src={`/static/images/icons/loc_types/${item.image}`}
                       className={classes.typeimg}
-                      style={{backgroundColor: `${item.color}`}}
+                      style={{
+                        backgroundColor:
+                          theme_mode === THEME_MODE_DARK
+                            ? item.color.dark.stroke
+                            : item.color.light.stroke,
+                      }}
                     />
                   }
                 />
               ))}
             </Tabs>
-
           </AppBar>
         </Fade>
       </div>
@@ -251,13 +278,15 @@ MapBottomNavBar.propTypes = {
   show: PropTypes.bool,
   mask: PropTypes.number,
   locationtype: PropTypes.number,
+  maptags: PropTypes.array,
+  selectedtags: PropTypes.array,
   onChangeMask: PropTypes.func,
-  onChangeType: PropTypes.func
+  onChangeType: PropTypes.func,
+  onChangeTag: PropTypes.func,
 };
 
-
-const mapStateToProps = state => ({
-  theme_mode: state.uiState.theme_mode
+const mapStateToProps = (state) => ({
+  theme_mode: state.uiState.theme_mode,
 });
 
 function mapDispatchToProps(dispatch) {
